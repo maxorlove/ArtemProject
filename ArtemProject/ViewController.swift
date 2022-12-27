@@ -17,7 +17,7 @@ class ViewController: UIViewController {
     }
     
     func setup() {
-        print("Seccond")
+        print("Second")
     }
 }
 
