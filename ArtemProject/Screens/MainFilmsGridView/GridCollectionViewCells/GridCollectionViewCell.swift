@@ -50,7 +50,7 @@ class GridCollectionViewCell: UICollectionViewCell {
         backgroundColor = .gray
     }
     
-    func congigure(_with num: Int) {
-        label.text = "\(num)"
+    func congigure(_with item: Item) {
+        label.text = item.title
     }
 }

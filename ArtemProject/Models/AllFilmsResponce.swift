@@ -8,5 +8,11 @@
 import Foundation
 
 struct AllFilmsResponce: Codable {
-    
+    let results: [Item]
+//    let total_pages: Int
+}
+
+struct Item: Codable {
+    let id: Int
+    let title: String
 }

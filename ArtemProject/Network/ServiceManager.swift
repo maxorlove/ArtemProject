@@ -11,7 +11,7 @@ class ServiceManager {
 
     public static let shared: ServiceManager = ServiceManager()
 
-    public var baseURL: String = ""
+    public var baseURL: String = "https://api.themoviedb.org/3/"
 }
 
 extension ServiceManager {

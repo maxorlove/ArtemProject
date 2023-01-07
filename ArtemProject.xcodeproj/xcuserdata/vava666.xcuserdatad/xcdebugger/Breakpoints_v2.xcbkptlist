@@ -36,5 +36,85 @@
             landmarkType = "3">
          </BreakpointContent>
       </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "B4172308-6860-434D-B1D5-BB76F0691102"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "ArtemProject/Screens/MainFilmsGridView/FilmsGridViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "70"
+            endingLineNumber = "70"
+            landmarkName = "loadData(for:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "38A7DC66-DF0C-4017-9E56-2AB7532F7526"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "ArtemProject/Screens/MainFilmsGridView/FilmsGridViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "73"
+            endingLineNumber = "73"
+            landmarkName = "loadData(for:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "9DB3580C-4EB8-45CC-A829-CBAB57DE8BF8"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "ArtemProject/Screens/MainFilmsGridView/FilmsGridViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "67"
+            endingLineNumber = "67"
+            landmarkName = "loadData(for:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "9DB3580C-4EB8-45CC-A829-CBAB57DE8BF8 - b87b99b53acda4b2"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Swift.Result&lt;ArtemProject.AllFilmsResponce, ArtemProject.ErrorModel&gt;) -&gt; () in ArtemProject.FilmsGridViewController.loadData(for: Swift.Int) -&gt; ()"
+                  moduleName = "ArtemProject"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/vava666/Desktop/LearningSwift/ArtemProject/ArtemProject/Screens/MainFilmsGridView/FilmsGridViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "67"
+                  endingLineNumber = "67"
+                  offsetFromSymbolStart = "260">
+               </Location>
+               <Location
+                  uuid = "9DB3580C-4EB8-45CC-A829-CBAB57DE8BF8 - 41d674b62e0c2445"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 @Swift.MainActor () -&gt; () in closure #1 (Swift.Result&lt;ArtemProject.AllFilmsResponce, ArtemProject.ErrorModel&gt;) -&gt; () in ArtemProject.FilmsGridViewController.loadData(for: Swift.Int) -&gt; ()"
+                  moduleName = "ArtemProject"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/vava666/Desktop/LearningSwift/ArtemProject/ArtemProject/Screens/MainFilmsGridView/FilmsGridViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "64"
+                  endingLineNumber = "64"
+                  offsetFromSymbolStart = "28">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
    </Breakpoints>
 </Bucket>

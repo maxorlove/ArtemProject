@@ -7,7 +7,7 @@
 
 import Foundation
 
-class AllFilmsRequest: RequestModel {
+class PopularFilmsRequest: RequestModel {
 
     private var page: Int
 
@@ -16,11 +16,13 @@ class AllFilmsRequest: RequestModel {
     }
 
     override var path: String {
-        return "api/character"
+        return "movie/popular"
     }
 
     override var parameters: [String : Any?] {
         return [
+            "api_key": "e7cd6cd3c324af8138cb9d0d998c2cc6",
+            "language": "en-US",
             "page": page
         ]
     }
