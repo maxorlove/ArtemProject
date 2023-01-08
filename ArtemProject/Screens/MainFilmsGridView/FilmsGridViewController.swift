@@ -11,41 +11,37 @@ class FilmsGridViewController: UIViewController {
 
     private let filmsCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
-        layout.scrollDirection = .vertical
-        layout.minimumLineSpacing = 0
-        layout.minimumInteritemSpacing = 0
         let collection = UICollectionView(frame: .zero, collectionViewLayout: layout)
         return collection
     }()
     
-    var currentPage: Int = 1
-    var totalPages: Int = 0
+    private var currentPage: Int = 1
+    private var totalPages: Int = 1
     
-    var dataSourse: [Item] = []
+    private var dataSourse: [Item] = []
     
-    let networkClient = NetworkServiceImpl()
+    private let networkClient = NetworkServiceImpl()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view.
         setup()
         loadData(for: currentPage)
     }
     
-    func setup() {
+    private func setup() {
         addSubviews()
         setupConstraints()
         setupColectionViews()
     }
     
-    func addSubviews() {
+    private func addSubviews() {
         [filmsCollectionView].forEach {
             view.addSubview($0)
             $0.translatesAutoresizingMaskIntoConstraints = false
         }
     }
     
-    func setupConstraints() {
+    private func setupConstraints() {
         NSLayoutConstraint.activate([
             filmsCollectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             filmsCollectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
@@ -54,28 +50,34 @@ class FilmsGridViewController: UIViewController {
         ])
     }
     
-    func setupColectionViews() {
+    private func setupColectionViews() {
         filmsCollectionView.delegate = self
         filmsCollectionView.dataSource = self
         filmsCollectionView.register(GridCollectionViewCell.self, forCellWithReuseIdentifier: Constants.gridCellReuseId)
     }
-    
-    func loadData(for page: Int) {
+
+    private func loadData(for page: Int) {
         networkClient.getPopularMovies(page: page) { [weak self] result in
             switch result {
                 case .success(let response):
                 DispatchQueue.main.async {
                     self?.dataSourse.append(contentsOf: response.results)
+                    self?.totalPages = response.totalPages
                     self?.filmsCollectionView.reloadData()
-//                    self?.totalPages = response.total_pages
                 }
                 case .failure(let error):
+                let alert = UIAlertController(title: "Error", message: error.localizedDescription, preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { _ in
+                }))
+                DispatchQueue.main.async {
+                    self?.present(alert, animated: true, completion: nil)
+                }
                 break
             }
         }
     }
 }
-
+   
 extension FilmsGridViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         dataSourse.count
@@ -84,7 +86,7 @@ extension FilmsGridViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = filmsCollectionView.dequeueReusableCell(withReuseIdentifier: Constants.gridCellReuseId, for: indexPath) as! GridCollectionViewCell
         let model = dataSourse[indexPath.row]
-        cell.congigure(_with: model)
+        cell.configure(with: model)
         return cell
     }
 }
@@ -103,7 +105,7 @@ extension FilmsGridViewController: UICollectionViewDelegateFlowLayout {
     }
     
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        if dataSourse.count - 3 == indexPath.row {
+        if dataSourse.count - 3 == indexPath.row, currentPage < totalPages {
             currentPage += 1
             loadData(for: currentPage)
         }

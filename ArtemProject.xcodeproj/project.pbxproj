@@ -15,6 +15,7 @@
 		0033E8D62969650D0095DF7E /* AllFilmsResponce.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0033E8D52969650D0095DF7E /* AllFilmsResponce.swift */; };
 		0033E8DC29696AAE0095DF7E /* GridCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0033E8DB29696AAE0095DF7E /* GridCollectionViewCell.swift */; };
 		0033E8DF296979A80095DF7E /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0033E8DE296979A80095DF7E /* ProfileViewController.swift */; };
+		0033E8E2296AE36E0095DF7E /* SDWebImage in Frameworks */ = {isa = PBXBuildFile; productRef = 0033E8E1296AE36E0095DF7E /* SDWebImage */; };
 		7FA9803C295B23D10053E050 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FA9803B295B23D10053E050 /* AppDelegate.swift */; };
 		7FA9803E295B23D10053E050 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FA9803D295B23D10053E050 /* SceneDelegate.swift */; };
 		7FA98040295B23D10053E050 /* FilmsGridViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FA9803F295B23D10053E050 /* FilmsGridViewController.swift */; };
@@ -47,6 +48,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0033E8E2296AE36E0095DF7E /* SDWebImage in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -163,6 +165,9 @@
 			dependencies = (
 			);
 			name = ArtemProject;
+			packageProductDependencies = (
+				0033E8E1296AE36E0095DF7E /* SDWebImage */,
+			);
 			productName = ArtemProject;
 			productReference = 7FA98038295B23D10053E050 /* ArtemProject.app */;
 			productType = "com.apple.product-type.application";
@@ -191,6 +196,9 @@
 				Base,
 			);
 			mainGroup = 7FA9802F295B23D10053E050;
+			packageReferences = (
+				0033E8E0296AE36E0095DF7E /* XCRemoteSwiftPackageReference "SDWebImage" */,
+			);
 			productRefGroup = 7FA98039295B23D10053E050 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -448,6 +456,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		0033E8E0296AE36E0095DF7E /* XCRemoteSwiftPackageReference "SDWebImage" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SDWebImage/SDWebImage";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		0033E8E1296AE36E0095DF7E /* SDWebImage */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0033E8E0296AE36E0095DF7E /* XCRemoteSwiftPackageReference "SDWebImage" */;
+			productName = SDWebImage;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 7FA98030295B23D10053E050 /* Project object */;
 }

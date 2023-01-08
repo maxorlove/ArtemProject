@@ -9,10 +9,16 @@ import Foundation
 
 struct AllFilmsResponce: Codable {
     let results: [Item]
-//    let total_pages: Int
+    let totalPages: Int
 }
 
 struct Item: Codable {
     let id: Int
     let title: String
+    let adult: Bool
+    let backdropPath: String?
+    let overview: String
+    let voteAverage: Double
+    let releaseDate: String
+    let posterPath: String?
 }

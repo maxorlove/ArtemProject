@@ -16,5 +16,4 @@ class NetworkServiceImpl: NetworkService {
         let request = ServiceManager.shared.sendRequest(request: PopularFilmsRequest(page: page), completion: completion)
         return request
     }
-
 }
