@@ -29,7 +29,8 @@ class ProfileHeaderView: UIView {
         setupConstraints()
         setupLabels()
         setupImages()
-        setupButton()
+//        setupButton()
+        setEditFlag(edit: editFlag)
     }
     
     private func addSubViews() {
