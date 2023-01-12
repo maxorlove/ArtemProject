@@ -15,6 +15,9 @@ class ProfileViewController: UIViewController {
         super.viewDidLoad()
         
         setup()
+        
+        print("branch test")
+        print("fix PR issues")
     }
     
     func setup() {
