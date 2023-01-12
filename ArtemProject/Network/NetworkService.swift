@@ -28,4 +28,5 @@ class NetworkServiceImpl: NetworkService {
         let request = ServiceManager.shared.sendRequest(request: NowPlayingFilmsRequest(page: page), completion: completion)
         return request
     }
+
 }

@@ -66,7 +66,7 @@ class GridCollectionViewCell: UICollectionViewCell {
         label.lineBreakMode = .byTruncatingTail
         label.minimumScaleFactor = 0.5
         label.adjustsFontSizeToFitWidth = true
-        
+
         yearLabel.font = .systemFont(ofSize: 8, weight: .bold)
         yearLabel.textAlignment = .center
         yearLabel.textColor = .darkGray

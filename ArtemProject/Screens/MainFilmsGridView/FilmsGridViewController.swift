@@ -145,6 +145,27 @@ class FilmsGridViewController: UIViewController {
             self.present(alert, animated: true, completion: nil)
         }
     }
+    
+    private func loadData(for page: Int) {
+        networkClient.getPopularMovies(page: page) { [weak self] result in
+            switch result {
+            case .success(let response):
+                DispatchQueue.main.async {
+                    self?.dataSourse.append(contentsOf: response.results)
+                    self?.totalPages = response.totalPages
+                    self?.filmsCollectionView.reloadData()
+                }
+            case .failure(let error):
+                let alert = UIAlertController(title: "Error", message: error.localizedDescription, preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { _ in
+                }))
+                DispatchQueue.main.async {
+                    self?.present(alert, animated: true, completion: nil)
+                }
+                break
+            }
+        }
+    }
 }
 
 extension FilmsGridViewController: UICollectionViewDataSource {
@@ -195,6 +216,7 @@ extension FilmsGridViewController: UICollectionViewDelegateFlowLayout {
         }))
         self.present(alert, animated: true, completion: nil)
     }
+    
 }
 
 private enum Constants {
