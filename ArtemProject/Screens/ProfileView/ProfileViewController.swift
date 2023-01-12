@@ -121,19 +121,23 @@ class ProfileViewController: UIViewController {
         
     }
     
+    private func prep(attType: AttNameEnum, textValue: String) {
+        switch attType {
+        case .name:
+            profileStruct.name = textValue
+        case .email:
+            profileStruct.email = textValue
+        case .title:
+            profileStruct.title = textValue
+        case .location:
+            profileStruct.location = textValue
+        }
+    }
+    
     private func createProfileAttribute(att: AttNameEnum) -> ProfileAttributeView {
         let view = ProfileAttributeView()
         view.didEndEditAction = {[weak self] attType, textValue in
-            switch attType {
-            case .name:
-                self?.profileStruct.name = textValue
-            case .email:
-                self?.profileStruct.email = textValue
-            case .title:
-                self?.profileStruct.title = textValue
-            case .location:
-                self?.profileStruct.location = textValue
-            }
+            self?.prep(attType: attType, textValue: textValue)
         }
         view.configure(type: att)
         return view

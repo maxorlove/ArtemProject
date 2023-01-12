@@ -94,9 +94,9 @@
             filePath = "ArtemProject/Screens/ProfileView/ProfileViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "152"
-            endingLineNumber = "152"
-            landmarkName = "saveAttValues()"
+            startingLineNumber = "156"
+            endingLineNumber = "156"
+            landmarkName = "setEditFlag(edit:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -110,9 +110,9 @@
             filePath = "ArtemProject/Screens/ProfileView/ProfileViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "194"
-            endingLineNumber = "194"
-            landmarkName = "doneEdit()"
+            startingLineNumber = "198"
+            endingLineNumber = "198"
+            landmarkName = "swichEdit()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
