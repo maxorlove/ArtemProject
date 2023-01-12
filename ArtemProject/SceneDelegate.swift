@@ -19,18 +19,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         window = UIWindow(frame: windowScene.coordinateSpace.bounds)
         window?.windowScene = windowScene
-        let tabBarController = UITabBarController()
         
-        let profileViewController = ProfileViewController()
-        profileViewController.tabBarItem.title = "Profile"
-        profileViewController.tabBarItem.image = UIImage(named: "star")
-        let filmsGridViewController = FilmsGridViewController()
-        filmsGridViewController.tabBarItem.title = "Films list"
-        filmsGridViewController.tabBarItem.image = UIImage(named: "star")
-        
-        tabBarController.viewControllers = [filmsGridViewController, profileViewController]
+        //MARK: - setup view controllers
+        let tabBarController = TabBarController()
         window?.rootViewController = tabBarController
-//
+        
         window?.makeKeyAndVisible()
     }
     

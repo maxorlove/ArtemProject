@@ -92,70 +92,61 @@ class FilmsGridViewController: UIViewController {
         filmsCollectionView.dataSource = self
         filmsCollectionView.register(GridCollectionViewCell.self, forCellWithReuseIdentifier: Constants.gridCellReuseId)
     }
-
+    
     private func loadData(for page: Int, sortStyle: SortEnum) {
         switch sortStyle {
         case .def:
             networkClient.getPopularMovies(page: page) { [weak self] result in
                 switch result {
-                    case .success(let response):
+                case .success(let response):
                     DispatchQueue.main.async {
                         self?.dataSourse.append(contentsOf: response.results)
                         self?.totalPages = response.totalPages
                         self?.filmsCollectionView.reloadData()
                     }
-                    case .failure(let error):
-                    let alert = UIAlertController(title: "Error", message: error.localizedDescription, preferredStyle: .alert)
-                    alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { _ in
-                    }))
-                    DispatchQueue.main.async {
-                        self?.present(alert, animated: true, completion: nil)
-                    }
-                    break
+                case .failure(let error):
+                    self?.errorAlert(error: error)
                 }
             }
         case .topRated:
             networkClient.getTopRated(page: page) { [weak self] result in
                 switch result {
-                    case .success(let response):
+                case .success(let response):
                     DispatchQueue.main.async {
                         self?.dataSourse.append(contentsOf: response.results)
                         self?.totalPages = response.totalPages
                         self?.filmsCollectionView.reloadData()
                     }
-                    case .failure(let error):
-                    let alert = UIAlertController(title: "Error", message: error.localizedDescription, preferredStyle: .alert)
-                    alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { _ in
-                    }))
-                    DispatchQueue.main.async {
-                        self?.present(alert, animated: true, completion: nil)
-                    }
-                    break
+                case .failure(let error):
+                    self?.errorAlert(error: error)
                 }
             }
         case .popular:
             networkClient.getNowPlaying(page: page) { [weak self] result in
                 switch result {
-                    case .success(let response):
+                case .success(let response):
                     DispatchQueue.main.async {
                         self?.dataSourse.append(contentsOf: response.results)
                         self?.totalPages = response.totalPages
                         self?.filmsCollectionView.reloadData()
                     }
-                    case .failure(let error):
-                    let alert = UIAlertController(title: "Error", message: error.localizedDescription, preferredStyle: .alert)
-                    alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { _ in
-                    }))
-                    DispatchQueue.main.async {
-                        self?.present(alert, animated: true, completion: nil)
-                    }
-                    break
+                case .failure(let error):
+                    self?.errorAlert(error: error)
                 }
             }
         }
     }
+    
+    func errorAlert(error: ErrorModel) {
+        let alert = UIAlertController(title: "Error", message: error.localizedDescription, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { _ in
+        }))
+        DispatchQueue.main.async {
+            self.present(alert, animated: true, completion: nil)
+        }
+    }
 }
-   
+
 extension FilmsGridViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         dataSourse.count

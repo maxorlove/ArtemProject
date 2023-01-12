@@ -12,3 +12,10 @@ enum SortEnum: String, CaseIterable {
     case popular = "Popular"
     case def = "Default"
 }
+
+enum AttNameEnum: String, CaseIterable {
+    case name = "NAME"
+    case email = "EMAIL"
+    case title = "TITLE"
+    case location = "LOCATION"
+}
