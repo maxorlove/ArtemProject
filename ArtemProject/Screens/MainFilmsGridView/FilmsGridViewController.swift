@@ -14,28 +14,34 @@ class FilmsGridViewController: UIViewController {
     private let sortView: UIView = {
         let sortView = UIView()
         let label = UILabel()
-        let marker = UIButton()
+        let gridSizeChangeButton = UIButton()
         let sortButton = UIButton()
-        [label, marker, sortButton].forEach {
+        [label, gridSizeChangeButton, sortButton].forEach {
             sortView.addSubview($0)
             $0.translatesAutoresizingMaskIntoConstraints = false
         }
         NSLayoutConstraint.activate([
-            label.leadingAnchor.constraint(equalTo: sortView.leadingAnchor),
+            label.leadingAnchor.constraint(equalTo: sortView.leadingAnchor, constant: 3),
             label.topAnchor.constraint(equalTo: sortView.topAnchor),
+            label.centerYAnchor.constraint(equalTo: sortView.centerYAnchor),
             
-            marker.leadingAnchor.constraint(equalTo: label.trailingAnchor),
-            marker.topAnchor.constraint(equalTo: sortView.topAnchor),
-            
-            sortButton.leadingAnchor.constraint(equalTo: marker.trailingAnchor),
+            sortButton.leadingAnchor.constraint(equalTo: label.trailingAnchor, constant: 3),
             sortButton.topAnchor.constraint(equalTo: sortView.topAnchor),
-            sortButton.trailingAnchor.constraint(equalTo: sortView.trailingAnchor),
+            sortButton.trailingAnchor.constraint(lessThanOrEqualTo: gridSizeChangeButton.leadingAnchor),
+            sortButton.centerYAnchor.constraint(equalTo: sortView.centerYAnchor),
+            
+            gridSizeChangeButton.trailingAnchor.constraint(equalTo: sortView.trailingAnchor, constant: -3),
+            gridSizeChangeButton.topAnchor.constraint(equalTo: sortView.topAnchor),
+            gridSizeChangeButton.centerYAnchor.constraint(equalTo: sortView.centerYAnchor),
+            
+
         ])
         label.text = "Sorted by:"
-        label.textColor = .white
-        marker.setImage(UIImage(systemName: "arrow.down"), for: .normal)
+        label.textColor = Colors.primaryTextOnBackgroundColor
+        gridSizeChangeButton.setImage(UIImage(named: "gridSizeChanger"), for: .normal)
+        gridSizeChangeButton.addTarget(self, action: #selector(gridSizeChangeAction), for: .touchDown)
         sortButton.setTitle("Default", for: .normal)
-        sortButton.setTitleColor(.white, for: .normal)
+        sortButton.setTitleColor(Colors.primaryTextOnBackgroundColor, for: .normal)
         sortButton.addTarget(self, action: #selector(sortButtonAction), for: .touchDown)
         return sortView
     }()
@@ -60,7 +66,7 @@ class FilmsGridViewController: UIViewController {
     }
     
     private func setup() {
-        view.backgroundColor = .black
+        view.backgroundColor = Colors.primaryBackgroundColor
         addSubviews()
         setupConstraints()
         setupColectionViews()
@@ -187,11 +193,26 @@ extension FilmsGridViewController: UICollectionViewDelegateFlowLayout {
         }))
         self.present(alert, animated: true, completion: nil)
     }
+    
+    @objc
+    func gridSizeChangeAction() {
+        self.updateConstants()
+        self.filmsCollectionView.reloadData()
+    }
+    
+    private func updateConstants() {
+        if Constants.numberOfItemsInRow < 3 {
+            Constants.numberOfItemsInRow += 1
+        } else {
+            Constants.numberOfItemsInRow = 1
+        }
+        Constants.itemSize = (UIScreen.main.bounds.width / Constants.numberOfItemsInRow) - Constants.spacing
+    }
 }
 
 private enum Constants {
     static let gridCellReuseId = "GridCollectionViewCellIdentifier"
-    static let numberOfItemsInRow: CGFloat = 2
-    static let itemSize: CGFloat = (UIScreen.main.bounds.width / numberOfItemsInRow) - spacing
     static let spacing: CGFloat = 2
+    static var numberOfItemsInRow: CGFloat = 2
+    static var itemSize: CGFloat = (UIScreen.main.bounds.width / numberOfItemsInRow) - spacing
 }
