@@ -56,7 +56,7 @@ class FilmsGridViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setup()
-        loadData(for: currentPage, sortStyle: currentSortStyle)
+        loadData(for: currentPage)
     }
     
     private func setup() {
@@ -93,77 +93,48 @@ class FilmsGridViewController: UIViewController {
         filmsCollectionView.register(GridCollectionViewCell.self, forCellWithReuseIdentifier: Constants.gridCellReuseId)
     }
     
-    private func loadData(for page: Int, sortStyle: SortEnum) {
-        switch sortStyle {
-        case .def:
-            networkClient.getPopularMovies(page: page) { [weak self] result in
-                switch result {
-                case .success(let response):
-                    DispatchQueue.main.async {
-                        self?.dataSourse.append(contentsOf: response.results)
-                        self?.totalPages = response.totalPages
-                        self?.filmsCollectionView.reloadData()
-                    }
-                case .failure(let error):
-                    self?.errorAlert(error: error)
-                }
+    private func updateDataSourse(result: Result<AllFilmsResponce, ErrorModel>) {
+        switch result {
+        case .success(let response):
+            DispatchQueue.main.async {
+                self.dataSourse.append(contentsOf: response.results)
+                self.totalPages = response.totalPages
+                self.filmsCollectionView.reloadData()
             }
-        case .topRated:
-            networkClient.getTopRated(page: page) { [weak self] result in
-                switch result {
-                case .success(let response):
-                    DispatchQueue.main.async {
-                        self?.dataSourse.append(contentsOf: response.results)
-                        self?.totalPages = response.totalPages
-                        self?.filmsCollectionView.reloadData()
-                    }
-                case .failure(let error):
-                    self?.errorAlert(error: error)
-                }
-            }
-        case .popular:
-            networkClient.getNowPlaying(page: page) { [weak self] result in
-                switch result {
-                case .success(let response):
-                    DispatchQueue.main.async {
-                        self?.dataSourse.append(contentsOf: response.results)
-                        self?.totalPages = response.totalPages
-                        self?.filmsCollectionView.reloadData()
-                    }
-                case .failure(let error):
-                    self?.errorAlert(error: error)
-                }
-            }
-        }
-    }
-    
-    func errorAlert(error: ErrorModel) {
-        let alert = UIAlertController(title: "Error", message: error.localizedDescription, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { _ in
-        }))
-        DispatchQueue.main.async {
-            self.present(alert, animated: true, completion: nil)
+        case .failure(let error):
+            self.errorAlert(error: error)
         }
     }
     
     private func loadData(for page: Int) {
         networkClient.getPopularMovies(page: page) { [weak self] result in
-            switch result {
-            case .success(let response):
-                DispatchQueue.main.async {
-                    self?.dataSourse.append(contentsOf: response.results)
-                    self?.totalPages = response.totalPages
-                    self?.filmsCollectionView.reloadData()
-                }
-            case .failure(let error):
-                let alert = UIAlertController(title: "Error", message: error.localizedDescription, preferredStyle: .alert)
-                alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { _ in
-                }))
-                DispatchQueue.main.async {
-                    self?.present(alert, animated: true, completion: nil)
-                }
-                break
+            self?.updateDataSourse(result: result)
+        }
+    }
+    
+    private func loadData(for page: Int, sortStyle: SortEnum) {
+        switch sortStyle {
+        case .def:
+            networkClient.getPopularMovies(page: page) { [weak self] result in
+                self?.updateDataSourse(result: result)
             }
+        case .topRated:
+            networkClient.getTopRated(page: page) { [weak self] result in
+                self?.updateDataSourse(result: result)
+            }
+        case .popular:
+            networkClient.getNowPlaying(page: page) { [weak self] result in
+                self?.updateDataSourse(result: result)
+            }
+        }
+    }
+    
+    private func errorAlert(error: ErrorModel) {
+        let alert = UIAlertController(title: "Error", message: error.localizedDescription, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { _ in
+        }))
+        DispatchQueue.main.async {
+            self.present(alert, animated: true, completion: nil)
         }
     }
 }
@@ -183,7 +154,7 @@ extension FilmsGridViewController: UICollectionViewDataSource {
 
 extension FilmsGridViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: Constants.itemSize, height: Constants.itemSize)
+        return CGSize(width: Constants.itemSize, height: Constants.itemSize * 3 / 2)
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
@@ -195,7 +166,7 @@ extension FilmsGridViewController: UICollectionViewDelegateFlowLayout {
     }
     
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        if dataSourse.count - 3 == indexPath.row, currentPage < totalPages {
+        if dataSourse.count - Int(Constants.numberOfItemsInRow) == indexPath.row, currentPage < totalPages {
             currentPage += 1
             loadData(for: currentPage, sortStyle: currentSortStyle)
         }
@@ -216,12 +187,11 @@ extension FilmsGridViewController: UICollectionViewDelegateFlowLayout {
         }))
         self.present(alert, animated: true, completion: nil)
     }
-    
 }
 
 private enum Constants {
     static let gridCellReuseId = "GridCollectionViewCellIdentifier"
-    static let numberOfItemsInRow: CGFloat = 3
+    static let numberOfItemsInRow: CGFloat = 2
     static let itemSize: CGFloat = (UIScreen.main.bounds.width / numberOfItemsInRow) - spacing
     static let spacing: CGFloat = 2
 }
