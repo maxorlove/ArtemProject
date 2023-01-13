@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		0012C5F8296EC69400EFE5E1 /* ProfileStruct.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0012C5F7296EC69400EFE5E1 /* ProfileStruct.swift */; };
 		0012C5FA296F042000EFE5E1 /* ImagePicketManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0012C5F9296F041F00EFE5E1 /* ImagePicketManager.swift */; };
+		0012C5FD29713D0200EFE5E1 /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0012C5FC29713D0200EFE5E1 /* Colors.swift */; };
 		0033E8CF296964690095DF7E /* ErrorModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0033E8CA296964690095DF7E /* ErrorModel.swift */; };
 		0033E8D0296964690095DF7E /* RequestModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0033E8CB296964690095DF7E /* RequestModel.swift */; };
 		0033E8D1296964690095DF7E /* FilmsRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0033E8CC296964690095DF7E /* FilmsRequest.swift */; };
@@ -33,6 +34,7 @@
 /* Begin PBXFileReference section */
 		0012C5F7296EC69400EFE5E1 /* ProfileStruct.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileStruct.swift; sourceTree = "<group>"; };
 		0012C5F9296F041F00EFE5E1 /* ImagePicketManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePicketManager.swift; sourceTree = "<group>"; };
+		0012C5FC29713D0200EFE5E1 /* Colors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Colors.swift; sourceTree = "<group>"; };
 		0033E8CA296964690095DF7E /* ErrorModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ErrorModel.swift; sourceTree = "<group>"; };
 		0033E8CB296964690095DF7E /* RequestModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RequestModel.swift; sourceTree = "<group>"; };
 		0033E8CC296964690095DF7E /* FilmsRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FilmsRequest.swift; sourceTree = "<group>"; };
@@ -67,6 +69,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0012C5FB29713CE800EFE5E1 /* Resourses */ = {
+			isa = PBXGroup;
+			children = (
+				0012C5FC29713D0200EFE5E1 /* Colors.swift */,
+			);
+			path = Resourses;
+			sourceTree = "<group>";
+		};
 		0033E8C92969644D0095DF7E /* Network */ = {
 			isa = PBXGroup;
 			children = (
@@ -168,6 +178,7 @@
 		7FA9803A295B23D10053E050 /* ArtemProject */ = {
 			isa = PBXGroup;
 			children = (
+				0012C5FB29713CE800EFE5E1 /* Resourses */,
 				0033E8E6296C02C80095DF7E /* Other */,
 				0033E8D829696A6D0095DF7E /* Screens */,
 				0033E8D4296964F70095DF7E /* Models */,
@@ -261,6 +272,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0033E8D0296964690095DF7E /* RequestModel.swift in Sources */,
+				0012C5FD29713D0200EFE5E1 /* Colors.swift in Sources */,
 				7FA98040295B23D10053E050 /* FilmsGridViewController.swift in Sources */,
 				0033E8D3296964690095DF7E /* NetworkService.swift in Sources */,
 				0033E8EF296DBCD70095DF7E /* TabBarController.swift in Sources */,

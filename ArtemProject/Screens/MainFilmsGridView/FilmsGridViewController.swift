@@ -33,7 +33,7 @@ class FilmsGridViewController: UIViewController {
         ])
         label.text = "Sorted by:"
         label.textColor = .white
-        marker.setImage(UIImage(systemName: "paperplane"), for: .normal)
+        marker.setImage(UIImage(systemName: "arrow.down"), for: .normal)
         sortButton.setTitle("Default", for: .normal)
         sortButton.setTitleColor(.white, for: .normal)
         sortButton.addTarget(self, action: #selector(sortButtonAction), for: .touchDown)

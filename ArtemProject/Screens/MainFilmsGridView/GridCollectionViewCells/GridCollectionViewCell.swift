@@ -60,7 +60,6 @@ class GridCollectionViewCell: UICollectionViewCell {
         image.contentMode = .scaleAspectFill
         
         label.font = .systemFont(ofSize: 16, weight: .semibold)
-//        label.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.4)
         label.textColor = .white
         label.textAlignment = .center
         label.lineBreakMode = .byTruncatingTail
