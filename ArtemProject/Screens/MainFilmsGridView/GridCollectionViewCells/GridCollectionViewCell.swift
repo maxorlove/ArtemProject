@@ -12,6 +12,7 @@ class GridCollectionViewCell: UICollectionViewCell {
    
     private let image = UIImageView()
     private let label = UILabel()
+    private let yearLabel = UILabel()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -29,7 +30,7 @@ class GridCollectionViewCell: UICollectionViewCell {
     }
     
     private func addSubviews() {
-        [image, label].forEach {
+        [image, label, yearLabel].forEach {
             contentView.addSubview($0)
             $0.translatesAutoresizingMaskIntoConstraints = false
         }
@@ -43,9 +44,14 @@ class GridCollectionViewCell: UICollectionViewCell {
             image.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
             
             label.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
-            label.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
+            label.bottomAnchor.constraint(equalTo: yearLabel.topAnchor),
             label.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 3),
             label.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -3),
+            
+            yearLabel.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
+            yearLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 3),
+            yearLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -3),
+            yearLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
         ])
     }
     
@@ -54,16 +60,20 @@ class GridCollectionViewCell: UICollectionViewCell {
         image.contentMode = .scaleAspectFill
         
         label.font = .systemFont(ofSize: 16, weight: .semibold)
-        label.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.4)
         label.textColor = .white
         label.textAlignment = .center
         label.lineBreakMode = .byTruncatingTail
         label.minimumScaleFactor = 0.5
         label.adjustsFontSizeToFitWidth = true
+
+        yearLabel.font = .systemFont(ofSize: 8, weight: .bold)
+        yearLabel.textAlignment = .center
+        yearLabel.textColor = .darkGray
     }
     
     func configure(with item: Item) {
         label.text = item.title
+        yearLabel.text = item.releaseDate
         guard let poster = item.posterPath else {return}
         setImage(path: poster)
     }
@@ -76,6 +86,7 @@ class GridCollectionViewCell: UICollectionViewCell {
     override func prepareForReuse() {
         super.prepareForReuse()
         label.text = nil
+        yearLabel.text = nil
         image.sd_cancelCurrentImageLoad()
         image.image = nil
     }
