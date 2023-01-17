@@ -62,7 +62,7 @@ class FilmsGridViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setup()
-        loadData(for: currentPage)
+        loadData(for: currentPage, sortStyle: currentSortStyle)
     }
     
     private func setup() {
@@ -84,7 +84,7 @@ class FilmsGridViewController: UIViewController {
             sortView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             sortView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             sortView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            sortView.heightAnchor.constraint(equalToConstant: UIScreen.main.bounds.height/20),
+            sortView.heightAnchor.constraint(equalToConstant: 64),
             
             filmsCollectionView.topAnchor.constraint(equalTo: sortView.bottomAnchor),
             filmsCollectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
@@ -99,39 +99,43 @@ class FilmsGridViewController: UIViewController {
         filmsCollectionView.register(GridCollectionViewCell.self, forCellWithReuseIdentifier: Constants.gridCellReuseId)
     }
     
-    private func updateDataSourse(result: Result<AllFilmsResponce, ErrorModel>) {
-        switch result {
-        case .success(let response):
-            DispatchQueue.main.async {
-                self.dataSourse.append(contentsOf: response.results)
-                self.totalPages = response.totalPages
-                self.filmsCollectionView.reloadData()
-            }
-        case .failure(let error):
-            self.errorAlert(error: error)
-        }
-    }
-    
-    private func loadData(for page: Int) {
-        networkClient.getPopularMovies(page: page) { [weak self] result in
-            self?.updateDataSourse(result: result)
-        }
-    }
-    
     private func loadData(for page: Int, sortStyle: SortEnum) {
         switch sortStyle {
         case .def:
             networkClient.getPopularMovies(page: page) { [weak self] result in
-                self?.updateDataSourse(result: result)
+                switch result {
+                case .success(let response):
+                    self?.reloadDataSourse(response: response)
+                case .failure(let error):
+                    self?.errorAlert(error: error)
+                }
             }
         case .topRated:
             networkClient.getTopRated(page: page) { [weak self] result in
-                self?.updateDataSourse(result: result)
+                switch result {
+                case .success(let response):
+                    self?.reloadDataSourse(response: response)
+                case .failure(let error):
+                    self?.errorAlert(error: error)
+                }
             }
         case .popular:
             networkClient.getNowPlaying(page: page) { [weak self] result in
-                self?.updateDataSourse(result: result)
+                switch result {
+                case .success(let response):
+                    self?.reloadDataSourse(response: response)
+                case .failure(let error):
+                    self?.errorAlert(error: error)
+                }
             }
+        }
+    }
+   
+    private func reloadDataSourse(response: AllFilmsResponse) {
+        DispatchQueue.main.async {
+            self.dataSourse.append(contentsOf: response.results)
+            self.totalPages = response.totalPages
+            self.filmsCollectionView.reloadData()
         }
     }
     

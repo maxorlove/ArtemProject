@@ -100,7 +100,8 @@ class ProfileViewController: UIViewController {
         } else {
             navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Edit", image: nil, target: self, action: #selector(swichEdit))
         }
-        headerView.ActionPressed = {[weak self] in
+        
+        headerView.actionPressed = {[weak self] in
             ImagePickerManager().pickImage(self!){ image in
                 self?.headerView.setImage(image: image)
                 self?.profileStruct.image = image
@@ -110,15 +111,11 @@ class ProfileViewController: UIViewController {
     }
     
     private func addStackViews() {
-        var array: [ProfileAttributeView] = []
         AttNameEnum.allCases.forEach {
-            array.append(createProfileAttribute(att: $0))
+            let att = createProfileAttribute(att: $0)
+            att.setEditFlag(edit: editFlag)
+            verticalStackView.addArrangedSubview(att)
         }
-        array.forEach {
-            $0.setEditFlag(edit: editFlag)
-            verticalStackView.addArrangedSubview($0)
-        }
-        
     }
     
     private func prep(attType: AttNameEnum, textValue: String) {
@@ -164,9 +161,9 @@ class ProfileViewController: UIViewController {
     }
     
     func updateStackView() {
-        verticalStackView.arrangedSubviews.forEach { e in
-            if let sv = e as? ProfileAttributeView {
-                sv.configure(type: sv.type!)
+        verticalStackView.arrangedSubviews.forEach {
+            if let sv = $0 as? ProfileAttributeView, let type = sv.type {
+                sv.configure(type: type)
             }
         }
     }

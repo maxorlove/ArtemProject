@@ -14,7 +14,7 @@ class ProfileHeaderView: UIView {
     private let image = UIImageView()
     private let editButton = UIButton()
     private let imageEditButton = UIButton()
-    var ActionPressed: (() -> Void)?
+    var actionPressed: (() -> Void)?
     
     override init(frame: CGRect) {
         super.init(frame: .zero)
@@ -29,7 +29,6 @@ class ProfileHeaderView: UIView {
         setupConstraints()
         setupLabels()
         setupImages()
-//        setupButton()
         setEditFlag(edit: editFlag)
     }
     
@@ -80,13 +79,13 @@ class ProfileHeaderView: UIView {
     private func setupButton() {
         editButton.setImage(UIImage(systemName: "pencil"), for: .normal)
         editButton.tintColor = .black
-        editButton.addTarget(self, action: #selector(buttonAction), for: .touchDown)
+        editButton.addTarget(self, action: #selector(buttonAction), for: .touchUpInside)
         editButton.isHidden = !editFlag
         editButton.isEnabled = editFlag
         
         imageEditButton.setImage(UIImage(systemName: "pencil"), for: .normal)
         imageEditButton.tintColor = .white
-        imageEditButton.addTarget(self, action: #selector(buttonAction), for: .touchDown)
+        imageEditButton.addTarget(self, action: #selector(buttonAction), for: .touchUpInside)
         imageEditButton.isHidden = !editFlag
         imageEditButton.isEnabled = editFlag
         imageEditButton.layer.masksToBounds = true
@@ -101,7 +100,7 @@ class ProfileHeaderView: UIView {
     
     @objc
     private func buttonAction() {
-        ActionPressed?()
+        actionPressed?()
     }
     
     func setImage(image: UIImage) {

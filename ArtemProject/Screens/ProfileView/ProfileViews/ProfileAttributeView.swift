@@ -12,6 +12,7 @@ class ProfileAttributeView: UIView {
     var didEndEditAction: ((AttNameEnum, String) -> Void)?
     var type: AttNameEnum?
     
+    let defaults = UserDefaults.standard
     private let label = UILabel()
     private let value = UITextField()
     private let editButton = UIButton()
@@ -67,7 +68,7 @@ class ProfileAttributeView: UIView {
     private func setupButton() {
         editButton.setImage(UIImage(systemName: "pencil"), for: .normal)
         editButton.tintColor = .black
-        editButton.addTarget(self, action: #selector(buttonAction), for: .touchDown)
+        editButton.addTarget(self, action: #selector(buttonAction), for: .touchUpInside)
         editButton.isHidden = !editFlag
         editButton.isEnabled = editFlag
     }
@@ -80,46 +81,35 @@ class ProfileAttributeView: UIView {
     
     func setEditFlag(edit: Bool) {
         editFlag = edit
-        setupButton()
+        editButton.isHidden = !editFlag
+        editButton.isEnabled = editFlag
     }
     
     func configure(type: AttNameEnum) {
-        let defaults = UserDefaults.standard
         self.label.text = type.rawValue
         self.type = type
         switch type {
         case .name:
-            if let savedValue = defaults.string(forKey: "\(type)") {
-                self.value.text = savedValue
-                self.didEndEditAction!(type, savedValue)
-            } else {
-                self.value.placeholder = "\(type)"
-            }
+            setLabel(type: type)
         case .email:
-            if let savedValue = defaults.string(forKey: "\(type)") {
-                self.value.text = savedValue
-                self.didEndEditAction!(type, savedValue)
-            } else {
-                self.value.placeholder = "\(type)"
-            }
+            setLabel(type: type)
         case .title:
-            if let savedValue = defaults.string(forKey: "\(type)") {
-                self.value.text = savedValue
-                self.didEndEditAction!(type, savedValue)
-            } else {
-                self.value.placeholder = "\(type)"
-            }
+            setLabel(type: type)
         case .location:
-            if let savedValue = defaults.string(forKey: "\(type)") {
-                self.value.text = savedValue
-                self.didEndEditAction!(type, savedValue)
-            } else {
-                self.value.placeholder = "\(type)"
-            }
+            setLabel(type: type)
         }
     }
     
-    func setupViews() {
+    private func setLabel(type: AttNameEnum) {
+        if let savedValue = defaults.string(forKey: "\(type)") {
+            self.value.text = savedValue
+            self.didEndEditAction?(type, savedValue)
+        } else {
+            self.value.placeholder = "\(type)"
+        }
+    }
+    
+    private func setupViews() {
         value.isEnabled = false
         value.returnKeyType = .done
     }
@@ -132,8 +122,9 @@ extension ProfileAttributeView: UITextFieldDelegate {
     }
     
     func textFieldDidEndEditing(_ textField: UITextField) {
+        guard let type = self.type else { return }
         value.isEnabled = false
         let text = value.text
-        didEndEditAction?(type!, text ?? "")
+        didEndEditAction?(type, text ?? "")
     }
 }
