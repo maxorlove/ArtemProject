@@ -36,7 +36,7 @@ class FilmsGridViewController: UIViewController {
         marker.setImage(UIImage(systemName: "paperplane"), for: .normal)
         sortButton.setTitle("Default", for: .normal)
         sortButton.setTitleColor(.white, for: .normal)
-        sortButton.addTarget(self, action: #selector(sortButtonAction), for: .touchDown)
+        sortButton.addTarget(self, action: #selector(sortButtonAction), for: .touchUpInside)
         return sortView
     }()
     
@@ -78,7 +78,7 @@ class FilmsGridViewController: UIViewController {
             sortView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             sortView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             sortView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            sortView.heightAnchor.constraint(equalToConstant: UIScreen.main.bounds.height/20),
+            sortView.heightAnchor.constraint(equalToConstant: 64),
             
             filmsCollectionView.topAnchor.constraint(equalTo: sortView.bottomAnchor),
             filmsCollectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
@@ -99,11 +99,7 @@ class FilmsGridViewController: UIViewController {
             networkClient.getPopularMovies(page: page) { [weak self] result in
                 switch result {
                 case .success(let response):
-                    DispatchQueue.main.async {
-                        self?.dataSourse.append(contentsOf: response.results)
-                        self?.totalPages = response.totalPages
-                        self?.filmsCollectionView.reloadData()
-                    }
+                    self?.reloadDataSourse(response: response)
                 case .failure(let error):
                     self?.errorAlert(error: error)
                 }
@@ -112,11 +108,7 @@ class FilmsGridViewController: UIViewController {
             networkClient.getTopRated(page: page) { [weak self] result in
                 switch result {
                 case .success(let response):
-                    DispatchQueue.main.async {
-                        self?.dataSourse.append(contentsOf: response.results)
-                        self?.totalPages = response.totalPages
-                        self?.filmsCollectionView.reloadData()
-                    }
+                    self?.reloadDataSourse(response: response)
                 case .failure(let error):
                     self?.errorAlert(error: error)
                 }
@@ -125,45 +117,28 @@ class FilmsGridViewController: UIViewController {
             networkClient.getNowPlaying(page: page) { [weak self] result in
                 switch result {
                 case .success(let response):
-                    DispatchQueue.main.async {
-                        self?.dataSourse.append(contentsOf: response.results)
-                        self?.totalPages = response.totalPages
-                        self?.filmsCollectionView.reloadData()
-                    }
+                    self?.reloadDataSourse(response: response)
                 case .failure(let error):
                     self?.errorAlert(error: error)
                 }
             }
         }
     }
+   
+    private func reloadDataSourse(response: AllFilmsResponse) {
+        DispatchQueue.main.async {
+            self.dataSourse.append(contentsOf: response.results)
+            self.totalPages = response.totalPages
+            self.filmsCollectionView.reloadData()
+        }
+    }
     
-    func errorAlert(error: ErrorModel) {
+    private func errorAlert(error: ErrorModel) {
         let alert = UIAlertController(title: "Error", message: error.localizedDescription, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { _ in
         }))
         DispatchQueue.main.async {
             self.present(alert, animated: true, completion: nil)
-        }
-    }
-    
-    private func loadData(for page: Int) {
-        networkClient.getPopularMovies(page: page) { [weak self] result in
-            switch result {
-            case .success(let response):
-                DispatchQueue.main.async {
-                    self?.dataSourse.append(contentsOf: response.results)
-                    self?.totalPages = response.totalPages
-                    self?.filmsCollectionView.reloadData()
-                }
-            case .failure(let error):
-                let alert = UIAlertController(title: "Error", message: error.localizedDescription, preferredStyle: .alert)
-                alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { _ in
-                }))
-                DispatchQueue.main.async {
-                    self?.present(alert, animated: true, completion: nil)
-                }
-                break
-            }
         }
     }
 }
