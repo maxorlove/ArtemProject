@@ -205,10 +205,10 @@ extension FilmsGridViewController: UICollectionViewDelegateFlowLayout {
     }
     
     private func updateConstants() {
-        if Constants.numberOfItemsInRow < 3 {
-            Constants.numberOfItemsInRow += 1
+        if Constants.numberOfItemsInRow > 1 {
+            Constants.numberOfItemsInRow -= 1
         } else {
-            Constants.numberOfItemsInRow = 1
+            Constants.numberOfItemsInRow = 3
         }
         Constants.itemSize = (UIScreen.main.bounds.width / Constants.numberOfItemsInRow) - Constants.spacing
     }
