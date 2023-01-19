@@ -97,7 +97,7 @@ class FilmsGridViewController: UIViewController {
             newSortView.bottomAnchor.constraint(equalTo: filmsCollectionView.bottomAnchor, constant: -6),
             newSortView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 32),
             newSortView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -32),
-            newSortView.heightAnchor.constraint(equalToConstant: 32),
+            newSortView.topAnchor.constraint(lessThanOrEqualTo: view.topAnchor)
         ])
     }
     

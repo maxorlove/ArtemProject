@@ -14,7 +14,6 @@ class SortView: UIView {
     
     private let sortButton = UIButton()
     private let gridChangeButton = UIButton()
-    private var stackConstArray: [NSLayoutConstraint] = []
     
     private let verticalStackView: UIStackView = {
         let stack = UIStackView()
@@ -49,17 +48,17 @@ class SortView: UIView {
         NSLayoutConstraint.activate([
             sortButton.leadingAnchor.constraint(equalTo: leadingAnchor),
             sortButton.bottomAnchor.constraint(equalTo: bottomAnchor),
-            sortButton.topAnchor.constraint(equalTo: topAnchor),
             sortButton.heightAnchor.constraint(equalTo: gridChangeButton.heightAnchor),
             
             gridChangeButton.leadingAnchor.constraint(equalTo: sortButton.trailingAnchor, constant: 6),
             gridChangeButton.bottomAnchor.constraint(equalTo: bottomAnchor),
             gridChangeButton.trailingAnchor.constraint(equalTo: trailingAnchor),
             gridChangeButton.heightAnchor.constraint(equalTo: gridChangeButton.widthAnchor),
+            
+            verticalStackView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            verticalStackView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            verticalStackView.bottomAnchor.constraint(equalTo: sortButton.topAnchor, constant: -3)
         ])
-        stackConstArray.append(verticalStackView.leadingAnchor.constraint(equalTo: sortButton.leadingAnchor))
-        stackConstArray.append(verticalStackView.trailingAnchor.constraint(equalTo: sortButton.trailingAnchor))
-        stackConstArray.append(verticalStackView.bottomAnchor.constraint(equalTo: sortButton.topAnchor, constant: -3))
     }
     
     private func setupViews() {
@@ -86,7 +85,6 @@ class SortView: UIView {
                 addArrangedSubview(sortStyle: $0, tag: tag)
                 tag += 1
             }
-            NSLayoutConstraint.activate(stackConstArray)
         }
     }
     
@@ -104,7 +102,6 @@ class SortView: UIView {
             verticalStackView.removeArrangedSubview($0)
             $0.removeFromSuperview()
         }
-        NSLayoutConstraint.deactivate(stackConstArray)
     }
     
     @objc
