@@ -11,6 +11,8 @@ class FilmsGridViewController: UIViewController {
     
     private var currentSortStyle: SortEnum = .def
     
+    private let newSortView = SortView()
+    
     private let sortView: UIView = {
         let sortView = UIView()
         let label = UILabel()
@@ -69,11 +71,12 @@ class FilmsGridViewController: UIViewController {
         view.backgroundColor = Colors.primaryBackgroundColor
         addSubviews()
         setupConstraints()
+        setupViews()
         setupColectionViews()
     }
     
     private func addSubviews() {
-        [filmsCollectionView, sortView].forEach {
+        [filmsCollectionView, sortView, newSortView].forEach {
             view.addSubview($0)
             $0.translatesAutoresizingMaskIntoConstraints = false
         }
@@ -90,7 +93,24 @@ class FilmsGridViewController: UIViewController {
             filmsCollectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
             filmsCollectionView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
             filmsCollectionView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+            
+            newSortView.bottomAnchor.constraint(equalTo: filmsCollectionView.bottomAnchor, constant: -6),
+            newSortView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 32),
+            newSortView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -32),
+            newSortView.heightAnchor.constraint(equalToConstant: 32),
         ])
+    }
+    
+    private func setupViews() {
+        newSortView.gridSizeChangeAction = {[weak self] in
+            self?.updateConstants()
+            self?.filmsCollectionView.reloadData()
+        }
+        newSortView.sortButtonChoseAction = {[weak self] sort in
+            self?.currentSortStyle = sort
+            self?.dataSourse.removeAll()
+            self?.loadData(for: 1, sortStyle: sort)
+        }
     }
     
     private func setupColectionViews() {

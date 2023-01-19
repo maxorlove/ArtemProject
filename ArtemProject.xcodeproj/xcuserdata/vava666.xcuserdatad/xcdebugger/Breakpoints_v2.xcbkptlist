@@ -36,5 +36,53 @@
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "0F5D5227-A1E7-4944-AF89-BB4A55425689"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "ArtemProject/Screens/MainFilmsGridView/GridCollectionOtherViews/SotrView.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "117"
+            endingLineNumber = "117"
+            landmarkName = "choseSortStyle(sender:)"
+            landmarkType = "9">
+            <Locations>
+               <Location
+                  uuid = "0F5D5227-A1E7-4944-AF89-BB4A55425689 - a8567444618d05ed"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "ArtemProject.SortView.deactivateStackView() -&gt; ()"
+                  moduleName = "ArtemProject"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/vava666/Desktop/LearningSwift/ArtemProject/ArtemProject/Screens/MainFilmsGridView/GridCollectionOtherViews/SotrView.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "102"
+                  endingLineNumber = "102"
+                  offsetFromSymbolStart = "44">
+               </Location>
+               <Location
+                  uuid = "0F5D5227-A1E7-4944-AF89-BB4A55425689 - e400d6d8c5db8d00"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (__C.UIView) -&gt; () in ArtemProject.SortView.deactivateStackView() -&gt; ()"
+                  moduleName = "ArtemProject"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/vava666/Desktop/LearningSwift/ArtemProject/ArtemProject/Screens/MainFilmsGridView/GridCollectionOtherViews/SotrView.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "103"
+                  endingLineNumber = "103"
+                  offsetFromSymbolStart = "48">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
    </Breakpoints>
 </Bucket>
