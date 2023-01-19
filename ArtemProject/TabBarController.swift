@@ -14,14 +14,17 @@ class TabBarController: UITabBarController {
         setup()
     }
     
-    func setup() {
+    private func setup() {
         let pv = ProfileViewController()
         pv.setViewTitle(title: "Profile")
         pv.setEditFlag(edit: false)
         let profileViewController = UINavigationController(rootViewController: pv)
         profileViewController.tabBarItem.title = "Profile"
         profileViewController.tabBarItem.image = UIImage(named: "star")
-        let filmsGridViewController = FilmsGridViewController()
+        
+        let fv = FilmsGridViewController()
+        fv.setViewTitle(title: "Movies")
+        let filmsGridViewController = UINavigationController(rootViewController: fv)
         filmsGridViewController.tabBarItem.title = "Films list"
         filmsGridViewController.tabBarItem.image = UIImage(named: "star")
         self.viewControllers = [filmsGridViewController, profileViewController]

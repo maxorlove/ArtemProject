@@ -69,11 +69,26 @@ class SortView: UIView {
     private func setupButtons() {
         sortButton.backgroundColor = Colors.primarySurfaceColor
         sortButton.setTitle("Sorting", for: .normal)
+        sortButton.setTitleColor(Colors.primaryTextOnSurfaceColor, for: .normal)
+        sortButton.layer.cornerRadius = 10
+        sortButton.clipsToBounds = false
         sortButton.addTarget(self, action: #selector(activateStackView), for: .touchUpInside)
         
+        sortButton.layer.shadowColor = CGColor(red: 0, green: 0, blue: 0, alpha: 1)
+        sortButton.layer.shadowOffset = CGSize(width: 12, height: 8)
+        sortButton.layer.shadowOpacity = 0.8
+        sortButton.layer.shadowRadius = 10
+        
         gridChangeButton.backgroundColor = Colors.primarySurfaceColor
-        gridChangeButton.setTitle("X", for: .normal)
+        gridChangeButton.setImage(UIImage(named: "gridSizeChanger"), for: .normal)
+        gridChangeButton.layer.cornerRadius = 10
+        gridChangeButton.clipsToBounds = false
         gridChangeButton.addTarget(self, action: #selector(gridSizeChangeActionButton), for: .touchUpInside)
+        
+        gridChangeButton.layer.shadowColor = CGColor(red: 0, green: 0, blue: 0, alpha: 1)
+        gridChangeButton.layer.shadowOffset = CGSize(width: 12, height: 8)
+        gridChangeButton.layer.shadowOpacity = 0.8
+        gridChangeButton.layer.shadowRadius = 10
     }
     
     @objc
@@ -92,6 +107,7 @@ class SortView: UIView {
     
     private func addArrangedSubview(sortStyle: SortEnum, tag: Int) {
         let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
         button.backgroundColor = Colors.primarySurfaceColor
         button.setTitle(sortStyle.rawValue, for: .normal)
         button.tag = tag

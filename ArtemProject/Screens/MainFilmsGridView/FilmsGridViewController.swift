@@ -11,42 +11,7 @@ class FilmsGridViewController: UIViewController {
     
     private var currentSortStyle: SortEnum = .def
     
-    private let newSortView = SortView()
-    
-    private let sortView: UIView = {
-        let sortView = UIView()
-        let label = UILabel()
-        let gridSizeChangeButton = UIButton()
-        let sortButton = UIButton()
-        [label, gridSizeChangeButton, sortButton].forEach {
-            sortView.addSubview($0)
-            $0.translatesAutoresizingMaskIntoConstraints = false
-        }
-        NSLayoutConstraint.activate([
-            label.leadingAnchor.constraint(equalTo: sortView.leadingAnchor, constant: 3),
-            label.topAnchor.constraint(equalTo: sortView.topAnchor),
-            label.centerYAnchor.constraint(equalTo: sortView.centerYAnchor),
-            
-            sortButton.leadingAnchor.constraint(equalTo: label.trailingAnchor, constant: 3),
-            sortButton.topAnchor.constraint(equalTo: sortView.topAnchor),
-            sortButton.trailingAnchor.constraint(lessThanOrEqualTo: gridSizeChangeButton.leadingAnchor),
-            sortButton.centerYAnchor.constraint(equalTo: sortView.centerYAnchor),
-            
-            gridSizeChangeButton.trailingAnchor.constraint(equalTo: sortView.trailingAnchor, constant: -3),
-            gridSizeChangeButton.topAnchor.constraint(equalTo: sortView.topAnchor),
-            gridSizeChangeButton.centerYAnchor.constraint(equalTo: sortView.centerYAnchor),
-            
-
-        ])
-        label.text = "Sorted by:"
-        label.textColor = Colors.primaryTextOnBackgroundColor
-        gridSizeChangeButton.setImage(UIImage(named: "gridSizeChanger"), for: .normal)
-        gridSizeChangeButton.addTarget(self, action: #selector(gridSizeChangeAction), for: .touchDown)
-        sortButton.setTitle("Default", for: .normal)
-        sortButton.setTitleColor(Colors.primaryTextOnBackgroundColor, for: .normal)
-        sortButton.addTarget(self, action: #selector(sortButtonAction), for: .touchDown)
-        return sortView
-    }()
+    private let sortView = SortView()
     
     private let filmsCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
@@ -76,7 +41,7 @@ class FilmsGridViewController: UIViewController {
     }
     
     private func addSubviews() {
-        [filmsCollectionView, sortView, newSortView].forEach {
+        [filmsCollectionView, sortView].forEach {
             view.addSubview($0)
             $0.translatesAutoresizingMaskIntoConstraints = false
         }
@@ -84,29 +49,24 @@ class FilmsGridViewController: UIViewController {
     
     private func setupConstraints() {
         NSLayoutConstraint.activate([
-            sortView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            sortView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            sortView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            sortView.heightAnchor.constraint(equalToConstant: 64),
-            
-            filmsCollectionView.topAnchor.constraint(equalTo: sortView.bottomAnchor),
+            filmsCollectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             filmsCollectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
             filmsCollectionView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
             filmsCollectionView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
             
-            newSortView.bottomAnchor.constraint(equalTo: filmsCollectionView.bottomAnchor, constant: -6),
-            newSortView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 32),
-            newSortView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -32),
-            newSortView.heightAnchor.constraint(equalToConstant: 32),
+            sortView.bottomAnchor.constraint(equalTo: filmsCollectionView.bottomAnchor, constant: -6),
+            sortView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 32),
+            sortView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -32),
+            sortView.heightAnchor.constraint(equalToConstant: 32),
         ])
     }
     
     private func setupViews() {
-        newSortView.gridSizeChangeAction = {[weak self] in
+        sortView.gridSizeChangeAction = { [weak self] in
             self?.updateConstants()
             self?.filmsCollectionView.reloadData()
         }
-        newSortView.sortButtonChoseAction = {[weak self] sort in
+        sortView.sortButtonChoseAction = { [weak self] sort in
             self?.currentSortStyle = sort
             self?.dataSourse.removeAll()
             self?.loadData(for: 1, sortStyle: sort)
@@ -117,6 +77,10 @@ class FilmsGridViewController: UIViewController {
         filmsCollectionView.delegate = self
         filmsCollectionView.dataSource = self
         filmsCollectionView.register(GridCollectionViewCell.self, forCellWithReuseIdentifier: Constants.gridCellReuseId)
+    }
+    
+    func setViewTitle(title: String) {
+        self.title = title
     }
     
     private func loadData(for page: Int, sortStyle: SortEnum) {
