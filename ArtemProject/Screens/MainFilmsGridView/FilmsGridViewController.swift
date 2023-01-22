@@ -9,23 +9,20 @@ import UIKit
 
 class FilmsGridViewController: UIViewController {
     
-    private var currentSortStyle: SortEnum = .def
+    private let networkClient = NetworkServiceImpl()
     
-    private let sortView = SortView()
-    
+    private let sortView = SortActionView()
     private let filmsCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         let collection = UICollectionView(frame: .zero, collectionViewLayout: layout)
         return collection
     }()
     
+    private var currentSortStyle: SortEnum = .def
     private var currentPage: Int = 1
     private var totalPages: Int = 1
-    
     private var dataSourse: [Item] = []
-    
-    private let networkClient = NetworkServiceImpl()
-    
+     
     override func viewDidLoad() {
         super.viewDidLoad()
         setup()
@@ -33,7 +30,6 @@ class FilmsGridViewController: UIViewController {
     }
     
     private func setup() {
-        view.backgroundColor = Colors.primaryBackgroundColor
         addSubviews()
         setupConstraints()
         setupViews()
@@ -51,25 +47,25 @@ class FilmsGridViewController: UIViewController {
         NSLayoutConstraint.activate([
             filmsCollectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             filmsCollectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
-            filmsCollectionView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
-            filmsCollectionView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+            filmsCollectionView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: Constants.border),
+            filmsCollectionView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -Constants.border),
             
             sortView.bottomAnchor.constraint(equalTo: filmsCollectionView.bottomAnchor, constant: -6),
-            sortView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 32),
-            sortView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -32),
-            sortView.heightAnchor.constraint(equalToConstant: 32),
+            sortView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 104),
+            sortView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -104),
+            sortView.heightAnchor.constraint(equalToConstant: 48),
         ])
     }
     
     private func setupViews() {
+        view.backgroundColor = Colors.primaryBackgroundColor
+        navigationController?.navigationBar.prefersLargeTitles = true
+        
         sortView.gridSizeChangeAction = { [weak self] in
-            self?.updateConstants()
-            self?.filmsCollectionView.reloadData()
+            self?.gridSizeChangeAction()
         }
-        sortView.sortButtonChoseAction = { [weak self] sort in
-            self?.currentSortStyle = sort
-            self?.dataSourse.removeAll()
-            self?.loadData(for: 1, sortStyle: sort)
+        sortView.sortButtonChoseAction = { [weak self] in
+            self?.sortButtonAction()
         }
     }
     
@@ -77,10 +73,12 @@ class FilmsGridViewController: UIViewController {
         filmsCollectionView.delegate = self
         filmsCollectionView.dataSource = self
         filmsCollectionView.register(GridCollectionViewCell.self, forCellWithReuseIdentifier: Constants.gridCellReuseId)
+        filmsCollectionView.register(GridSingleViewCell.self, forCellWithReuseIdentifier: Constants.singleCellReuseId)
     }
     
     func setViewTitle(title: String) {
         self.title = title
+        self.sortView.changeImgButton(gridType: Constants.gridType)
     }
     
     private func loadData(for page: Int, sortStyle: SortEnum) {
@@ -114,7 +112,7 @@ class FilmsGridViewController: UIViewController {
             }
         }
     }
-   
+    
     private func reloadDataSourse(response: AllFilmsResponse) {
         DispatchQueue.main.async {
             self.dataSourse.append(contentsOf: response.results)
@@ -131,6 +129,37 @@ class FilmsGridViewController: UIViewController {
             self.present(alert, animated: true, completion: nil)
         }
     }
+    
+    private func sortButtonAction() {
+        let alert = UIAlertController(title: "Sort movies:", message: nil, preferredStyle: UIAlertController.Style.actionSheet)
+        alert.addAction(UIAlertAction(title: "Top rated", style: UIAlertAction.Style.default, handler: { action in
+            self.currentSortStyle = .topRated
+            self.dataSourse.removeAll()
+            self.loadData(for: 1, sortStyle: .topRated)
+            self.sortView.changeSortLabel(sortStyle: .topRated)
+        }))
+        alert.addAction(UIAlertAction(title: "Popular", style: UIAlertAction.Style.default, handler: { action in
+            self.currentSortStyle = .popular
+            self.dataSourse.removeAll()
+            self.loadData(for: 1, sortStyle: .popular)
+            self.sortView.changeSortLabel(sortStyle: .popular)
+        }))
+        self.present(alert, animated: true, completion: nil)
+    }
+    
+    private func gridSizeChangeAction() {
+        self.updateConstants()
+        self.filmsCollectionView.reloadData()
+        self.sortView.changeImgButton(gridType: Constants.gridType)
+    }
+    
+    private func updateConstants() {
+        switch Constants.gridType {
+            case .single: Constants.gridType = .double
+            case .double: Constants.gridType = .single
+        }
+        Constants.itemSize = (UIScreen.main.bounds.width / CGFloat(Constants.gridType.rawValue)) - Constants.spacing - Constants.border
+    }
 }
 
 extension FilmsGridViewController: UICollectionViewDataSource {
@@ -139,16 +168,44 @@ extension FilmsGridViewController: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = filmsCollectionView.dequeueReusableCell(withReuseIdentifier: Constants.gridCellReuseId, for: indexPath) as! GridCollectionViewCell
         let model = dataSourse[indexPath.row]
-        cell.configure(with: model)
-        return cell
+        
+        switch Constants.gridType {
+        case .single:
+            let cell = filmsCollectionView.dequeueReusableCell(withReuseIdentifier: Constants.singleCellReuseId, for: indexPath) as! GridSingleViewCell
+            cell.configure(with: model)
+            return cell
+        case .double:
+            let cell = filmsCollectionView.dequeueReusableCell(withReuseIdentifier: Constants.gridCellReuseId, for: indexPath) as! GridCollectionViewCell
+            cell.configure(with: model)
+            return cell
+        }
+    }
+    
+    private func showDetails(item: Item) {
+        
+        networkClient.getDetails(id: item.id) { [weak self] result in
+            switch result {
+            case .success(let response):
+                DispatchQueue.main.async {
+                    let filmDetailController = FilmDetailController()
+                    filmDetailController.configure(with: response)
+                    self?.navigationController?.pushViewController(filmDetailController, animated: true)
+//                    self?.present(filmDetailController, animated: true)
+                }
+            case .failure(let error):
+                self?.errorAlert(error: error)
+            }
+        }
     }
 }
 
 extension FilmsGridViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: Constants.itemSize, height: Constants.itemSize * 3 / 2)
+        switch Constants.gridType {
+        case .single: return CGSize(width: Constants.itemSize, height: Constants.itemSize / 2)
+        case .double: return CGSize(width: Constants.itemSize, height: Constants.itemSize * 3 / 2)
+        }
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
@@ -160,47 +217,24 @@ extension FilmsGridViewController: UICollectionViewDelegateFlowLayout {
     }
     
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        if dataSourse.count - Int(Constants.numberOfItemsInRow) == indexPath.row, currentPage < totalPages {
+        if dataSourse.count - Int(Constants.gridType.rawValue) == indexPath.row, currentPage < totalPages {
             currentPage += 1
             loadData(for: currentPage, sortStyle: currentSortStyle)
         }
     }
     
-    @objc
-    func sortButtonAction() {
-        let alert = UIAlertController(title: "Sort movies:", message: nil, preferredStyle: UIAlertController.Style.actionSheet)
-        alert.addAction(UIAlertAction(title: "Top rated", style: UIAlertAction.Style.default, handler: { action in
-            self.currentSortStyle = .topRated
-            self.dataSourse.removeAll()
-            self.loadData(for: 1, sortStyle: .topRated)
-        }))
-        alert.addAction(UIAlertAction(title: "Popular", style: UIAlertAction.Style.default, handler: { action in
-            self.currentSortStyle = .popular
-            self.dataSourse.removeAll()
-            self.loadData(for: 1, sortStyle: .popular)
-        }))
-        self.present(alert, animated: true, completion: nil)
-    }
-    
-    @objc
-    func gridSizeChangeAction() {
-        self.updateConstants()
-        self.filmsCollectionView.reloadData()
-    }
-    
-    private func updateConstants() {
-        if Constants.numberOfItemsInRow > 1 {
-            Constants.numberOfItemsInRow -= 1
-        } else {
-            Constants.numberOfItemsInRow = 3
-        }
-        Constants.itemSize = (UIScreen.main.bounds.width / Constants.numberOfItemsInRow) - Constants.spacing
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let index = indexPath.row
+        let item = dataSourse[index]
+        showDetails(item: item)
     }
 }
 
 private enum Constants {
     static let gridCellReuseId = "GridCollectionViewCellIdentifier"
-    static let spacing: CGFloat = 2
-    static var numberOfItemsInRow: CGFloat = 2
-    static var itemSize: CGFloat = (UIScreen.main.bounds.width / numberOfItemsInRow) - spacing
+    static let singleCellReuseId = "SingleCellReuseId"
+    static var gridType: GridType = .double
+    static let spacing: CGFloat = 3
+    static let border: CGFloat = 3
+    static var itemSize: CGFloat = (UIScreen.main.bounds.width / CGFloat(gridType.rawValue)) - spacing - border
 }

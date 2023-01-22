@@ -11,8 +11,11 @@ import SDWebImage
 class GridCollectionViewCell: UICollectionViewCell {
    
     private let image = UIImageView()
-    private let label = UILabel()
-    private let yearLabel = UILabel()
+    private let labelView = UIView()
+    private let labelText = UILabel()
+    private let ratingView = UIView()
+    private let ratingLabel = UILabel()
+    private let ratingImg = UIImageView()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -30,7 +33,15 @@ class GridCollectionViewCell: UICollectionViewCell {
     }
     
     private func addSubviews() {
-        [image, label, yearLabel].forEach {
+        labelView.addSubview(labelText)
+        labelText.translatesAutoresizingMaskIntoConstraints = false
+        
+        [ratingImg, ratingLabel].forEach {
+            ratingView.addSubview($0)
+            $0.translatesAutoresizingMaskIntoConstraints = false
+        }
+        
+        [image, labelView, ratingView].forEach {
             contentView.addSubview($0)
             $0.translatesAutoresizingMaskIntoConstraints = false
         }
@@ -43,37 +54,59 @@ class GridCollectionViewCell: UICollectionViewCell {
             image.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             image.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
             
-            label.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
-            label.bottomAnchor.constraint(equalTo: yearLabel.topAnchor),
-            label.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 3),
-            label.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -3),
+            labelView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -4),
+            labelView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 4),
+            labelView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -4),
+            labelView.heightAnchor.constraint(equalToConstant: contentView.frame.height / 4.5),
             
-            yearLabel.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
-            yearLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 3),
-            yearLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -3),
-            yearLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
+            labelText.centerXAnchor.constraint(equalTo: labelView.centerXAnchor),
+            labelView.centerYAnchor.constraint(equalTo: labelView.centerYAnchor),
+            labelText.leadingAnchor.constraint(equalTo: labelView.leadingAnchor, constant: 12),
+            labelText.trailingAnchor.constraint(equalTo: labelView.trailingAnchor, constant: -12),
+            labelText.topAnchor.constraint(equalTo: labelView.topAnchor, constant: 4),
+            labelText.bottomAnchor.constraint(equalTo: labelView.bottomAnchor, constant: -4),
+            
+            ratingView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 4),
+            ratingView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -4),
+            ratingView.widthAnchor.constraint(equalToConstant: contentView.frame.width / 3),
+            ratingView.heightAnchor.constraint(equalToConstant: 32),
+            
+            ratingImg.centerYAnchor.constraint(equalTo: ratingView.centerYAnchor),
+            ratingImg.leadingAnchor.constraint(equalTo: ratingView.leadingAnchor, constant: 6),
+            
+            ratingLabel.centerYAnchor.constraint(equalTo: ratingView.centerYAnchor),
+            ratingLabel.trailingAnchor.constraint(equalTo: ratingView.trailingAnchor, constant: -6),
         ])
     }
     
     private func setupView() {
         image.clipsToBounds = true
-        image.contentMode = .scaleAspectFill
+        image.contentMode = .scaleToFill
+        image.layer.cornerRadius = 16
         
-        label.font = .systemFont(ofSize: 16, weight: .semibold)
-        label.textColor = .white
-        label.textAlignment = .center
-        label.lineBreakMode = .byTruncatingTail
-        label.minimumScaleFactor = 0.5
-        label.adjustsFontSizeToFitWidth = true
+        labelView.backgroundColor = Colors.secondarySurfaceColor
+        labelView.layer.cornerRadius = 13
+        
+        labelText.font = .systemFont(ofSize: 20)
+        labelText.textColor = Colors.accentTextColor
+        labelText.textAlignment = .center
+        labelText.lineBreakMode = .byWordWrapping
+        labelText.numberOfLines = 0
+        labelText.minimumScaleFactor = 0.5
+        labelText.adjustsFontSizeToFitWidth = true
 
-        yearLabel.font = .systemFont(ofSize: 8, weight: .bold)
-        yearLabel.textAlignment = .center
-        yearLabel.textColor = .darkGray
+        ratingView.backgroundColor = Colors.secondarySurfaceColor
+        ratingView.layer.cornerRadius = 13
+        
+        ratingImg.image = UIImage(named: "star")
+        
+        ratingLabel.font = .systemFont(ofSize: 15)
+        ratingLabel.textColor = Colors.accentTextColor
     }
     
     func configure(with item: Item) {
-        label.text = item.title
-        yearLabel.text = item.releaseDate
+        labelText.text = item.title
+        ratingLabel.text = "\(item.voteAverage)"
         guard let poster = item.posterPath else {return}
         setImage(path: poster)
     }
@@ -85,8 +118,8 @@ class GridCollectionViewCell: UICollectionViewCell {
     
     override func prepareForReuse() {
         super.prepareForReuse()
-        label.text = nil
-        yearLabel.text = nil
+        labelText.text = nil
+        ratingLabel.text = nil
         image.sd_cancelCurrentImageLoad()
         image.image = nil
     }

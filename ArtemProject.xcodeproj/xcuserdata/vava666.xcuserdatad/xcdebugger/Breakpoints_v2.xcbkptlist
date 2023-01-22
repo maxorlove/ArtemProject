@@ -46,10 +46,10 @@
             filePath = "ArtemProject/Screens/MainFilmsGridView/GridCollectionOtherViews/SotrView.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "133"
-            endingLineNumber = "133"
-            landmarkName = "unknown"
-            landmarkType = "0">
+            startingLineNumber = "145"
+            endingLineNumber = "145"
+            landmarkName = "SortView"
+            landmarkType = "3">
             <Locations>
                <Location
                   uuid = "0F5D5227-A1E7-4944-AF89-BB4A55425689 - a8567444618d05ed"
@@ -82,6 +82,133 @@
                   offsetFromSymbolStart = "48">
                </Location>
             </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "48E89073-2085-4892-8B62-C5B90B4B983D"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "ArtemProject/Screens/MainFilmsGridView/FilmsGridViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "190"
+            endingLineNumber = "190"
+            landmarkName = "showDetails(item:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "320A4EE8-09CC-411B-AE7B-FEB8C9EE2F7B"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "ArtemProject/Screens/MainFilmsGridView/FilmsGridViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "189"
+            endingLineNumber = "189"
+            landmarkName = "showDetails(item:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "7F72EC2B-17C2-4BA1-AEAD-3F6DAFA0C3AA"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "ArtemProject/Screens/MainFilmsGridView/FilmsGridViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "188"
+            endingLineNumber = "188"
+            landmarkName = "showDetails(item:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "EAA7D541-253E-49A3-BF22-357512F29DAE"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "ArtemProject/Screens/MainFilmsGridView/FilmsGridViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "187"
+            endingLineNumber = "187"
+            landmarkName = "showDetails(item:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "EAA7D541-253E-49A3-BF22-357512F29DAE - a8790a2f1011b955"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "ArtemProject.FilmsGridViewController.showDetails(item: ArtemProject.Item) -&gt; ()"
+                  moduleName = "ArtemProject"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/vava666/Desktop/LearningSwift/ArtemProject/ArtemProject/Screens/MainFilmsGridView/FilmsGridViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "187"
+                  endingLineNumber = "187"
+                  offsetFromSymbolStart = "48">
+               </Location>
+               <Location
+                  uuid = "EAA7D541-253E-49A3-BF22-357512F29DAE - 18388a002761eede"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Swift.Result&lt;ArtemProject.DetailsFilmResponse, ArtemProject.ErrorModel&gt;) -&gt; () in ArtemProject.FilmsGridViewController.showDetails(item: ArtemProject.Item) -&gt; ()"
+                  moduleName = "ArtemProject"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/vava666/Desktop/LearningSwift/ArtemProject/ArtemProject/Screens/MainFilmsGridView/FilmsGridViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "187"
+                  endingLineNumber = "187"
+                  offsetFromSymbolStart = "192">
+               </Location>
+               <Location
+                  uuid = "EAA7D541-253E-49A3-BF22-357512F29DAE - 11b6e8093ff535c5"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 @Swift.MainActor () -&gt; () in closure #1 (Swift.Result&lt;ArtemProject.DetailsFilmResponse, ArtemProject.ErrorModel&gt;) -&gt; () in ArtemProject.FilmsGridViewController.showDetails(item: ArtemProject.Item) -&gt; ()"
+                  moduleName = "ArtemProject"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/vava666/Desktop/LearningSwift/ArtemProject/ArtemProject/Screens/MainFilmsGridView/FilmsGridViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "187"
+                  endingLineNumber = "187"
+                  offsetFromSymbolStart = "36">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "544A740F-60E5-4A78-8E9E-71E43E3256A1"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "ArtemProject/Screens/MainFilmsGridView/FilmsGridViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "191"
+            endingLineNumber = "191"
+            landmarkName = "showDetails(item:)"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

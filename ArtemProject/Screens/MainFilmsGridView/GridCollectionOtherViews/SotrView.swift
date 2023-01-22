@@ -90,6 +90,26 @@ class SortView: UIView {
         gridChangeButton.layer.shadowRadius = 10
     }
     
+    private func addArrangedSubview(sortStyle: SortEnum, tag: Int) {
+        let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.backgroundColor = Colors.primarySurfaceColor
+        button.setTitle(sortStyle.rawValue, for: .normal)
+        button.tag = tag
+        button.addTarget(self, action: #selector(choseSortStyle), for: .touchUpInside)
+        
+        button.setTitleColor(Colors.primaryTextOnSurfaceColor, for: .normal)
+        button.layer.cornerRadius = 10
+        button.clipsToBounds = false
+        
+        button.layer.shadowColor = CGColor(red: 0, green: 0, blue: 0, alpha: 1)
+        button.layer.shadowOffset = CGSize(width: 12, height: 8)
+        button.layer.shadowOpacity = 0.8
+        button.layer.shadowRadius = 10
+        
+        verticalStackView.addArrangedSubview(button)
+    }
+    
     @objc
     private func activateStackView() {
         if verticalStackView.arrangedSubviews.count != 0 {
@@ -101,16 +121,6 @@ class SortView: UIView {
                 tag += 1
             }
         }
-    }
-    
-    private func addArrangedSubview(sortStyle: SortEnum, tag: Int) {
-        let button = UIButton()
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.backgroundColor = Colors.primarySurfaceColor
-        button.setTitle(sortStyle.rawValue, for: .normal)
-        button.tag = tag
-        button.addTarget(self, action: #selector(choseSortStyle), for: .touchUpInside)
-        verticalStackView.addArrangedSubview(button)
     }
     
     private func deactivateStackView() {
@@ -128,6 +138,8 @@ class SortView: UIView {
     @objc
     private func choseSortStyle(sender: UIButton) {
         deactivateStackView()
-        sortButtonChoseAction?(SortEnum.allCases[sender.tag])
+        let sortStyle = SortEnum.allCases[sender.tag]
+        sortButton.setTitle(sortStyle.rawValue, for: .normal)
+        sortButtonChoseAction?(sortStyle)
     }
 }
