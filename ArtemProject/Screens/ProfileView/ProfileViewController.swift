@@ -7,7 +7,7 @@
 
 import UIKit
 
-class ProfileViewController: UIViewController {
+final class ProfileViewController: UIViewController {
     
     //    MARK: - properties
     var didEndEdit: ((ProfileStruct) -> Void)?

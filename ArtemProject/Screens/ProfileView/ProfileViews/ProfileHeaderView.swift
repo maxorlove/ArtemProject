@@ -7,7 +7,7 @@
 
 import UIKit
 
-class ProfileHeaderView: UIView {
+final class ProfileHeaderView: UIView {
     
     private var editFlag: Bool = false
     private let label = UILabel()
@@ -24,9 +24,9 @@ class ProfileHeaderView: UIView {
     required init?(coder: NSCoder) { fatalError() }
     
     private func setup() {
-        backgroundColor = .lightGray
         addSubViews()
         setupConstraints()
+        setupViews()
         setupLabels()
         setupImages()
         setEditFlag(edit: editFlag)
@@ -61,6 +61,10 @@ class ProfileHeaderView: UIView {
             editButton.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.width / 10),
             editButton.heightAnchor.constraint(equalTo: editButton.widthAnchor)
         ])
+    }
+    
+    private func setupViews() {
+        backgroundColor = Colors.primaryBackgroundColor
     }
     
     private func setupLabels() {

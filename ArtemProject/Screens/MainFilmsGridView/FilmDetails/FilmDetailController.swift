@@ -8,11 +8,16 @@
 import UIKit
 import SDWebImage
 
-class FilmDetailController: UIViewController {
+final class FilmDetailController: UIViewController {
     
     private let scrollView = UIScrollView()
-    private let imageView = UIImageView()
     private let topView = UIView()
+    private let bottomView = UIView()
+    private let imageView = UIImageView()
+    
+    private let blurEffectView = UIVisualEffectView(effect: UIBlurEffect(style: .systemUltraThinMaterialDark))
+    private let backImageView = UIImageView()
+
     private let detailsView: UIStackView = {
         let stack = UIStackView()
         stack.spacing = 8
@@ -37,11 +42,15 @@ class FilmDetailController: UIViewController {
             $0.translatesAutoresizingMaskIntoConstraints = false
             view.addSubview($0)
         }
-        [topView, detailsView].forEach {
+        [topView, bottomView, detailsView].forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false
             scrollView.addSubview($0)
         }
-        [imageView].forEach {
+        [detailsView].forEach {
+            $0.translatesAutoresizingMaskIntoConstraints = false
+            bottomView.addSubview($0)
+        }
+        [backImageView, blurEffectView, imageView].forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false
             topView.addSubview($0)
         }
@@ -60,18 +69,30 @@ class FilmDetailController: UIViewController {
             topView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             topView.heightAnchor.constraint(lessThanOrEqualToConstant: UIScreen.main.bounds.height / 3 * 2),
             
+            blurEffectView.topAnchor.constraint(equalTo: topView.topAnchor),
+            blurEffectView.leadingAnchor.constraint(equalTo: topView.leadingAnchor),
+            blurEffectView.trailingAnchor.constraint(equalTo: topView.trailingAnchor),
+            blurEffectView.bottomAnchor.constraint(equalTo: topView.bottomAnchor),
+            
+            backImageView.topAnchor.constraint(equalTo: topView.topAnchor),
+            backImageView.leadingAnchor.constraint(equalTo: topView.leadingAnchor),
+            backImageView.trailingAnchor.constraint(equalTo: topView.trailingAnchor),
+            backImageView.bottomAnchor.constraint(equalTo: topView.bottomAnchor),
+            
             imageView.topAnchor.constraint(equalTo: topView.topAnchor, constant: 24),
             imageView.leadingAnchor.constraint(equalTo: topView.leadingAnchor, constant: 48),
             imageView.trailingAnchor.constraint(equalTo: topView.trailingAnchor, constant: -48),
             imageView.bottomAnchor.constraint(equalTo: topView.bottomAnchor, constant: -40),
-//            imageView.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.width),
-//            imageView.heightAnchor.constraint(lessThanOrEqualToConstant: UIScreen.main.bounds.height / 3 * 2),
-            
 
-            detailsView.topAnchor.constraint(equalTo: topView.bottomAnchor, constant: -16),
-            detailsView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            detailsView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            detailsView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
+            bottomView.topAnchor.constraint(equalTo: topView.bottomAnchor, constant: -16),
+            bottomView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            bottomView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            bottomView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
+            
+            detailsView.topAnchor.constraint(equalTo: bottomView.topAnchor, constant: 16),
+            detailsView.leadingAnchor.constraint(equalTo: bottomView.leadingAnchor),
+            detailsView.trailingAnchor.constraint(equalTo: bottomView.trailingAnchor),
+            detailsView.bottomAnchor.constraint(equalTo: bottomView.bottomAnchor),
         ])
     }
     
@@ -79,14 +100,17 @@ class FilmDetailController: UIViewController {
         navigationItem.largeTitleDisplayMode = .never
         view.backgroundColor = Colors.primaryBackgroundColor
         detailsView.backgroundColor = Colors.primaryBackgroundColor
-        topView.backgroundColor = Colors.secondarySurfaceColor
+        bottomView.backgroundColor = Colors.primaryBackgroundColor
         
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
         imageView.layer.cornerRadius = 16
         
-        detailsView.layer.cornerRadius = 16
-        detailsView.clipsToBounds = true
+        backImageView.contentMode = .scaleAspectFill
+        backImageView.clipsToBounds = true
+        
+        bottomView.layer.cornerRadius = 16
+        bottomView.clipsToBounds = true
     }
     
     func configure(with item: DetailsFilmResponse) {
@@ -98,6 +122,7 @@ class FilmDetailController: UIViewController {
     private func setImage(path: String) {
         let url = URL(string: "https://image.tmdb.org/t/p/original/\(path)")
         imageView.sd_setImage(with: url)
+        backImageView.sd_setImage(with: url)
     }
     
     private func addArrangedSubviews(item: DetailsFilmResponse) {

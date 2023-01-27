@@ -8,7 +8,7 @@
 import UIKit
 import SDWebImage
 
-class GridCollectionViewCell: UICollectionViewCell {
+final class GridCollectionViewCell: UICollectionViewCell {
    
     private let image = UIImageView()
     private let labelView = UIView()

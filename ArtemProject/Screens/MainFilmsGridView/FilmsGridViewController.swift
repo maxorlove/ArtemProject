@@ -7,7 +7,7 @@
 
 import UIKit
 
-class FilmsGridViewController: UIViewController {
+final class FilmsGridViewController: UIViewController {
     
     private let networkClient = NetworkServiceImpl()
     
@@ -22,6 +22,8 @@ class FilmsGridViewController: UIViewController {
     private var currentPage: Int = 1
     private var totalPages: Int = 1
     private var dataSourse: [Item] = []
+    private var gridType: GridType = .double
+    private var itemSize: CGFloat = 0.0
      
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -60,6 +62,7 @@ class FilmsGridViewController: UIViewController {
     private func setupViews() {
         view.backgroundColor = Colors.primaryBackgroundColor
         navigationController?.navigationBar.prefersLargeTitles = true
+        itemSize = getItemSize(gridType: gridType)
         
         sortView.gridSizeChangeAction = { [weak self] in
             self?.gridSizeChangeAction()
@@ -78,7 +81,7 @@ class FilmsGridViewController: UIViewController {
     
     func setViewTitle(title: String) {
         self.title = title
-        self.sortView.changeImgButton(gridType: Constants.gridType)
+        self.sortView.changeImgButton(gridType: gridType)
     }
     
     private func loadData(for page: Int, sortStyle: SortEnum) {
@@ -144,21 +147,29 @@ class FilmsGridViewController: UIViewController {
             self.loadData(for: 1, sortStyle: .popular)
             self.sortView.changeSortLabel(sortStyle: .popular)
         }))
+        let cancelActoin = UIAlertAction(title: "Cancel", style: .destructive, handler: nil)
+        alert.addAction(cancelActoin)
         self.present(alert, animated: true, completion: nil)
     }
     
     private func gridSizeChangeAction() {
-        self.updateConstants()
+        self.updateGridType()
         self.filmsCollectionView.reloadData()
-        self.sortView.changeImgButton(gridType: Constants.gridType)
+        self.sortView.changeImgButton(gridType: gridType)
     }
     
-    private func updateConstants() {
-        switch Constants.gridType {
-            case .single: Constants.gridType = .double
-            case .double: Constants.gridType = .single
+    private func updateGridType() {
+        switch gridType {
+            case .single:
+                gridType = .double
+            case .double:
+                gridType = .single
         }
-        Constants.itemSize = (UIScreen.main.bounds.width / CGFloat(Constants.gridType.rawValue)) - Constants.spacing - Constants.border
+        itemSize = getItemSize(gridType: gridType)
+    }
+    
+    private func getItemSize(gridType: GridType) -> CGFloat {
+        return (UIScreen.main.bounds.width / CGFloat(gridType.rawValue)) - Constants.spacing - Constants.border
     }
 }
 
@@ -170,7 +181,7 @@ extension FilmsGridViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let model = dataSourse[indexPath.row]
         
-        switch Constants.gridType {
+        switch gridType {
         case .single:
             let cell = filmsCollectionView.dequeueReusableCell(withReuseIdentifier: Constants.singleCellReuseId, for: indexPath) as! GridSingleViewCell
             cell.configure(with: model)
@@ -183,7 +194,6 @@ extension FilmsGridViewController: UICollectionViewDataSource {
     }
     
     private func showDetails(item: Item) {
-        
         networkClient.getDetails(id: item.id) { [weak self] result in
             switch result {
             case .success(let response):
@@ -191,7 +201,6 @@ extension FilmsGridViewController: UICollectionViewDataSource {
                     let filmDetailController = FilmDetailController()
                     filmDetailController.configure(with: response)
                     self?.navigationController?.pushViewController(filmDetailController, animated: true)
-//                    self?.present(filmDetailController, animated: true)
                 }
             case .failure(let error):
                 self?.errorAlert(error: error)
@@ -202,9 +211,11 @@ extension FilmsGridViewController: UICollectionViewDataSource {
 
 extension FilmsGridViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        switch Constants.gridType {
-        case .single: return CGSize(width: Constants.itemSize, height: Constants.itemSize / 2)
-        case .double: return CGSize(width: Constants.itemSize, height: Constants.itemSize * 3 / 2)
+        switch gridType {
+        case .single:
+            return CGSize(width: itemSize, height: itemSize / 2)
+        case .double:
+            return CGSize(width: itemSize, height: itemSize * 3 / 2)
         }
     }
     
@@ -217,7 +228,7 @@ extension FilmsGridViewController: UICollectionViewDelegateFlowLayout {
     }
     
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        if dataSourse.count - Int(Constants.gridType.rawValue) == indexPath.row, currentPage < totalPages {
+        if dataSourse.count - Int(gridType.rawValue) == indexPath.row, currentPage < totalPages {
             currentPage += 1
             loadData(for: currentPage, sortStyle: currentSortStyle)
         }
@@ -233,8 +244,6 @@ extension FilmsGridViewController: UICollectionViewDelegateFlowLayout {
 private enum Constants {
     static let gridCellReuseId = "GridCollectionViewCellIdentifier"
     static let singleCellReuseId = "SingleCellReuseId"
-    static var gridType: GridType = .double
     static let spacing: CGFloat = 3
     static let border: CGFloat = 3
-    static var itemSize: CGFloat = (UIScreen.main.bounds.width / CGFloat(gridType.rawValue)) - spacing - border
 }

@@ -7,7 +7,7 @@
 
 import UIKit
 
-class SortActionView: UIView {
+final class SortActionView: UIView {
     
     var gridSizeChangeAction: (() -> Void)?
     var sortButtonChoseAction: (() -> Void)?

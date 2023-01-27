@@ -8,7 +8,7 @@
 import UIKit
 import SDWebImage
 
-class GridSingleViewCell: UICollectionViewCell {
+final class GridSingleViewCell: UICollectionViewCell {
     
     private let image = UIImageView()
     private let label = UILabel()
@@ -101,8 +101,12 @@ class GridSingleViewCell: UICollectionViewCell {
         label.text = item.title
         yearLabel.text = item.releaseDate
         ratingLabel.text = "\(item.voteAverage)"
-        guard let poster = item.posterPath else {return}
-        setImage(path: poster)
+        if let poster = item.posterPath {
+            setImage(path: poster)
+        } else {
+            return
+        }
+        
     }
     
     private func setImage(path: String) {

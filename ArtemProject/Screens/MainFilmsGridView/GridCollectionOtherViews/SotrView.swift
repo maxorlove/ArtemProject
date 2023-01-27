@@ -7,7 +7,7 @@
 
 import UIKit
 
-class SortView: UIView {
+final class SortView: UIView {
     
     var gridSizeChangeAction: (() -> Void)?
     var sortButtonChoseAction: ((SortEnum) -> Void)?
@@ -92,7 +92,6 @@ class SortView: UIView {
     
     private func addArrangedSubview(sortStyle: SortEnum, tag: Int) {
         let button = UIButton()
-        button.translatesAutoresizingMaskIntoConstraints = false
         button.backgroundColor = Colors.primarySurfaceColor
         button.setTitle(sortStyle.rawValue, for: .normal)
         button.tag = tag
