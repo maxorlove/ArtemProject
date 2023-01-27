@@ -7,9 +7,16 @@
 
 import UIKit
 
+protocol FilmsGridViewControllerProtocol: AnyObject {
+    func reloadDataSourse(response: AllFilmsResponse)
+    func errorAlert(error: ErrorModel)
+    func showDetails(item: Item)
+}
+
 final class FilmsGridViewController: UIViewController {
     
-    private let networkClient = NetworkServiceImpl()
+    private let networkClient: FilmsNetworkProtocol
+    var presenter: FilmsGridPresenterProtocol?
     
     private let sortView = SortActionView()
     private let filmsCollectionView: UICollectionView = {
@@ -18,17 +25,24 @@ final class FilmsGridViewController: UIViewController {
         return collection
     }()
     
+    private var dataSourse: [Item] = []
     private var currentSortStyle: SortEnum = .def
     private var currentPage: Int = 1
     private var totalPages: Int = 1
-    private var dataSourse: [Item] = []
     private var gridType: GridType = .double
     private var itemSize: CGFloat = 0.0
-     
+    
+    init(networkClient: FilmsNetworkProtocol) {
+        self.networkClient = networkClient
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setup()
-        loadData(for: currentPage, sortStyle: currentSortStyle)
+        presenter?.loadData(for: currentPage, sortStyle: currentSortStyle)
     }
     
     private func setup() {
@@ -84,67 +98,18 @@ final class FilmsGridViewController: UIViewController {
         self.sortView.changeImgButton(gridType: gridType)
     }
     
-    private func loadData(for page: Int, sortStyle: SortEnum) {
-        switch sortStyle {
-        case .def:
-            networkClient.getPopularMovies(page: page) { [weak self] result in
-                switch result {
-                case .success(let response):
-                    self?.reloadDataSourse(response: response)
-                case .failure(let error):
-                    self?.errorAlert(error: error)
-                }
-            }
-        case .topRated:
-            networkClient.getTopRated(page: page) { [weak self] result in
-                switch result {
-                case .success(let response):
-                    self?.reloadDataSourse(response: response)
-                case .failure(let error):
-                    self?.errorAlert(error: error)
-                }
-            }
-        case .popular:
-            networkClient.getNowPlaying(page: page) { [weak self] result in
-                switch result {
-                case .success(let response):
-                    self?.reloadDataSourse(response: response)
-                case .failure(let error):
-                    self?.errorAlert(error: error)
-                }
-            }
-        }
-    }
-    
-    private func reloadDataSourse(response: AllFilmsResponse) {
-        DispatchQueue.main.async {
-            self.dataSourse.append(contentsOf: response.results)
-            self.totalPages = response.totalPages
-            self.filmsCollectionView.reloadData()
-        }
-    }
-    
-    private func errorAlert(error: ErrorModel) {
-        let alert = UIAlertController(title: "Error", message: error.localizedDescription, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { _ in
-        }))
-        DispatchQueue.main.async {
-            self.present(alert, animated: true, completion: nil)
-        }
-    }
-    
     private func sortButtonAction() {
         let alert = UIAlertController(title: "Sort movies:", message: nil, preferredStyle: UIAlertController.Style.actionSheet)
         alert.addAction(UIAlertAction(title: "Top rated", style: UIAlertAction.Style.default, handler: { action in
             self.currentSortStyle = .topRated
             self.dataSourse.removeAll()
-            self.loadData(for: 1, sortStyle: .topRated)
+            self.presenter?.loadData(for: 1, sortStyle: .topRated)
             self.sortView.changeSortLabel(sortStyle: .topRated)
         }))
         alert.addAction(UIAlertAction(title: "Popular", style: UIAlertAction.Style.default, handler: { action in
             self.currentSortStyle = .popular
             self.dataSourse.removeAll()
-            self.loadData(for: 1, sortStyle: .popular)
+            self.presenter?.loadData(for: 1, sortStyle: .popular)
             self.sortView.changeSortLabel(sortStyle: .popular)
         }))
         let cancelActoin = UIAlertAction(title: "Cancel", style: .destructive, handler: nil)
@@ -192,21 +157,6 @@ extension FilmsGridViewController: UICollectionViewDataSource {
             return cell
         }
     }
-    
-    private func showDetails(item: Item) {
-        networkClient.getDetails(id: item.id) { [weak self] result in
-            switch result {
-            case .success(let response):
-                DispatchQueue.main.async {
-                    let filmDetailController = FilmDetailController()
-                    filmDetailController.configure(with: response)
-                    self?.navigationController?.pushViewController(filmDetailController, animated: true)
-                }
-            case .failure(let error):
-                self?.errorAlert(error: error)
-            }
-        }
-    }
 }
 
 extension FilmsGridViewController: UICollectionViewDelegateFlowLayout {
@@ -230,7 +180,7 @@ extension FilmsGridViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         if dataSourse.count - Int(gridType.rawValue) == indexPath.row, currentPage < totalPages {
             currentPage += 1
-            loadData(for: currentPage, sortStyle: currentSortStyle)
+            presenter?.loadData(for: currentPage, sortStyle: currentSortStyle)
         }
     }
     
@@ -238,6 +188,32 @@ extension FilmsGridViewController: UICollectionViewDelegateFlowLayout {
         let index = indexPath.row
         let item = dataSourse[index]
         showDetails(item: item)
+    }
+}
+
+extension FilmsGridViewController: FilmsGridViewControllerProtocol {
+    
+    func reloadDataSourse(response: AllFilmsResponse) {
+        DispatchQueue.main.async {
+            self.dataSourse.append(contentsOf: response.results)
+            self.totalPages = response.totalPages
+            self.filmsCollectionView.reloadData()
+        }
+    }
+    
+    func errorAlert(error: ErrorModel) {
+        let alert = UIAlertController(title: "Error", message: error.localizedDescription, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { _ in
+        }))
+        DispatchQueue.main.async {
+            self.present(alert, animated: true, completion: nil)
+        }
+    }
+    
+    func showDetails(item: Item) {
+        let filmDetailController = FilmDetailBuilder.build()
+        filmDetailController.presenter?.getData(item: item)
+        self.navigationController?.pushViewController(filmDetailController, animated: true)
     }
 }
 

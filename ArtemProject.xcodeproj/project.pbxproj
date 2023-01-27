@@ -31,6 +31,10 @@
 		00F32BB4297BF9920029E4C8 /* FilmDetailController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00F32BB3297BF9920029E4C8 /* FilmDetailController.swift */; };
 		00F32BB8297D3CD90029E4C8 /* DetailsFilmRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00F32BB7297D3CD90029E4C8 /* DetailsFilmRequest.swift */; };
 		00F32BBA297D3E190029E4C8 /* DetailsFilmResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00F32BB9297D3E190029E4C8 /* DetailsFilmResponse.swift */; };
+		00F32BBC2983B82D0029E4C8 /* FilmsGridBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00F32BBB2983B82D0029E4C8 /* FilmsGridBuilder.swift */; };
+		00F32BBE2983C96B0029E4C8 /* FilmsGridPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00F32BBD2983C96B0029E4C8 /* FilmsGridPresenter.swift */; };
+		00F32BC02983E3A40029E4C8 /* FilmDetailBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00F32BBF2983E3A40029E4C8 /* FilmDetailBuilder.swift */; };
+		00F32BC22983E4F90029E4C8 /* FilmDetailPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00F32BC12983E4F90029E4C8 /* FilmDetailPresenter.swift */; };
 		7FA9803C295B23D10053E050 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FA9803B295B23D10053E050 /* AppDelegate.swift */; };
 		7FA9803E295B23D10053E050 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FA9803D295B23D10053E050 /* SceneDelegate.swift */; };
 		7FA98040295B23D10053E050 /* FilmsGridViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FA9803F295B23D10053E050 /* FilmsGridViewController.swift */; };
@@ -63,6 +67,10 @@
 		00F32BB3297BF9920029E4C8 /* FilmDetailController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilmDetailController.swift; sourceTree = "<group>"; };
 		00F32BB7297D3CD90029E4C8 /* DetailsFilmRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailsFilmRequest.swift; sourceTree = "<group>"; };
 		00F32BB9297D3E190029E4C8 /* DetailsFilmResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailsFilmResponse.swift; sourceTree = "<group>"; };
+		00F32BBB2983B82D0029E4C8 /* FilmsGridBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilmsGridBuilder.swift; sourceTree = "<group>"; };
+		00F32BBD2983C96B0029E4C8 /* FilmsGridPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilmsGridPresenter.swift; sourceTree = "<group>"; };
+		00F32BBF2983E3A40029E4C8 /* FilmDetailBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilmDetailBuilder.swift; sourceTree = "<group>"; };
+		00F32BC12983E4F90029E4C8 /* FilmDetailPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilmDetailPresenter.swift; sourceTree = "<group>"; };
 		7FA98038295B23D10053E050 /* ArtemProject.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ArtemProject.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7FA9803B295B23D10053E050 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		7FA9803D295B23D10053E050 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -142,6 +150,8 @@
 				00F32BAB2977FF7E0029E4C8 /* GridCollectionOtherViews */,
 				0033E8DA29696A9C0095DF7E /* GridCollectionViewCells */,
 				7FA9803F295B23D10053E050 /* FilmsGridViewController.swift */,
+				00F32BBB2983B82D0029E4C8 /* FilmsGridBuilder.swift */,
+				00F32BBD2983C96B0029E4C8 /* FilmsGridPresenter.swift */,
 			);
 			path = MainFilmsGridView;
 			sourceTree = "<group>";
@@ -196,6 +206,8 @@
 			isa = PBXGroup;
 			children = (
 				00F32BB3297BF9920029E4C8 /* FilmDetailController.swift */,
+				00F32BBF2983E3A40029E4C8 /* FilmDetailBuilder.swift */,
+				00F32BC12983E4F90029E4C8 /* FilmDetailPresenter.swift */,
 			);
 			path = FilmDetails;
 			sourceTree = "<group>";
@@ -312,17 +324,21 @@
 			buildActionMask = 2147483647;
 			files = (
 				0033E8D0296964690095DF7E /* RequestModel.swift in Sources */,
+				00F32BBC2983B82D0029E4C8 /* FilmsGridBuilder.swift in Sources */,
 				0012C5FD29713D0200EFE5E1 /* Colors.swift in Sources */,
 				7FA98040295B23D10053E050 /* FilmsGridViewController.swift in Sources */,
 				0033E8D3296964690095DF7E /* NetworkService.swift in Sources */,
 				0033E8EF296DBCD70095DF7E /* TabBarController.swift in Sources */,
 				0012C6012976A63C00EFE5E1 /* NowPlayingFilmsRequest.swift in Sources */,
 				00F32BAF29799E7D0029E4C8 /* GridSingleViewCell.swift in Sources */,
+				00F32BC02983E3A40029E4C8 /* FilmDetailBuilder.swift in Sources */,
 				00F32BB8297D3CD90029E4C8 /* DetailsFilmRequest.swift in Sources */,
 				0012C5F8296EC69400EFE5E1 /* ProfileStruct.swift in Sources */,
 				00F32BB4297BF9920029E4C8 /* FilmDetailController.swift in Sources */,
 				0033E8ED296DA21A0095DF7E /* ProfileAttributeView.swift in Sources */,
+				00F32BBE2983C96B0029E4C8 /* FilmsGridPresenter.swift in Sources */,
 				0012C5FF2976A62000EFE5E1 /* TopRatedFilmsRequest.swift in Sources */,
+				00F32BC22983E4F90029E4C8 /* FilmDetailPresenter.swift in Sources */,
 				0033E8D62969650D0095DF7E /* AllFilmsResponse.swift in Sources */,
 				0033E8DC29696AAE0095DF7E /* GridCollectionViewCell.swift in Sources */,
 				0033E8E8296C02E80095DF7E /* MainEnums.swift in Sources */,

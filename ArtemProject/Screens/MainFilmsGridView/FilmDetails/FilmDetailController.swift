@@ -8,7 +8,13 @@
 import UIKit
 import SDWebImage
 
+protocol FilmDetailControllerProtocol: AnyObject {
+    func configure(with item: DetailsFilmResponse)
+}
+
 final class FilmDetailController: UIViewController {
+    
+    var presenter: FilmDetailPresenterProtocol?
     
     private let scrollView = UIScrollView()
     private let topView = UIView()
@@ -25,7 +31,7 @@ final class FilmDetailController: UIViewController {
         stack.axis = .vertical
         return stack
     }()
-    
+   
     override func viewDidLoad() {
         super.viewDidLoad()
         setup()
@@ -113,12 +119,6 @@ final class FilmDetailController: UIViewController {
         bottomView.clipsToBounds = true
     }
     
-    func configure(with item: DetailsFilmResponse) {
-        guard let poster = item.posterPath else {return}
-        setImage(path: poster)
-        addArrangedSubviews(item: item)
-    }
-    
     private func setImage(path: String) {
         let url = URL(string: "https://image.tmdb.org/t/p/original/\(path)")
         imageView.sd_setImage(with: url)
@@ -164,5 +164,14 @@ final class FilmDetailController: UIViewController {
         labelView.topAnchor.constraint(equalTo: textView.topAnchor).isActive = true
         labelView.bottomAnchor.constraint(equalTo: textView.bottomAnchor).isActive = true
         return textView
+    }
+}
+
+extension FilmDetailController: FilmDetailControllerProtocol {
+    func configure(with item: DetailsFilmResponse) {
+        if let poster = item.posterPath {
+            setImage(path: poster)
+        }
+        addArrangedSubviews(item: item)
     }
 }
