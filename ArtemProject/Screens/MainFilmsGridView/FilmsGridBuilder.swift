@@ -11,7 +11,7 @@ class FilmsGridBuilder {
     
     static func build() -> FilmsGridViewController {
         let networkClient = NetworkService()
-        let viewController = FilmsGridViewController(networkClient: networkClient)
+        let viewController = FilmsGridViewController()
         let presenter = FilmsGridPresenter(controller: viewController, networkClient: NetworkService())
         viewController.presenter = presenter
         return viewController

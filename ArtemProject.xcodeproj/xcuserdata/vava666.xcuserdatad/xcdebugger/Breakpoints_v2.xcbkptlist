@@ -126,8 +126,8 @@
             filePath = "ArtemProject/Screens/MainFilmsGridView/FilmsGridViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "45"
-            endingLineNumber = "45"
+            startingLineNumber = "38"
+            endingLineNumber = "38"
             landmarkName = "viewDidLoad()"
             landmarkType = "7">
          </BreakpointContent>
@@ -142,8 +142,8 @@
             filePath = "ArtemProject/Screens/MainFilmsGridView/FilmsGridViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "215"
-            endingLineNumber = "215"
+            startingLineNumber = "208"
+            endingLineNumber = "208"
             landmarkName = "showDetails(item:)"
             landmarkType = "7">
          </BreakpointContent>
