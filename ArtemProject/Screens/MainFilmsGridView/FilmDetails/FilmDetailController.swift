@@ -37,7 +37,7 @@ final class FilmDetailController: UIViewController {
         setup()
     }
     
-    func setup() {
+    private func setup() {
         addSubviews()
         setupConstraints()
         setupViews()
@@ -126,9 +126,6 @@ final class FilmDetailController: UIViewController {
     }
     
     private func addArrangedSubviews(item: DetailsFilmResponse) {
-        
-        let spacer = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: 16))
-        detailsView.addArrangedSubview(spacer)
         
         let label = UILabel()
         label.text = item.title

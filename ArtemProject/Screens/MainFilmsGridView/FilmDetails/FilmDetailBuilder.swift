@@ -7,7 +7,7 @@
 
 import Foundation
 
-class FilmDetailBuilder {
+final class FilmDetailBuilder {
     static func build() -> FilmDetailController {
         let controller = FilmDetailController()
         let presenter = FilmDetailPresenter(networkClient: NetworkService(), controller: controller)

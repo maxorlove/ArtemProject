@@ -25,12 +25,12 @@ final class TabBarController: UITabBarController {
         
         let filmsGridViewController = FilmsGridBuilder.build()
         filmsGridViewController.setViewTitle(title: "Movies")
-        let ilmsGridnavigationController = UINavigationController(rootViewController: filmsGridViewController)
-        ilmsGridnavigationController.tabBarItem.image = UIImage(named: "filmsIco")
-        ilmsGridnavigationController.title = nil
-        ilmsGridnavigationController.tabBarItem.imageInsets = UIEdgeInsets.init(top: 5,left: 0,bottom: -5,right: 0)
+        let ilmsGridNavigationController = UINavigationController(rootViewController: filmsGridViewController)
+        ilmsGridNavigationController.tabBarItem.image = UIImage(named: "filmsIco")
+        ilmsGridNavigationController.title = nil
+        ilmsGridNavigationController.tabBarItem.imageInsets = UIEdgeInsets.init(top: 5,left: 0,bottom: -5,right: 0)
         
-        self.viewControllers = [ilmsGridnavigationController, profileViewController]
+        self.viewControllers = [ilmsGridNavigationController, profileViewController]
     }
     
 }

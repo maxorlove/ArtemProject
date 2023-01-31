@@ -8,7 +8,6 @@
 import Foundation
 
 protocol FilmDetailPresenterProtocol: AnyObject {
-//    func configure()
     func getData(item: Item)
 }
 
@@ -25,11 +24,7 @@ class FilmDetailPresenter {
 }
 
 extension FilmDetailPresenter: FilmDetailPresenterProtocol {
-//    func configure() {
-//
-////        controller?.configure(with: item)
-//    }
-    
+
     func getData(item: Item) {
         networkClient.getDetails(id: item.id) { [weak self] result in
             switch result {

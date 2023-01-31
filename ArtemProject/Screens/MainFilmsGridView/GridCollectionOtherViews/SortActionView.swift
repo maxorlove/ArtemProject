@@ -25,7 +25,6 @@ final class SortActionView: UIView {
     private func setup() {
         addSubviews()
         setupConstraints()
-        setupViews()
         setupButtons()
     }
     
@@ -49,10 +48,6 @@ final class SortActionView: UIView {
             gridChangeButton.widthAnchor.constraint(equalToConstant: 56),
 
         ])
-    }
-    
-    private func setupViews() {
-        
     }
     
     private func setupButtons() {

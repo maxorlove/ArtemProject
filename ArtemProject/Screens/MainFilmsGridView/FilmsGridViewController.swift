@@ -15,7 +15,6 @@ protocol FilmsGridViewControllerProtocol: AnyObject {
 
 final class FilmsGridViewController: UIViewController {
     
-//    private let networkClient: FilmsNetworkProtocol
     var presenter: FilmsGridPresenterProtocol?
     
     private let sortView = SortActionView()
@@ -26,16 +25,14 @@ final class FilmsGridViewController: UIViewController {
     }()
     
     private var dataSourse: [Item] = []
-    private var currentSortStyle: SortEnum = .def
-    private var currentPage: Int = 1
-    private var totalPages: Int = 1
+ 
     private var gridType: GridType = .double
     private var itemSize: CGFloat = 0.0
      
     override func viewDidLoad() {
         super.viewDidLoad()
         setup()
-        presenter?.loadData(for: currentPage, sortStyle: currentSortStyle)
+        presenter?.loadData()
     }
     
     private func setup() {
@@ -88,21 +85,23 @@ final class FilmsGridViewController: UIViewController {
     
     func setViewTitle(title: String) {
         self.title = title
-        self.sortView.changeImgButton(gridType: gridType)
+        sortView.changeImgButton(gridType: gridType)
     }
     
     private func sortButtonAction() {
         let alert = UIAlertController(title: "Sort movies:", message: nil, preferredStyle: UIAlertController.Style.actionSheet)
         alert.addAction(UIAlertAction(title: "Top rated", style: UIAlertAction.Style.default, handler: { action in
-            self.currentSortStyle = .topRated
             self.dataSourse.removeAll()
-            self.presenter?.loadData(for: 1, sortStyle: .topRated)
+            self.presenter?.setSortStyle(sortStyle: .topRated)
+            self.presenter?.refreshPages()
+            self.presenter?.loadData()
             self.sortView.changeSortLabel(sortStyle: .topRated)
         }))
         alert.addAction(UIAlertAction(title: "Popular", style: UIAlertAction.Style.default, handler: { action in
-            self.currentSortStyle = .popular
             self.dataSourse.removeAll()
-            self.presenter?.loadData(for: 1, sortStyle: .popular)
+            self.presenter?.setSortStyle(sortStyle: .popular)
+            self.presenter?.refreshPages()
+            self.presenter?.loadData()
             self.sortView.changeSortLabel(sortStyle: .popular)
         }))
         let cancelActoin = UIAlertAction(title: "Cancel", style: .destructive, handler: nil)
@@ -111,9 +110,9 @@ final class FilmsGridViewController: UIViewController {
     }
     
     private func gridSizeChangeAction() {
-        self.updateGridType()
-        self.filmsCollectionView.reloadData()
-        self.sortView.changeImgButton(gridType: gridType)
+        updateGridType()
+        filmsCollectionView.reloadData()
+        sortView.changeImgButton(gridType: gridType)
     }
     
     private func updateGridType() {
@@ -171,9 +170,9 @@ extension FilmsGridViewController: UICollectionViewDelegateFlowLayout {
     }
     
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        if dataSourse.count - Int(gridType.rawValue) == indexPath.row, currentPage < totalPages {
-            currentPage += 1
-            presenter?.loadData(for: currentPage, sortStyle: currentSortStyle)
+        guard let next = presenter?.getNext() else { return }
+        if dataSourse.count - Int(gridType.rawValue) == indexPath.row, next {
+            presenter?.loadData()
         }
     }
     
@@ -189,7 +188,7 @@ extension FilmsGridViewController: FilmsGridViewControllerProtocol {
     func reloadDataSourse(response: AllFilmsResponse) {
         DispatchQueue.main.async {
             self.dataSourse.append(contentsOf: response.results)
-            self.totalPages = response.totalPages
+//            self.totalPages = response.totalPages
             self.filmsCollectionView.reloadData()
         }
     }
