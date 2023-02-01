@@ -11,6 +11,7 @@ protocol FilmsGridViewControllerProtocol: AnyObject {
     func reloadDataSourse(response: AllFilmsResponse)
     func errorAlert(error: ErrorModel)
     func showDetails(item: Item)
+    func clearDataSource(sortStyle: SortEnum)
 }
 
 final class FilmsGridViewController: UIViewController {
@@ -91,17 +92,11 @@ final class FilmsGridViewController: UIViewController {
     private func sortButtonAction() {
         let alert = UIAlertController(title: "Sort movies:", message: nil, preferredStyle: UIAlertController.Style.actionSheet)
         alert.addAction(UIAlertAction(title: "Top rated", style: UIAlertAction.Style.default, handler: { action in
-            self.dataSourse.removeAll()
-            self.presenter?.setSortStyle(sortStyle: .topRated)
-            self.presenter?.refreshPages()
-            self.presenter?.loadData()
+            self.presenter?.didSortButtonPressed(sortStyle: .topRated)
             self.sortView.changeSortLabel(sortStyle: .topRated)
         }))
         alert.addAction(UIAlertAction(title: "Popular", style: UIAlertAction.Style.default, handler: { action in
-            self.dataSourse.removeAll()
-            self.presenter?.setSortStyle(sortStyle: .popular)
-            self.presenter?.refreshPages()
-            self.presenter?.loadData()
+            self.presenter?.didSortButtonPressed(sortStyle: .popular)
             self.sortView.changeSortLabel(sortStyle: .popular)
         }))
         let cancelActoin = UIAlertAction(title: "Cancel", style: .destructive, handler: nil)
@@ -184,11 +179,15 @@ extension FilmsGridViewController: UICollectionViewDelegateFlowLayout {
 }
 
 extension FilmsGridViewController: FilmsGridViewControllerProtocol {
+    func clearDataSource(sortStyle: SortEnum) {
+        self.sortView.changeSortLabel(sortStyle: sortStyle)
+        self.dataSourse.removeAll()
+    }
+    
     
     func reloadDataSourse(response: AllFilmsResponse) {
         DispatchQueue.main.async {
             self.dataSourse.append(contentsOf: response.results)
-//            self.totalPages = response.totalPages
             self.filmsCollectionView.reloadData()
         }
     }
@@ -203,9 +202,7 @@ extension FilmsGridViewController: FilmsGridViewControllerProtocol {
     }
     
     func showDetails(item: Item) {
-        let filmDetailController = FilmDetailBuilder.build()
-        filmDetailController.presenter?.getData(item: item)
-        self.navigationController?.pushViewController(filmDetailController, animated: true)
+        presenter?.showDetails(item: item)
     }
 }
 

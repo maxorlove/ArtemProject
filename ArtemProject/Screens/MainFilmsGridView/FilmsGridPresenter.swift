@@ -13,10 +13,12 @@ protocol FilmsGridPresenterProtocol: AnyObject {
     func getCurrentPage() -> Int
     func getNext() -> Bool
     func refreshPages()
-    func setSortStyle(sortStyle: SortEnum)
+    func didSortButtonPressed(sortStyle: SortEnum)
+    func showDetails(item: Item)
 }
 
 final class FilmsGridPresenter {
+    private let router: FilmsGridRouterProtocol?
     weak var controller: FilmsGridViewControllerProtocol?
     private let networkClient: FilmsNetworkProtocol
     
@@ -25,17 +27,26 @@ final class FilmsGridPresenter {
     private var totalPages: Int = 1
     
     init(
+        router: FilmsGridRouterProtocol,
         controller: FilmsGridViewControllerProtocol,
         networkClient: FilmsNetworkProtocol
     ) {
+        self.router = router
         self.controller = controller
         self.networkClient = networkClient
     }
 }
 
 extension FilmsGridPresenter: FilmsGridPresenterProtocol {
-    func setSortStyle(sortStyle: SortEnum) {
+    func showDetails(item: Item) {
+        router?.showFilmsDetailView(item: item)
+    }
+    
+    func didSortButtonPressed(sortStyle: SortEnum) {
         currentSortStyle = sortStyle
+        self.controller?.clearDataSource(sortStyle: .topRated)
+        refreshPages()
+        loadData()
     }
     
     func refreshPages() {
