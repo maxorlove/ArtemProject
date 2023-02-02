@@ -8,7 +8,7 @@
 import UIKit
 
 protocol FilmsGridRouterProtocol: AnyObject {
-    func showFilmsDetailView(item: Item)
+    func showFilmsDetailView(data: DetailDataStruct)
 }
 
 final class FilmsGridRouter {
@@ -20,9 +20,8 @@ final class FilmsGridRouter {
 }
 
 extension FilmsGridRouter: FilmsGridRouterProtocol {
-    func showFilmsDetailView(item: Item) {
-        let filmDetailController = FilmDetailBuilder.build()
-        filmDetailController.presenter?.getData(item: item)
+    func showFilmsDetailView(data: DetailDataStruct) {
+        let filmDetailController = FilmDetailBuilder.build(data: data)
         viewController?.navigationController?.pushViewController(filmDetailController, animated: true)
     }
 }

@@ -8,34 +8,45 @@
 import Foundation
 
 protocol FilmDetailPresenterProtocol: AnyObject {
-    func getData(item: Item)
+    func getData()
+    func popOut()
 }
 
 class FilmDetailPresenter {
-    weak var controller: FilmDetailControllerProtocol?
+    weak var viewController: FilmDetailControllerProtocol?
+    private let router: FilmDetailRouterProtocol
     private let networkClient: FilmDetailNetworkProtocol
+    private let data: DetailDataStruct
+    //    let item
     init(
         networkClient: FilmDetailNetworkProtocol,
-        controller: FilmDetailControllerProtocol
+        controller: FilmDetailControllerProtocol,
+        router: FilmDetailRouterProtocol,
+        data: DetailDataStruct
     ) {
         self.networkClient = networkClient
-        self.controller = controller
+        self.viewController = controller
+        self.router = router
+        self.data = data
     }
 }
 
 extension FilmDetailPresenter: FilmDetailPresenterProtocol {
-
-    func getData(item: Item) {
-        networkClient.getDetails(id: item.id) { [weak self] result in
+    func getData() {
+        let id = data.id
+        networkClient.getDetails(id: id) { [weak self] result in
             switch result {
             case .success(let response):
                 DispatchQueue.main.async {
-                    self?.controller?.configure(with: response)
+                    self?.viewController?.configure(with: response)
                 }
             case .failure(let error):
-                print("")
-//                self?.errorAlert(error: error)
+                self?.viewController?.errorAlert(error: error)
             }
         }
+    }
+    
+    func popOut() {
+        router.popOutView()
     }
 }

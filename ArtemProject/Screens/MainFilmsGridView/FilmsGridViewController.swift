@@ -10,7 +10,6 @@ import UIKit
 protocol FilmsGridViewControllerProtocol: AnyObject {
     func reloadDataSourse(response: AllFilmsResponse)
     func errorAlert(error: ErrorModel)
-    func showDetails(item: Item)
     func clearDataSource(sortStyle: SortEnum)
 }
 
@@ -123,6 +122,10 @@ final class FilmsGridViewController: UIViewController {
     private func getItemSize(gridType: GridType) -> CGFloat {
         return (UIScreen.main.bounds.width / CGFloat(gridType.rawValue)) - Constants.spacing - Constants.border
     }
+    
+    private func showDetails(item: Item) {
+        presenter?.showDetails(item: item)
+    }
 }
 
 extension FilmsGridViewController: UICollectionViewDataSource {
@@ -199,10 +202,6 @@ extension FilmsGridViewController: FilmsGridViewControllerProtocol {
         DispatchQueue.main.async {
             self.present(alert, animated: true, completion: nil)
         }
-    }
-    
-    func showDetails(item: Item) {
-        presenter?.showDetails(item: item)
     }
 }
 

@@ -5,12 +5,17 @@
 //  Created by Artem Vavilov on 27.01.2023.
 //
 
-import Foundation
+import UIKit
 
 final class FilmDetailBuilder {
-    static func build() -> FilmDetailController {
+    static func build(data: DetailDataStruct) -> UIViewController {
         let controller = FilmDetailController()
-        let presenter = FilmDetailPresenter(networkClient: NetworkService(), controller: controller)
+        let router = FilmDetailRouter(viewController: controller)
+        let presenter = FilmDetailPresenter(
+            networkClient: NetworkService(),
+            controller: controller,
+            router: router,
+            data: data)
         controller.presenter = presenter
         return controller
     }

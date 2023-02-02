@@ -18,8 +18,8 @@ protocol FilmsGridPresenterProtocol: AnyObject {
 }
 
 final class FilmsGridPresenter {
-    private let router: FilmsGridRouterProtocol?
-    weak var controller: FilmsGridViewControllerProtocol?
+    private let router: FilmsGridRouterProtocol
+    weak var viewController: FilmsGridViewControllerProtocol?
     private let networkClient: FilmsNetworkProtocol
     
     private var currentSortStyle: SortEnum = .def
@@ -32,19 +32,20 @@ final class FilmsGridPresenter {
         networkClient: FilmsNetworkProtocol
     ) {
         self.router = router
-        self.controller = controller
+        self.viewController = controller
         self.networkClient = networkClient
     }
 }
 
 extension FilmsGridPresenter: FilmsGridPresenterProtocol {
     func showDetails(item: Item) {
-        router?.showFilmsDetailView(item: item)
+        let data = DetailDataStruct.init(id: item.id)
+        router.showFilmsDetailView(data: data)
     }
     
     func didSortButtonPressed(sortStyle: SortEnum) {
         currentSortStyle = sortStyle
-        self.controller?.clearDataSource(sortStyle: .topRated)
+        self.viewController?.clearDataSource(sortStyle: .topRated)
         refreshPages()
         loadData()
     }
@@ -74,9 +75,9 @@ extension FilmsGridPresenter: FilmsGridPresenterProtocol {
                 switch result {
                 case .success(let response):
                     self?.totalPages = response.totalPages
-                    self?.controller?.reloadDataSourse(response: response)
+                    self?.viewController?.reloadDataSourse(response: response)
                 case .failure(let error):
-                    self?.controller?.errorAlert(error: error)
+                    self?.viewController?.errorAlert(error: error)
                 }
             }
         case .topRated:
@@ -84,9 +85,9 @@ extension FilmsGridPresenter: FilmsGridPresenterProtocol {
                 switch result {
                 case .success(let response):
                     self?.totalPages = response.totalPages
-                    self?.controller?.reloadDataSourse(response: response)
+                    self?.viewController?.reloadDataSourse(response: response)
                 case .failure(let error):
-                    self?.controller?.errorAlert(error: error)
+                    self?.viewController?.errorAlert(error: error)
                 }
             }
         case .popular:
@@ -94,9 +95,9 @@ extension FilmsGridPresenter: FilmsGridPresenterProtocol {
                 switch result {
                 case .success(let response):
                     self?.totalPages = response.totalPages
-                    self?.controller?.reloadDataSourse(response: response)
+                    self?.viewController?.reloadDataSourse(response: response)
                 case .failure(let error):
-                    self?.controller?.errorAlert(error: error)
+                    self?.viewController?.errorAlert(error: error)
                 }
             }
         }

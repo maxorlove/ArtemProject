@@ -10,6 +10,7 @@ import SDWebImage
 
 protocol FilmDetailControllerProtocol: AnyObject {
     func configure(with item: DetailsFilmResponse)
+    func errorAlert(error: ErrorModel)
 }
 
 final class FilmDetailController: UIViewController {
@@ -34,6 +35,7 @@ final class FilmDetailController: UIViewController {
    
     override func viewDidLoad() {
         super.viewDidLoad()
+        presenter?.getData()
         setup()
     }
     
@@ -170,5 +172,15 @@ extension FilmDetailController: FilmDetailControllerProtocol {
             setImage(path: poster)
         }
         addArrangedSubviews(item: item)
+    }
+    
+    func errorAlert(error: ErrorModel) {
+        let alert = UIAlertController(title: "Error", message: error.localizedDescription, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { _ in
+            self.presenter?.popOut()
+        }))
+        DispatchQueue.main.async {
+            self.present(alert, animated: true, completion: nil)
+        }
     }
 }
