@@ -7,7 +7,7 @@
 
 import UIKit
 
-class ProfileViewController: UIViewController {
+final class ProfileViewController: UIViewController {
     
     //    MARK: - properties
     var didEndEdit: ((ProfileStruct) -> Void)?
@@ -100,6 +100,7 @@ class ProfileViewController: UIViewController {
         } else {
             navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Edit", image: nil, target: self, action: #selector(swichEdit))
         }
+        
         headerView.actionPressed = {[weak self] in
             ImagePickerManager().pickImage(self!){ image in
                 self?.headerView.setImage(image: image)

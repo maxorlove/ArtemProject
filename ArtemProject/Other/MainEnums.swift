@@ -19,3 +19,8 @@ enum AttNameEnum: String, CaseIterable {
     case title = "TITLE"
     case location = "LOCATION"
 }
+
+enum GridType: Int {
+    case single = 1
+    case double = 2
+}

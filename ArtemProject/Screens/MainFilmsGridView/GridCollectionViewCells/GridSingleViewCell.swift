@@ -1,18 +1,18 @@
 //
-//  GridCollectionViewCell.swift
+//  GridSingleViewCell.swift
 //  ArtemProject
 //
-//  Created by Artem Vavilov on 07.01.2023.
+//  Created by Artem Vavilov on 19.01.2023.
 //
 
 import UIKit
 import SDWebImage
 
-final class GridCollectionViewCell: UICollectionViewCell {
-   
+final class GridSingleViewCell: UICollectionViewCell {
+    
     private let image = UIImageView()
-    private let labelView = UIView()
-    private let labelText = UILabel()
+    private let label = UILabel()
+    private let yearLabel = UILabel()
     private let ratingView = UIView()
     private let ratingLabel = UILabel()
     private let ratingImg = UIImageView()
@@ -36,15 +36,12 @@ final class GridCollectionViewCell: UICollectionViewCell {
     }
     
     private func addSubviews() {
-        labelView.addSubview(labelText)
-        labelText.translatesAutoresizingMaskIntoConstraints = false
-        
         [ratingImg, ratingLabel].forEach {
             ratingView.addSubview($0)
             $0.translatesAutoresizingMaskIntoConstraints = false
         }
         
-        [image, labelView, ratingView, likeButton].forEach {
+        [image, label, yearLabel, ratingView, likeButton].forEach {
             contentView.addSubview($0)
             $0.translatesAutoresizingMaskIntoConstraints = false
         }
@@ -52,26 +49,22 @@ final class GridCollectionViewCell: UICollectionViewCell {
     
     private func setupConstraints() {
         NSLayoutConstraint.activate([
-            image.topAnchor.constraint(equalTo: contentView.topAnchor),
-            image.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
-            image.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-            image.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
+            image.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 3),
+            image.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 3),
+            image.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -3),
+            image.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.width / 3),
             
-            labelView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -4),
-            labelView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 4),
-            labelView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -4),
-            labelView.heightAnchor.constraint(equalToConstant: contentView.frame.height / 4.5),
+            yearLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
+            yearLabel.leadingAnchor.constraint(equalTo: image.trailingAnchor, constant: 24),
+            yearLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             
-            labelText.centerXAnchor.constraint(equalTo: labelView.centerXAnchor),
-            labelView.centerYAnchor.constraint(equalTo: labelView.centerYAnchor),
-            labelText.leadingAnchor.constraint(equalTo: labelView.leadingAnchor, constant: 12),
-            labelText.trailingAnchor.constraint(equalTo: labelView.trailingAnchor, constant: -12),
-            labelText.topAnchor.constraint(equalTo: labelView.topAnchor, constant: 4),
-            labelText.bottomAnchor.constraint(equalTo: labelView.bottomAnchor, constant: -4),
+            label.leadingAnchor.constraint(equalTo: image.trailingAnchor, constant: 24),
+            label.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -24),
+            label.bottomAnchor.constraint(equalTo: yearLabel.topAnchor),
             
-            ratingView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 4),
-            ratingView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 4),
-            ratingView.widthAnchor.constraint(equalToConstant: contentView.frame.width / 3),
+            ratingView.bottomAnchor.constraint(equalTo: image.bottomAnchor, constant: -4),
+            ratingView.trailingAnchor.constraint(equalTo: image.trailingAnchor, constant: -4),
+            ratingView.widthAnchor.constraint(equalToConstant: 66),
             ratingView.heightAnchor.constraint(equalToConstant: 32),
             
             ratingImg.centerYAnchor.constraint(equalTo: ratingView.centerYAnchor),
@@ -92,17 +85,17 @@ final class GridCollectionViewCell: UICollectionViewCell {
         image.contentMode = .scaleToFill
         image.layer.cornerRadius = 16
         
-        labelView.backgroundColor = Colors.secondarySurfaceColor
-        labelView.layer.cornerRadius = 13
-        
-        labelText.font = .systemFont(ofSize: 20)
-        labelText.textColor = Colors.accentTextColor
-        labelText.textAlignment = .center
-        labelText.lineBreakMode = .byWordWrapping
-        labelText.numberOfLines = 0
-        labelText.minimumScaleFactor = 0.5
-        labelText.adjustsFontSizeToFitWidth = true
+        label.font = .systemFont(ofSize: 27)
+        label.textColor = Colors.primaryTextOnBackgroundColor
+        label.textAlignment = .left
+        label.numberOfLines = 2
+        label.lineBreakMode = .byTruncatingTail
+        label.clipsToBounds = true
 
+        yearLabel.font = .systemFont(ofSize: 17)
+        yearLabel.textColor = Colors.secondaryTextOnSurfaceColor
+        yearLabel.textAlignment = .left
+        
         ratingView.backgroundColor = Colors.secondarySurfaceColor
         ratingView.layer.cornerRadius = 13
         
@@ -112,24 +105,17 @@ final class GridCollectionViewCell: UICollectionViewCell {
         ratingLabel.textColor = Colors.accentTextColor
     }
     
-    private func setupButtons() {
-        likeButton.addTarget(self, action: #selector(likeDidTapped), for: .touchUpInside)
-    }
-    
-    @objc
-    private func likeDidTapped() {
-        guard let id = id else { return }
-        SupportFunctions.addLikedFilm(id: id)
-        setupLikeButton(isLiked: SupportFunctions.checkLikedFilm(id: id))
-    }
-    
     func configure(with item: Item) {
         id = item.id
-        labelText.text = item.title
+        label.text = item.title
+        yearLabel.text = item.releaseDate
         ratingLabel.text = "\(item.voteAverage)"
-        guard let poster = item.posterPath else {return}
-        setImage(path: poster)
         setupLikeButton(isLiked: SupportFunctions.checkLikedFilm(id: item.id))
+        if let poster = item.posterPath {
+            setImage(path: poster)
+        } else {
+            return
+        }
     }
     
     func setupLikeButton(isLiked: Bool) {
@@ -143,6 +129,17 @@ final class GridCollectionViewCell: UICollectionViewCell {
         }
     }
     
+    private func setupButtons() {
+        likeButton.addTarget(self, action: #selector(likeDidTapped), for: .touchUpInside)
+    }
+    
+    @objc
+    private func likeDidTapped() {
+        guard let id = id else { return }
+        SupportFunctions.addLikedFilm(id: id)
+        setupLikeButton(isLiked: SupportFunctions.checkLikedFilm(id: id))
+    }
+    
     private func setImage(path: String) {
         let url = URL(string: "https://image.tmdb.org/t/p/original/\(path)")
         image.sd_setImage(with: url)
@@ -150,9 +147,10 @@ final class GridCollectionViewCell: UICollectionViewCell {
     
     override func prepareForReuse() {
         super.prepareForReuse()
-        labelText.text = nil
-        ratingLabel.text = nil
+        label.text = nil
+        yearLabel.text = nil
         image.sd_cancelCurrentImageLoad()
         image.image = nil
+        ratingLabel.text = nil
     }
 }

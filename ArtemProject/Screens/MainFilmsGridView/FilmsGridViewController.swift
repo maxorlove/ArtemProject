@@ -7,62 +7,39 @@
 
 import UIKit
 
-class FilmsGridViewController: UIViewController {
+protocol FilmsGridViewControllerProtocol: AnyObject {
+    func reloadDataSourse(response: AllFilmsResponse)
+    func errorAlert(error: ErrorModel)
+    func clearDataSource(sortStyle: SortEnum)
+    func updateCell(index: Int)
+}
+
+final class FilmsGridViewController: UIViewController {
     
-    private var currentSortStyle: SortEnum = .def
+    var presenter: FilmsGridPresenterProtocol?
     
-    private let sortView: UIView = {
-        let sortView = UIView()
-        let label = UILabel()
-        let marker = UIButton()
-        let sortButton = UIButton()
-        [label, marker, sortButton].forEach {
-            sortView.addSubview($0)
-            $0.translatesAutoresizingMaskIntoConstraints = false
-        }
-        NSLayoutConstraint.activate([
-            label.leadingAnchor.constraint(equalTo: sortView.leadingAnchor),
-            label.topAnchor.constraint(equalTo: sortView.topAnchor),
-            
-            marker.leadingAnchor.constraint(equalTo: label.trailingAnchor),
-            marker.topAnchor.constraint(equalTo: sortView.topAnchor),
-            
-            sortButton.leadingAnchor.constraint(equalTo: marker.trailingAnchor),
-            sortButton.topAnchor.constraint(equalTo: sortView.topAnchor),
-            sortButton.trailingAnchor.constraint(equalTo: sortView.trailingAnchor),
-        ])
-        label.text = "Sorted by:"
-        label.textColor = .white
-        marker.setImage(UIImage(systemName: "paperplane"), for: .normal)
-        sortButton.setTitle("Default", for: .normal)
-        sortButton.setTitleColor(.white, for: .normal)
-        sortButton.addTarget(self, action: #selector(sortButtonAction), for: .touchUpInside)
-        return sortView
-    }()
-    
+    private let sortView = SortActionView()
     private let filmsCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         let collection = UICollectionView(frame: .zero, collectionViewLayout: layout)
         return collection
     }()
     
-    private var currentPage: Int = 1
-    private var totalPages: Int = 1
-    
     private var dataSourse: [Item] = []
-    
-    private let networkClient = NetworkServiceImpl()
-    
+ 
+    private var gridType: GridType = .double
+    private var itemSize: CGFloat = 0.0
+     
     override func viewDidLoad() {
         super.viewDidLoad()
         setup()
-        loadData(for: currentPage, sortStyle: currentSortStyle)
+        presenter?.loadData()
     }
     
     private func setup() {
-        view.backgroundColor = .black
         addSubviews()
         setupConstraints()
+        setupViews()
         setupColectionViews()
     }
     
@@ -75,70 +52,87 @@ class FilmsGridViewController: UIViewController {
     
     private func setupConstraints() {
         NSLayoutConstraint.activate([
-            sortView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            sortView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            sortView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            sortView.heightAnchor.constraint(equalToConstant: 64),
-            
-            filmsCollectionView.topAnchor.constraint(equalTo: sortView.bottomAnchor),
+            filmsCollectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             filmsCollectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
-            filmsCollectionView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
-            filmsCollectionView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+            filmsCollectionView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: Constants.border),
+            filmsCollectionView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -Constants.border),
+            
+            sortView.bottomAnchor.constraint(equalTo: filmsCollectionView.bottomAnchor, constant: -6),
+            sortView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 104),
+            sortView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -104),
+            sortView.heightAnchor.constraint(equalToConstant: 48),
         ])
+    }
+    
+    private func setupViews() {
+        view.backgroundColor = Colors.primaryBackgroundColor
+        navigationController?.navigationBar.prefersLargeTitles = true
+        itemSize = getItemSize(gridType: gridType)
+        
+        sortView.gridSizeChangeAction = { [weak self] in
+            self?.gridSizeChangeAction()
+        }
+        sortView.sortButtonChoseAction = { [weak self] in
+            self?.sortButtonAction()
+        }
     }
     
     private func setupColectionViews() {
         filmsCollectionView.delegate = self
         filmsCollectionView.dataSource = self
         filmsCollectionView.register(GridCollectionViewCell.self, forCellWithReuseIdentifier: Constants.gridCellReuseId)
+        filmsCollectionView.register(GridSingleViewCell.self, forCellWithReuseIdentifier: Constants.singleCellReuseId)
     }
     
-    private func loadData(for page: Int, sortStyle: SortEnum) {
-        switch sortStyle {
-        case .def:
-            networkClient.getPopularMovies(page: page) { [weak self] result in
-                switch result {
-                case .success(let response):
-                    self?.reloadDataSourse(response: response)
-                case .failure(let error):
-                    self?.errorAlert(error: error)
-                }
-            }
-        case .topRated:
-            networkClient.getTopRated(page: page) { [weak self] result in
-                switch result {
-                case .success(let response):
-                    self?.reloadDataSourse(response: response)
-                case .failure(let error):
-                    self?.errorAlert(error: error)
-                }
-            }
-        case .popular:
-            networkClient.getNowPlaying(page: page) { [weak self] result in
-                switch result {
-                case .success(let response):
-                    self?.reloadDataSourse(response: response)
-                case .failure(let error):
-                    self?.errorAlert(error: error)
-                }
-            }
-        }
-    }
-   
-    private func reloadDataSourse(response: AllFilmsResponse) {
-        DispatchQueue.main.async {
-            self.dataSourse.append(contentsOf: response.results)
-            self.totalPages = response.totalPages
-            self.filmsCollectionView.reloadData()
-        }
+    func setViewTitle(title: String) {
+        self.title = title
+        sortView.changeImgButton(gridType: gridType)
     }
     
-    private func errorAlert(error: ErrorModel) {
-        let alert = UIAlertController(title: "Error", message: error.localizedDescription, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { _ in
+    private func sortButtonAction() {
+        let alert = UIAlertController(title: "Sort movies:", message: nil, preferredStyle: UIAlertController.Style.actionSheet)
+        alert.addAction(UIAlertAction(title: "Top rated", style: UIAlertAction.Style.default, handler: { action in
+            self.presenter?.didSortButtonPressed(sortStyle: .topRated)
+            self.sortView.changeSortLabel(sortStyle: .topRated)
         }))
-        DispatchQueue.main.async {
-            self.present(alert, animated: true, completion: nil)
+        alert.addAction(UIAlertAction(title: "Popular", style: UIAlertAction.Style.default, handler: { action in
+            self.presenter?.didSortButtonPressed(sortStyle: .popular)
+            self.sortView.changeSortLabel(sortStyle: .popular)
+        }))
+        let cancelActoin = UIAlertAction(title: "Cancel", style: .destructive, handler: nil)
+        alert.addAction(cancelActoin)
+        self.present(alert, animated: true, completion: nil)
+    }
+    
+    private func gridSizeChangeAction() {
+        updateGridType()
+        filmsCollectionView.reloadData()
+        sortView.changeImgButton(gridType: gridType)
+    }
+    
+    private func updateGridType() {
+        switch gridType {
+            case .single:
+                gridType = .double
+            case .double:
+                gridType = .single
+        }
+        itemSize = getItemSize(gridType: gridType)
+    }
+    
+    private func getItemSize(gridType: GridType) -> CGFloat {
+        return (UIScreen.main.bounds.width / CGFloat(gridType.rawValue)) - Constants.spacing - Constants.border
+    }
+    
+    private func showDetails(item: Item) {
+        presenter?.showDetails(item: item)
+    }
+    
+    private func searchIndexForId(id: Int) -> Int? {
+        if let index = dataSourse.firstIndex(where: {$0.id == id}) {
+            return index
+        } else {
+            return nil
         }
     }
 }
@@ -149,16 +143,29 @@ extension FilmsGridViewController: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = filmsCollectionView.dequeueReusableCell(withReuseIdentifier: Constants.gridCellReuseId, for: indexPath) as! GridCollectionViewCell
         let model = dataSourse[indexPath.row]
-        cell.configure(with: model)
-        return cell
+        
+        switch gridType {
+        case .single:
+            let cell = filmsCollectionView.dequeueReusableCell(withReuseIdentifier: Constants.singleCellReuseId, for: indexPath) as! GridSingleViewCell
+            cell.configure(with: model)
+            return cell
+        case .double:
+            let cell = filmsCollectionView.dequeueReusableCell(withReuseIdentifier: Constants.gridCellReuseId, for: indexPath) as! GridCollectionViewCell
+            cell.configure(with: model)
+            return cell
+        }
     }
 }
 
 extension FilmsGridViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: Constants.itemSize, height: Constants.itemSize)
+        switch gridType {
+        case .single:
+            return CGSize(width: itemSize, height: itemSize / 2)
+        case .double:
+            return CGSize(width: itemSize, height: itemSize * 3 / 2)
+        }
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
@@ -170,33 +177,53 @@ extension FilmsGridViewController: UICollectionViewDelegateFlowLayout {
     }
     
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        if dataSourse.count - 3 == indexPath.row, currentPage < totalPages {
-            currentPage += 1
-            loadData(for: currentPage, sortStyle: currentSortStyle)
+        guard let next = presenter?.getNext() else { return }
+        if dataSourse.count - Int(gridType.rawValue) == indexPath.row, next {
+            presenter?.loadData()
         }
     }
     
-    @objc
-    func sortButtonAction() {
-        let alert = UIAlertController(title: "Sort movies:", message: nil, preferredStyle: UIAlertController.Style.actionSheet)
-        alert.addAction(UIAlertAction(title: "Top rated", style: UIAlertAction.Style.default, handler: { action in
-            self.currentSortStyle = .topRated
-            self.dataSourse.removeAll()
-            self.loadData(for: 1, sortStyle: .topRated)
-        }))
-        alert.addAction(UIAlertAction(title: "Popular", style: UIAlertAction.Style.default, handler: { action in
-            self.currentSortStyle = .popular
-            self.dataSourse.removeAll()
-            self.loadData(for: 1, sortStyle: .popular)
-        }))
-        self.present(alert, animated: true, completion: nil)
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let index = indexPath.row
+        let item = dataSourse[index]
+        showDetails(item: item)
+    }
+}
+
+extension FilmsGridViewController: FilmsGridViewControllerProtocol {
+    
+    func clearDataSource(sortStyle: SortEnum) {
+        self.sortView.changeSortLabel(sortStyle: sortStyle)
+        self.dataSourse.removeAll()
     }
     
+    
+    func reloadDataSourse(response: AllFilmsResponse) {
+        DispatchQueue.main.async {
+            self.dataSourse.append(contentsOf: response.results)
+            self.filmsCollectionView.reloadData()
+        }
+    }
+    
+    func errorAlert(error: ErrorModel) {
+        let alert = UIAlertController(title: "Error", message: error.localizedDescription, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { _ in
+        }))
+        DispatchQueue.main.async {
+            self.present(alert, animated: true, completion: nil)
+        }
+    }
+    
+    func updateCell(index: Int) {
+        if let index = searchIndexForId(id: index) {
+            filmsCollectionView.reloadItems(at: [IndexPath(row: index, section: 0)])
+        }
+    }
 }
 
 private enum Constants {
     static let gridCellReuseId = "GridCollectionViewCellIdentifier"
-    static let numberOfItemsInRow: CGFloat = 3
-    static let itemSize: CGFloat = (UIScreen.main.bounds.width / numberOfItemsInRow) - spacing
-    static let spacing: CGFloat = 2
+    static let singleCellReuseId = "SingleCellReuseId"
+    static let spacing: CGFloat = 3
+    static let border: CGFloat = 3
 }

@@ -7,13 +7,12 @@
 
 import UIKit
 
-class ProfileAttributeView: UIView {
+final class ProfileAttributeView: UIView {
     
     var didEndEditAction: ((AttNameEnum, String) -> Void)?
     var type: AttNameEnum?
     
     let defaults = UserDefaults.standard
-    
     private let label = UILabel()
     private let value = UITextField()
     private let editButton = UIButton()

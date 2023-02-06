@@ -1,29 +1,28 @@
 //
-//  AllCharactersRequest.swift
-//  RickAndMorty
+//  DetailsFilmRequest.swift
+//  ArtemProject
 //
-//  Created by Иван Беркут on 22.12.2022.
+//  Created by Artem Vavilov on 22.01.2023.
 //
 
 import Foundation
 
-class PopularFilmsRequest: RequestModel {
+class DetailsFilmRequest: RequestModel {
 
-    private var page: Int
+    private var id: Int
 
-    init(page: Int) {
-        self.page = page
+    init(id: Int) {
+        self.id = id
     }
 
     override var path: String {
-        return "movie/popular"
+        return "movie/\(id)"
     }
 
     override var parameters: [String : Any?] {
         return [
             "api_key": "e7cd6cd3c324af8138cb9d0d998c2cc6",
             "language": "en-US",
-            "page": page
         ]
     }
 
@@ -31,4 +30,3 @@ class PopularFilmsRequest: RequestModel {
         return .get
     }
 }
-

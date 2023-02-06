@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		0012C5F8296EC69400EFE5E1 /* ProfileStruct.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0012C5F7296EC69400EFE5E1 /* ProfileStruct.swift */; };
 		0012C5FA296F042000EFE5E1 /* ImagePicketManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0012C5F9296F041F00EFE5E1 /* ImagePicketManager.swift */; };
+		0012C5FD29713D0200EFE5E1 /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0012C5FC29713D0200EFE5E1 /* Colors.swift */; };
 		0012C5FF2976A62000EFE5E1 /* TopRatedFilmsRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0012C5FE2976A62000EFE5E1 /* TopRatedFilmsRequest.swift */; };
 		0012C6012976A63C00EFE5E1 /* NowPlayingFilmsRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0012C6002976A63C00EFE5E1 /* NowPlayingFilmsRequest.swift */; };
 		0033E8CF296964690095DF7E /* ErrorModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0033E8CA296964690095DF7E /* ErrorModel.swift */; };
@@ -24,6 +25,20 @@
 		0033E8EB296D9AE50095DF7E /* ProfileHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0033E8EA296D9AE50095DF7E /* ProfileHeaderView.swift */; };
 		0033E8ED296DA21A0095DF7E /* ProfileAttributeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0033E8EC296DA21A0095DF7E /* ProfileAttributeView.swift */; };
 		0033E8EF296DBCD70095DF7E /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0033E8EE296DBCD70095DF7E /* TabBarController.swift */; };
+		0063428A298A4AA70078DF6B /* FilmsGridRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00634289298A4AA70078DF6B /* FilmsGridRouter.swift */; };
+		0063428C298BC9F90078DF6B /* FilmDetailRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0063428B298BC9F90078DF6B /* FilmDetailRouter.swift */; };
+		0063428E298C29450078DF6B /* DataStruct.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0063428D298C29450078DF6B /* DataStruct.swift */; };
+		00634290298E743A0078DF6B /* SupportFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0063428F298E743A0078DF6B /* SupportFunctions.swift */; };
+		00F32BAD2977FFD20029E4C8 /* SotrView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00F32BAC2977FFD20029E4C8 /* SotrView.swift */; };
+		00F32BAF29799E7D0029E4C8 /* GridSingleViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00F32BAE29799E7D0029E4C8 /* GridSingleViewCell.swift */; };
+		00F32BB1297BE3560029E4C8 /* SortActionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00F32BB0297BE3560029E4C8 /* SortActionView.swift */; };
+		00F32BB4297BF9920029E4C8 /* FilmDetailController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00F32BB3297BF9920029E4C8 /* FilmDetailController.swift */; };
+		00F32BB8297D3CD90029E4C8 /* DetailsFilmRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00F32BB7297D3CD90029E4C8 /* DetailsFilmRequest.swift */; };
+		00F32BBA297D3E190029E4C8 /* DetailsFilmResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00F32BB9297D3E190029E4C8 /* DetailsFilmResponse.swift */; };
+		00F32BBC2983B82D0029E4C8 /* FilmsGridBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00F32BBB2983B82D0029E4C8 /* FilmsGridBuilder.swift */; };
+		00F32BBE2983C96B0029E4C8 /* FilmsGridPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00F32BBD2983C96B0029E4C8 /* FilmsGridPresenter.swift */; };
+		00F32BC02983E3A40029E4C8 /* FilmDetailBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00F32BBF2983E3A40029E4C8 /* FilmDetailBuilder.swift */; };
+		00F32BC22983E4F90029E4C8 /* FilmDetailPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00F32BC12983E4F90029E4C8 /* FilmDetailPresenter.swift */; };
 		7FA9803C295B23D10053E050 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FA9803B295B23D10053E050 /* AppDelegate.swift */; };
 		7FA9803E295B23D10053E050 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FA9803D295B23D10053E050 /* SceneDelegate.swift */; };
 		7FA98040295B23D10053E050 /* FilmsGridViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FA9803F295B23D10053E050 /* FilmsGridViewController.swift */; };
@@ -35,6 +50,7 @@
 /* Begin PBXFileReference section */
 		0012C5F7296EC69400EFE5E1 /* ProfileStruct.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileStruct.swift; sourceTree = "<group>"; };
 		0012C5F9296F041F00EFE5E1 /* ImagePicketManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePicketManager.swift; sourceTree = "<group>"; };
+		0012C5FC29713D0200EFE5E1 /* Colors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Colors.swift; sourceTree = "<group>"; };
 		0012C5FE2976A62000EFE5E1 /* TopRatedFilmsRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopRatedFilmsRequest.swift; sourceTree = "<group>"; };
 		0012C6002976A63C00EFE5E1 /* NowPlayingFilmsRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NowPlayingFilmsRequest.swift; sourceTree = "<group>"; };
 		0033E8CA296964690095DF7E /* ErrorModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ErrorModel.swift; sourceTree = "<group>"; };
@@ -49,6 +65,20 @@
 		0033E8EA296D9AE50095DF7E /* ProfileHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileHeaderView.swift; sourceTree = "<group>"; };
 		0033E8EC296DA21A0095DF7E /* ProfileAttributeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileAttributeView.swift; sourceTree = "<group>"; };
 		0033E8EE296DBCD70095DF7E /* TabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarController.swift; sourceTree = "<group>"; };
+		00634289298A4AA70078DF6B /* FilmsGridRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilmsGridRouter.swift; sourceTree = "<group>"; };
+		0063428B298BC9F90078DF6B /* FilmDetailRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilmDetailRouter.swift; sourceTree = "<group>"; };
+		0063428D298C29450078DF6B /* DataStruct.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataStruct.swift; sourceTree = "<group>"; };
+		0063428F298E743A0078DF6B /* SupportFunctions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupportFunctions.swift; sourceTree = "<group>"; };
+		00F32BAC2977FFD20029E4C8 /* SotrView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SotrView.swift; sourceTree = "<group>"; };
+		00F32BAE29799E7D0029E4C8 /* GridSingleViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GridSingleViewCell.swift; sourceTree = "<group>"; };
+		00F32BB0297BE3560029E4C8 /* SortActionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SortActionView.swift; sourceTree = "<group>"; };
+		00F32BB3297BF9920029E4C8 /* FilmDetailController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilmDetailController.swift; sourceTree = "<group>"; };
+		00F32BB7297D3CD90029E4C8 /* DetailsFilmRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailsFilmRequest.swift; sourceTree = "<group>"; };
+		00F32BB9297D3E190029E4C8 /* DetailsFilmResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailsFilmResponse.swift; sourceTree = "<group>"; };
+		00F32BBB2983B82D0029E4C8 /* FilmsGridBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilmsGridBuilder.swift; sourceTree = "<group>"; };
+		00F32BBD2983C96B0029E4C8 /* FilmsGridPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilmsGridPresenter.swift; sourceTree = "<group>"; };
+		00F32BBF2983E3A40029E4C8 /* FilmDetailBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilmDetailBuilder.swift; sourceTree = "<group>"; };
+		00F32BC12983E4F90029E4C8 /* FilmDetailPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilmDetailPresenter.swift; sourceTree = "<group>"; };
 		7FA98038295B23D10053E050 /* ArtemProject.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ArtemProject.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7FA9803B295B23D10053E050 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		7FA9803D295B23D10053E050 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -71,6 +101,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0012C5FB29713CE800EFE5E1 /* Resourses */ = {
+			isa = PBXGroup;
+			children = (
+				0012C5FC29713D0200EFE5E1 /* Colors.swift */,
+			);
+			path = Resourses;
+			sourceTree = "<group>";
+		};
 		0033E8C92969644D0095DF7E /* Network */ = {
 			isa = PBXGroup;
 			children = (
@@ -87,6 +125,7 @@
 			isa = PBXGroup;
 			children = (
 				0033E8D52969650D0095DF7E /* AllFilmsResponse.swift */,
+				00F32BB9297D3E190029E4C8 /* DetailsFilmResponse.swift */,
 				0012C5F7296EC69400EFE5E1 /* ProfileStruct.swift */,
 			);
 			path = Models;
@@ -98,6 +137,7 @@
 				0033E8CC296964690095DF7E /* PopularFilmsRequest.swift */,
 				0012C5FE2976A62000EFE5E1 /* TopRatedFilmsRequest.swift */,
 				0012C6002976A63C00EFE5E1 /* NowPlayingFilmsRequest.swift */,
+				00F32BB7297D3CD90029E4C8 /* DetailsFilmRequest.swift */,
 			);
 			path = Requests;
 			sourceTree = "<group>";
@@ -114,8 +154,13 @@
 		0033E8D929696A830095DF7E /* MainFilmsGridView */ = {
 			isa = PBXGroup;
 			children = (
+				00F32BB2297BF9320029E4C8 /* FilmDetails */,
+				00F32BAB2977FF7E0029E4C8 /* GridCollectionOtherViews */,
 				0033E8DA29696A9C0095DF7E /* GridCollectionViewCells */,
 				7FA9803F295B23D10053E050 /* FilmsGridViewController.swift */,
+				00F32BBB2983B82D0029E4C8 /* FilmsGridBuilder.swift */,
+				00F32BBD2983C96B0029E4C8 /* FilmsGridPresenter.swift */,
+				00634289298A4AA70078DF6B /* FilmsGridRouter.swift */,
 			);
 			path = MainFilmsGridView;
 			sourceTree = "<group>";
@@ -124,6 +169,7 @@
 			isa = PBXGroup;
 			children = (
 				0033E8DB29696AAE0095DF7E /* GridCollectionViewCell.swift */,
+				00F32BAE29799E7D0029E4C8 /* GridSingleViewCell.swift */,
 			);
 			path = GridCollectionViewCells;
 			sourceTree = "<group>";
@@ -142,6 +188,9 @@
 			children = (
 				0033E8E7296C02E80095DF7E /* MainEnums.swift */,
 				0012C5F9296F041F00EFE5E1 /* ImagePicketManager.swift */,
+				0033E8EE296DBCD70095DF7E /* TabBarController.swift */,
+				0063428D298C29450078DF6B /* DataStruct.swift */,
+				0063428F298E743A0078DF6B /* SupportFunctions.swift */,
 			);
 			path = Other;
 			sourceTree = "<group>";
@@ -153,6 +202,26 @@
 				0033E8EC296DA21A0095DF7E /* ProfileAttributeView.swift */,
 			);
 			path = ProfileViews;
+			sourceTree = "<group>";
+		};
+		00F32BAB2977FF7E0029E4C8 /* GridCollectionOtherViews */ = {
+			isa = PBXGroup;
+			children = (
+				00F32BAC2977FFD20029E4C8 /* SotrView.swift */,
+				00F32BB0297BE3560029E4C8 /* SortActionView.swift */,
+			);
+			path = GridCollectionOtherViews;
+			sourceTree = "<group>";
+		};
+		00F32BB2297BF9320029E4C8 /* FilmDetails */ = {
+			isa = PBXGroup;
+			children = (
+				00F32BB3297BF9920029E4C8 /* FilmDetailController.swift */,
+				00F32BBF2983E3A40029E4C8 /* FilmDetailBuilder.swift */,
+				00F32BC12983E4F90029E4C8 /* FilmDetailPresenter.swift */,
+				0063428B298BC9F90078DF6B /* FilmDetailRouter.swift */,
+			);
+			path = FilmDetails;
 			sourceTree = "<group>";
 		};
 		7FA9802F295B23D10053E050 = {
@@ -174,6 +243,7 @@
 		7FA9803A295B23D10053E050 /* ArtemProject */ = {
 			isa = PBXGroup;
 			children = (
+				0012C5FB29713CE800EFE5E1 /* Resourses */,
 				0033E8E6296C02C80095DF7E /* Other */,
 				0033E8D829696A6D0095DF7E /* Screens */,
 				0033E8D4296964F70095DF7E /* Models */,
@@ -184,7 +254,6 @@
 				7FA98044295B23D20053E050 /* Assets.xcassets */,
 				7FA98046295B23D20053E050 /* LaunchScreen.storyboard */,
 				7FA98049295B23D20053E050 /* Info.plist */,
-				0033E8EE296DBCD70095DF7E /* TabBarController.swift */,
 			);
 			path = ArtemProject;
 			sourceTree = "<group>";
@@ -267,26 +336,41 @@
 			buildActionMask = 2147483647;
 			files = (
 				0033E8D0296964690095DF7E /* RequestModel.swift in Sources */,
+				00F32BBC2983B82D0029E4C8 /* FilmsGridBuilder.swift in Sources */,
+				0012C5FD29713D0200EFE5E1 /* Colors.swift in Sources */,
 				7FA98040295B23D10053E050 /* FilmsGridViewController.swift in Sources */,
 				0033E8D3296964690095DF7E /* NetworkService.swift in Sources */,
 				0033E8EF296DBCD70095DF7E /* TabBarController.swift in Sources */,
 				0012C6012976A63C00EFE5E1 /* NowPlayingFilmsRequest.swift in Sources */,
+				00F32BAF29799E7D0029E4C8 /* GridSingleViewCell.swift in Sources */,
+				00F32BC02983E3A40029E4C8 /* FilmDetailBuilder.swift in Sources */,
+				00F32BB8297D3CD90029E4C8 /* DetailsFilmRequest.swift in Sources */,
 				0012C5F8296EC69400EFE5E1 /* ProfileStruct.swift in Sources */,
+				00F32BB4297BF9920029E4C8 /* FilmDetailController.swift in Sources */,
 				0033E8ED296DA21A0095DF7E /* ProfileAttributeView.swift in Sources */,
+				00F32BBE2983C96B0029E4C8 /* FilmsGridPresenter.swift in Sources */,
 				0012C5FF2976A62000EFE5E1 /* TopRatedFilmsRequest.swift in Sources */,
+				00F32BC22983E4F90029E4C8 /* FilmDetailPresenter.swift in Sources */,
 				0033E8D62969650D0095DF7E /* AllFilmsResponse.swift in Sources */,
 				0033E8DC29696AAE0095DF7E /* GridCollectionViewCell.swift in Sources */,
 				0033E8E8296C02E80095DF7E /* MainEnums.swift in Sources */,
 				0033E8EB296D9AE50095DF7E /* ProfileHeaderView.swift in Sources */,
+				0063428E298C29450078DF6B /* DataStruct.swift in Sources */,
 				7FA9803C295B23D10053E050 /* AppDelegate.swift in Sources */,
+				00F32BB1297BE3560029E4C8 /* SortActionView.swift in Sources */,
+				0063428A298A4AA70078DF6B /* FilmsGridRouter.swift in Sources */,
 				0033E8DF296979A80095DF7E /* ProfileViewController.swift in Sources */,
 				0012C5FA296F042000EFE5E1 /* ImagePicketManager.swift in Sources */,
 				0033E8D62969650D0095DF7E /* AllFilmsResponse.swift in Sources */,
+				00634290298E743A0078DF6B /* SupportFunctions.swift in Sources */,
+				00F32BAD2977FFD20029E4C8 /* SotrView.swift in Sources */,
 				0033E8DC29696AAE0095DF7E /* GridCollectionViewCell.swift in Sources */,
+				00F32BBA297D3E190029E4C8 /* DetailsFilmResponse.swift in Sources */,
 				7FA9803C295B23D10053E050 /* AppDelegate.swift in Sources */,
 				0033E8DF296979A80095DF7E /* ProfileViewController.swift in Sources */,
 				0033E8CF296964690095DF7E /* ErrorModel.swift in Sources */,
 				7FA9803E295B23D10053E050 /* SceneDelegate.swift in Sources */,
+				0063428C298BC9F90078DF6B /* FilmDetailRouter.swift in Sources */,
 				0033E8D2296964690095DF7E /* ServiceManager.swift in Sources */,
 				0033E8D1296964690095DF7E /* PopularFilmsRequest.swift in Sources */,
 			);
