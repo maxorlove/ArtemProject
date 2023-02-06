@@ -28,7 +28,7 @@ class SupportFunctions {
     static func checkLikedFilm(id: Int) -> Bool {
         let defaults = UserDefaults.standard
         if let likedFilms = defaults.array(forKey: "likedFilms") as? [Int] {
-            var set = Set(likedFilms)
+            let set = Set(likedFilms)
             if set.contains(id) {
                 return true
             } else {
