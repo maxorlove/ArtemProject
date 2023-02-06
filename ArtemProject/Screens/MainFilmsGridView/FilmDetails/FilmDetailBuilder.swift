@@ -9,14 +9,14 @@ import UIKit
 
 final class FilmDetailBuilder {
     static func build(data: DetailDataStruct) -> UIViewController {
-        let controller = FilmDetailController()
-        let router = FilmDetailRouter(viewController: controller)
+        let viewController = FilmDetailController()
+        let router = FilmDetailRouter(viewController: viewController)
         let presenter = FilmDetailPresenter(
             networkClient: NetworkService(),
-            controller: controller,
+            controller: viewController,
             router: router,
             data: data)
-        controller.presenter = presenter
-        return controller
+        viewController.presenter = presenter
+        return viewController
     }
 }

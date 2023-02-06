@@ -8,7 +8,9 @@
 import Foundation
 
 protocol FilmDetailPresenterProtocol: AnyObject {
-    func getData()
+    func loadData()
+    func setupLikeButton()
+    func likeDidTapped()
     func popOut()
 }
 
@@ -17,7 +19,7 @@ class FilmDetailPresenter {
     private let router: FilmDetailRouterProtocol
     private let networkClient: FilmDetailNetworkProtocol
     private let data: DetailDataStruct
-    //    let item
+    
     init(
         networkClient: FilmDetailNetworkProtocol,
         controller: FilmDetailControllerProtocol,
@@ -32,7 +34,17 @@ class FilmDetailPresenter {
 }
 
 extension FilmDetailPresenter: FilmDetailPresenterProtocol {
-    func getData() {
+    func likeDidTapped() {
+        SupportFunctions.addLikedFilm(id: data.id)
+        setupLikeButton()
+        data.callBack?(data.id)
+    }
+    
+    func setupLikeButton() {
+        viewController?.setupLikeButton(isLiked: SupportFunctions.checkLikedFilm(id: data.id))
+    }
+    
+    func loadData() {
         let id = data.id
         networkClient.getDetails(id: id) { [weak self] result in
             switch result {

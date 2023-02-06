@@ -11,6 +11,7 @@ protocol FilmsGridViewControllerProtocol: AnyObject {
     func reloadDataSourse(response: AllFilmsResponse)
     func errorAlert(error: ErrorModel)
     func clearDataSource(sortStyle: SortEnum)
+    func updateCell(index: Int)
 }
 
 final class FilmsGridViewController: UIViewController {
@@ -126,6 +127,14 @@ final class FilmsGridViewController: UIViewController {
     private func showDetails(item: Item) {
         presenter?.showDetails(item: item)
     }
+    
+    private func searchIndexForId(id: Int) -> Int? {
+        if let index = dataSourse.firstIndex(where: {$0.id == id}) {
+            return index
+        } else {
+            return nil
+        }
+    }
 }
 
 extension FilmsGridViewController: UICollectionViewDataSource {
@@ -182,6 +191,7 @@ extension FilmsGridViewController: UICollectionViewDelegateFlowLayout {
 }
 
 extension FilmsGridViewController: FilmsGridViewControllerProtocol {
+    
     func clearDataSource(sortStyle: SortEnum) {
         self.sortView.changeSortLabel(sortStyle: sortStyle)
         self.dataSourse.removeAll()
@@ -201,6 +211,12 @@ extension FilmsGridViewController: FilmsGridViewControllerProtocol {
         }))
         DispatchQueue.main.async {
             self.present(alert, animated: true, completion: nil)
+        }
+    }
+    
+    func updateCell(index: Int) {
+        if let index = searchIndexForId(id: index) {
+            filmsCollectionView.reloadItems(at: [IndexPath(row: index, section: 0)])
         }
     }
 }

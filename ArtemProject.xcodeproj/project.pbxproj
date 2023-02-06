@@ -28,6 +28,7 @@
 		0063428A298A4AA70078DF6B /* FilmsGridRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00634289298A4AA70078DF6B /* FilmsGridRouter.swift */; };
 		0063428C298BC9F90078DF6B /* FilmDetailRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0063428B298BC9F90078DF6B /* FilmDetailRouter.swift */; };
 		0063428E298C29450078DF6B /* DataStruct.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0063428D298C29450078DF6B /* DataStruct.swift */; };
+		00634290298E743A0078DF6B /* SupportFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0063428F298E743A0078DF6B /* SupportFunctions.swift */; };
 		00F32BAD2977FFD20029E4C8 /* SotrView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00F32BAC2977FFD20029E4C8 /* SotrView.swift */; };
 		00F32BAF29799E7D0029E4C8 /* GridSingleViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00F32BAE29799E7D0029E4C8 /* GridSingleViewCell.swift */; };
 		00F32BB1297BE3560029E4C8 /* SortActionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00F32BB0297BE3560029E4C8 /* SortActionView.swift */; };
@@ -67,6 +68,7 @@
 		00634289298A4AA70078DF6B /* FilmsGridRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilmsGridRouter.swift; sourceTree = "<group>"; };
 		0063428B298BC9F90078DF6B /* FilmDetailRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilmDetailRouter.swift; sourceTree = "<group>"; };
 		0063428D298C29450078DF6B /* DataStruct.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataStruct.swift; sourceTree = "<group>"; };
+		0063428F298E743A0078DF6B /* SupportFunctions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupportFunctions.swift; sourceTree = "<group>"; };
 		00F32BAC2977FFD20029E4C8 /* SotrView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SotrView.swift; sourceTree = "<group>"; };
 		00F32BAE29799E7D0029E4C8 /* GridSingleViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GridSingleViewCell.swift; sourceTree = "<group>"; };
 		00F32BB0297BE3560029E4C8 /* SortActionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SortActionView.swift; sourceTree = "<group>"; };
@@ -188,6 +190,7 @@
 				0012C5F9296F041F00EFE5E1 /* ImagePicketManager.swift */,
 				0033E8EE296DBCD70095DF7E /* TabBarController.swift */,
 				0063428D298C29450078DF6B /* DataStruct.swift */,
+				0063428F298E743A0078DF6B /* SupportFunctions.swift */,
 			);
 			path = Other;
 			sourceTree = "<group>";
@@ -359,6 +362,7 @@
 				0033E8DF296979A80095DF7E /* ProfileViewController.swift in Sources */,
 				0012C5FA296F042000EFE5E1 /* ImagePicketManager.swift in Sources */,
 				0033E8D62969650D0095DF7E /* AllFilmsResponse.swift in Sources */,
+				00634290298E743A0078DF6B /* SupportFunctions.swift in Sources */,
 				00F32BAD2977FFD20029E4C8 /* SotrView.swift in Sources */,
 				0033E8DC29696AAE0095DF7E /* GridCollectionViewCell.swift in Sources */,
 				00F32BBA297D3E190029E4C8 /* DetailsFilmResponse.swift in Sources */,

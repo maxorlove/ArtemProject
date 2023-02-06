@@ -11,6 +11,7 @@ import SDWebImage
 protocol FilmDetailControllerProtocol: AnyObject {
     func configure(with item: DetailsFilmResponse)
     func errorAlert(error: ErrorModel)
+    func setupLikeButton(isLiked: Bool)
 }
 
 final class FilmDetailController: UIViewController {
@@ -21,6 +22,7 @@ final class FilmDetailController: UIViewController {
     private let topView = UIView()
     private let bottomView = UIView()
     private let imageView = UIImageView()
+    private let likeButton = UIButton()
     
     private let blurEffectView = UIVisualEffectView(effect: UIBlurEffect(style: .systemUltraThinMaterialDark))
     private let backImageView = UIImageView()
@@ -35,14 +37,15 @@ final class FilmDetailController: UIViewController {
    
     override func viewDidLoad() {
         super.viewDidLoad()
-        presenter?.getData()
         setup()
+        presenter?.loadData()
     }
     
     private func setup() {
         addSubviews()
         setupConstraints()
         setupViews()
+        setupButtons()
     }
     
     private func addSubviews(){
@@ -58,7 +61,7 @@ final class FilmDetailController: UIViewController {
             $0.translatesAutoresizingMaskIntoConstraints = false
             bottomView.addSubview($0)
         }
-        [backImageView, blurEffectView, imageView].forEach {
+        [backImageView, blurEffectView, imageView, likeButton].forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false
             topView.addSubview($0)
         }
@@ -91,6 +94,11 @@ final class FilmDetailController: UIViewController {
             imageView.leadingAnchor.constraint(equalTo: topView.leadingAnchor, constant: 48),
             imageView.trailingAnchor.constraint(equalTo: topView.trailingAnchor, constant: -48),
             imageView.bottomAnchor.constraint(equalTo: topView.bottomAnchor, constant: -40),
+            
+            likeButton.bottomAnchor.constraint(equalTo: imageView.bottomAnchor, constant: -16),
+            likeButton.trailingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: -16),
+            likeButton.heightAnchor.constraint(equalToConstant: 32),
+            likeButton.widthAnchor.constraint(equalTo: likeButton.heightAnchor),
 
             bottomView.topAnchor.constraint(equalTo: topView.bottomAnchor, constant: -16),
             bottomView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
@@ -164,6 +172,16 @@ final class FilmDetailController: UIViewController {
         labelView.bottomAnchor.constraint(equalTo: textView.bottomAnchor).isActive = true
         return textView
     }
+    
+    private func setupButtons() {
+        likeButton.addTarget(self, action: #selector(likeDidTapped), for: .touchUpInside)
+        presenter?.setupLikeButton()
+    }
+    
+    @objc
+    func likeDidTapped() {
+        presenter?.likeDidTapped()
+    }
 }
 
 extension FilmDetailController: FilmDetailControllerProtocol {
@@ -181,6 +199,17 @@ extension FilmDetailController: FilmDetailControllerProtocol {
         }))
         DispatchQueue.main.async {
             self.present(alert, animated: true, completion: nil)
+        }
+    }
+    
+    func setupLikeButton(isLiked: Bool) {
+        let imageConfig = UIImage.SymbolConfiguration(scale: .large)
+        if isLiked {
+            likeButton.tintColor = .red
+            likeButton.setImage(UIImage(systemName: "heart.fill", withConfiguration: imageConfig), for: .normal)
+        } else {
+            likeButton.tintColor = .systemGray
+            likeButton.setImage(UIImage(systemName: "heart", withConfiguration: imageConfig), for: .normal)
         }
     }
 }

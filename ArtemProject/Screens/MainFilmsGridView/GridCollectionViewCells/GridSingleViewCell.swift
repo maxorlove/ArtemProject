@@ -16,6 +16,8 @@ final class GridSingleViewCell: UICollectionViewCell {
     private let ratingView = UIView()
     private let ratingLabel = UILabel()
     private let ratingImg = UIImageView()
+    private let likeButton = UIButton()
+    private var id: Int?
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -30,6 +32,7 @@ final class GridSingleViewCell: UICollectionViewCell {
         addSubviews()
         setupConstraints()
         setupView()
+        setupButtons()
     }
     
     private func addSubviews() {
@@ -38,7 +41,7 @@ final class GridSingleViewCell: UICollectionViewCell {
             $0.translatesAutoresizingMaskIntoConstraints = false
         }
         
-        [image, label, yearLabel, ratingView].forEach {
+        [image, label, yearLabel, ratingView, likeButton].forEach {
             contentView.addSubview($0)
             $0.translatesAutoresizingMaskIntoConstraints = false
         }
@@ -69,6 +72,11 @@ final class GridSingleViewCell: UICollectionViewCell {
             
             ratingLabel.centerYAnchor.constraint(equalTo: ratingView.centerYAnchor),
             ratingLabel.trailingAnchor.constraint(equalTo: ratingView.trailingAnchor, constant: -6),
+            
+            likeButton.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 4),
+            likeButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -4),
+            likeButton.widthAnchor.constraint(equalToConstant: 32),
+            likeButton.heightAnchor.constraint(equalTo: likeButton.widthAnchor),
         ])
     }
     
@@ -98,15 +106,38 @@ final class GridSingleViewCell: UICollectionViewCell {
     }
     
     func configure(with item: Item) {
+        id = item.id
         label.text = item.title
         yearLabel.text = item.releaseDate
         ratingLabel.text = "\(item.voteAverage)"
+        setupLikeButton(isLiked: SupportFunctions.checkLikedFilm(id: item.id))
         if let poster = item.posterPath {
             setImage(path: poster)
         } else {
             return
         }
-        
+    }
+    
+    func setupLikeButton(isLiked: Bool) {
+        let imageConfig = UIImage.SymbolConfiguration(scale: .large)
+        if isLiked {
+            likeButton.tintColor = .red
+            likeButton.setImage(UIImage(systemName: "heart.fill", withConfiguration: imageConfig), for: .normal)
+        } else {
+            likeButton.tintColor = .systemGray
+            likeButton.setImage(UIImage(systemName: "heart", withConfiguration: imageConfig), for: .normal)
+        }
+    }
+    
+    private func setupButtons() {
+        likeButton.addTarget(self, action: #selector(likeDidTapped), for: .touchUpInside)
+    }
+    
+    @objc
+    private func likeDidTapped() {
+        guard let id = id else { return }
+        SupportFunctions.addLikedFilm(id: id)
+        setupLikeButton(isLiked: SupportFunctions.checkLikedFilm(id: id))
     }
     
     private func setImage(path: String) {

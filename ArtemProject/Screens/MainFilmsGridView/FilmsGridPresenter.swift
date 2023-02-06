@@ -39,7 +39,10 @@ final class FilmsGridPresenter {
 
 extension FilmsGridPresenter: FilmsGridPresenterProtocol {
     func showDetails(item: Item) {
-        let data = DetailDataStruct.init(id: item.id)
+        var data = DetailDataStruct.init(id: item.id)
+        data.callBack = { [weak self] id in
+            self?.viewController?.updateCell(index: id)
+        }
         router.showFilmsDetailView(data: data)
     }
     
@@ -68,10 +71,10 @@ extension FilmsGridPresenter: FilmsGridPresenterProtocol {
     }
     
     func loadData() {
-        let page = currentPage + 1
+        currentPage += 1
         switch currentSortStyle {
         case .def:
-            networkClient.getPopularMovies(page: page) { [weak self] result in
+            networkClient.getPopularMovies(page: currentPage) { [weak self] result in
                 switch result {
                 case .success(let response):
                     self?.totalPages = response.totalPages
@@ -81,7 +84,7 @@ extension FilmsGridPresenter: FilmsGridPresenterProtocol {
                 }
             }
         case .topRated:
-            networkClient.getTopRated(page: page) { [weak self] result in
+            networkClient.getTopRated(page: currentPage) { [weak self] result in
                 switch result {
                 case .success(let response):
                     self?.totalPages = response.totalPages
@@ -91,7 +94,7 @@ extension FilmsGridPresenter: FilmsGridPresenterProtocol {
                 }
             }
         case .popular:
-            networkClient.getNowPlaying(page: page) { [weak self] result in
+            networkClient.getNowPlaying(page: currentPage) { [weak self] result in
                 switch result {
                 case .success(let response):
                     self?.totalPages = response.totalPages

@@ -16,6 +16,8 @@ final class GridCollectionViewCell: UICollectionViewCell {
     private let ratingView = UIView()
     private let ratingLabel = UILabel()
     private let ratingImg = UIImageView()
+    private let likeButton = UIButton()
+    private var id: Int?
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -30,6 +32,7 @@ final class GridCollectionViewCell: UICollectionViewCell {
         addSubviews()
         setupConstraints()
         setupView()
+        setupButtons()
     }
     
     private func addSubviews() {
@@ -41,7 +44,7 @@ final class GridCollectionViewCell: UICollectionViewCell {
             $0.translatesAutoresizingMaskIntoConstraints = false
         }
         
-        [image, labelView, ratingView].forEach {
+        [image, labelView, ratingView, likeButton].forEach {
             contentView.addSubview($0)
             $0.translatesAutoresizingMaskIntoConstraints = false
         }
@@ -67,7 +70,7 @@ final class GridCollectionViewCell: UICollectionViewCell {
             labelText.bottomAnchor.constraint(equalTo: labelView.bottomAnchor, constant: -4),
             
             ratingView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 4),
-            ratingView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -4),
+            ratingView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 4),
             ratingView.widthAnchor.constraint(equalToConstant: contentView.frame.width / 3),
             ratingView.heightAnchor.constraint(equalToConstant: 32),
             
@@ -76,6 +79,11 @@ final class GridCollectionViewCell: UICollectionViewCell {
             
             ratingLabel.centerYAnchor.constraint(equalTo: ratingView.centerYAnchor),
             ratingLabel.trailingAnchor.constraint(equalTo: ratingView.trailingAnchor, constant: -6),
+            
+            likeButton.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 4),
+            likeButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -4),
+            likeButton.widthAnchor.constraint(equalToConstant: 32),
+            likeButton.heightAnchor.constraint(equalTo: likeButton.widthAnchor),
         ])
     }
     
@@ -104,11 +112,35 @@ final class GridCollectionViewCell: UICollectionViewCell {
         ratingLabel.textColor = Colors.accentTextColor
     }
     
+    private func setupButtons() {
+        likeButton.addTarget(self, action: #selector(likeDidTapped), for: .touchUpInside)
+    }
+    
+    @objc
+    private func likeDidTapped() {
+        guard let id = id else { return }
+        SupportFunctions.addLikedFilm(id: id)
+        setupLikeButton(isLiked: SupportFunctions.checkLikedFilm(id: id))
+    }
+    
     func configure(with item: Item) {
+        id = item.id
         labelText.text = item.title
         ratingLabel.text = "\(item.voteAverage)"
         guard let poster = item.posterPath else {return}
         setImage(path: poster)
+        setupLikeButton(isLiked: SupportFunctions.checkLikedFilm(id: item.id))
+    }
+    
+    func setupLikeButton(isLiked: Bool) {
+        let imageConfig = UIImage.SymbolConfiguration(scale: .large)
+        if isLiked {
+            likeButton.tintColor = .red
+            likeButton.setImage(UIImage(systemName: "heart.fill", withConfiguration: imageConfig), for: .normal)
+        } else {
+            likeButton.tintColor = .systemGray
+            likeButton.setImage(UIImage(systemName: "heart", withConfiguration: imageConfig), for: .normal)
+        }
     }
     
     private func setImage(path: String) {

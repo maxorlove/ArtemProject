@@ -9,6 +9,7 @@ import Foundation
 
 struct DetailDataStruct {
     let id: Int
+    var callBack: ((Int) -> ())?
     
     init(id: Int) {
         self.id = id
