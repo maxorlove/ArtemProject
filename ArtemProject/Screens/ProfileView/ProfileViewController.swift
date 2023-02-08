@@ -7,12 +7,15 @@
 
 import UIKit
 
+protocol ProfileViewControllerProtocol: AnyObject {
+    func configure(profileStruct: Profile)
+    func switchEdit(edit: Bool)
+    func setViewTitle(title: String)
+}
+
 final class ProfileViewController: UIViewController {
+    var presenter: ProfileViewPresenterProtocol?
     
-    //    MARK: - properties
-    var didEndEdit: ((ProfileStruct) -> Void)?
-    
-    private var editFlag = false
     private let headerView = ProfileHeaderView()
     private let verticalStackView: UIStackView = {
         let stack = UIStackView()
@@ -21,43 +24,13 @@ final class ProfileViewController: UIViewController {
         stack.spacing = 3
         return stack
     }()
+    
     private var stackTopAnchor: NSLayoutConstraint!
     
-    private var profileStruct: ProfileStruct = {
-        var profile = ProfileStruct()
-        let defaults = UserDefaults.standard
-        AttNameEnum.allCases.forEach {
-            switch $0 {
-            case .name:
-                if let savedValue = defaults.string(forKey: "\($0)") {
-                    profile.name = savedValue
-                }
-            case .email:
-                if let savedValue = defaults.string(forKey: "\($0)") {
-                    profile.email = savedValue
-                }
-            case .title:
-                if let savedValue = defaults.string(forKey: "\($0)") {
-                    profile.title = savedValue
-                }
-            case .location:
-                if let savedValue = defaults.string(forKey: "\($0)") {
-                    profile.location = savedValue
-                }
-            }
-        }
-        if let data = defaults.object(forKey: "image") as? Data,  let image = UIImage(data: data) {
-            profile.image = image
-        }
-        return profile
-    }()
-    
-    var endEdit: ((ProfileStruct) -> Void)?
-    
-    //    MARK: - main funcs
     override func viewDidLoad() {
         super.viewDidLoad()
         setup()
+        presenter?.setupView()
         NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
@@ -91,121 +64,83 @@ final class ProfileViewController: UIViewController {
         stackTopAnchor.isActive = true
     }
     
-    func setupViews() {
-        view.backgroundColor = .white
-        verticalStackView.backgroundColor = .lightGray
-        headerView.setEditFlag(edit: editFlag)
-        if editFlag {
-            navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Save", image: nil, target: self, action: #selector(doneEdit))
-        } else {
-            navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Edit", image: nil, target: self, action: #selector(swichEdit))
-        }
-        
+    private func setupViews() {
+        view.backgroundColor = Colors.primaryBackgroundColor
         headerView.actionPressed = {[weak self] in
-            ImagePickerManager().pickImage(self!){ image in
+            ImagePickerManager().pickImage(self!) { image in
                 self?.headerView.setImage(image: image)
-                self?.profileStruct.image = image
+                if let data = image.pngData() {
+                    self?.presenter?.saveProfileImage(image: data)
                 }
+            }
         }
-        updateHeaderView()
+    }
+    
+    private func showAlert(message: String) {
+        let alert = UIAlertController(title: "Error", message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { _ in
+        }))
+        DispatchQueue.main.async {
+            self.present(alert, animated: true, completion: nil)
+        }
     }
     
     private func addStackViews() {
         AttNameEnum.allCases.forEach {
             let att = createProfileAttribute(att: $0)
-            att.setEditFlag(edit: editFlag)
             verticalStackView.addArrangedSubview(att)
-        }
-    }
-    
-    private func prep(attType: AttNameEnum, textValue: String) {
-        switch attType {
-        case .name:
-            profileStruct.name = textValue
-        case .email:
-            profileStruct.email = textValue
-        case .title:
-            profileStruct.title = textValue
-        case .location:
-            profileStruct.location = textValue
         }
     }
     
     private func createProfileAttribute(att: AttNameEnum) -> ProfileAttributeView {
         let view = ProfileAttributeView()
-        view.didEndEditAction = {[weak self] attType, textValue in
-            self?.prep(attType: attType, textValue: textValue)
-        }
         view.configure(type: att)
+        view.didEndEditAction = { [weak self] (att, value) in
+            self?.presenter?.saveAttValue(att: att, value: value)
+        }
         return view
     }
     
-    //    MARK: - func
-    func setEditFlag(edit: Bool) {
-        editFlag = edit
-    }
-    
-    func setViewTitle(title: String) {
-        self.title = title
-    }
-    
-    func saveAttValues() {
-        let defaults = UserDefaults.standard
-        defaults.set(profileStruct.name, forKey: "name")
-        defaults.set(profileStruct.email, forKey: "email")
-        defaults.set(profileStruct.title, forKey: "title")
-        defaults.set(profileStruct.location, forKey: "location")
-        if let data = profileStruct.image.pngData() {
-            defaults.set(data, forKey: "image")
-        }
-    }
-    
-    func updateStackView() {
-        verticalStackView.arrangedSubviews.forEach {
-            if let sv = $0 as? ProfileAttributeView, let type = sv.type {
-                sv.configure(type: type)
-            }
-        }
-    }
-    
-    func updateHeaderView() {
-        let defaults = UserDefaults.standard
-        if let data = defaults.object(forKey: "image") as? Data,  let image = UIImage(data: data) {
+    private func updateHeaderView(profileStruct: Profile) {
+        if let data = profileStruct.image, let image = UIImage(data: data) {
             headerView.setImage(image: image)
         }
     }
     
-    @objc
-    func swichEdit() {
-        let editViewController = ProfileViewController()
-        editViewController.setEditFlag(edit: true)
-        editViewController.setViewTitle(title: "Edit profile")
-        editViewController.didEndEdit = { [weak self] str in
-            self?.profileStruct = str
-            self?.saveAttValues()
-            self?.updateStackView()
-            self?.updateHeaderView()
-        }
-        navigationController?.pushViewController(editViewController, animated: true)
-    }
-    
-    @objc
-    func doneEdit() {
-        if checkAllProperties() {
-            didEndEdit?(profileStruct)
-            navigationController?.popViewController(animated: true)
-        } else {
-            let alert = UIAlertController(title: "Fill all attributes", message: "", preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
-            self.present(alert, animated: true, completion: nil)
+    private func updateStackViews(profileStruct: Profile) {
+        verticalStackView.arrangedSubviews.forEach {
+            if let sv = $0 as? ProfileAttributeView {
+                updateStackView(sv: sv, profileStruct: profileStruct)
+            }
         }
     }
     
-    func checkAllProperties() -> Bool {
-        if profileStruct.name != "", profileStruct.email != "", profileStruct.location != "", profileStruct.title != "" {
-            return true
+    private func updateStackView(sv: ProfileAttributeView, profileStruct: Profile) {
+        sv.setLabel(profileStruct: profileStruct)
+    }
+    
+    private func updateAccessibility(edit: Bool) {
+        headerView.showButtons(edit: edit)
+        verticalStackView.arrangedSubviews.forEach {
+            if let sv = $0 as? ProfileAttributeView {
+                sv.showButtons(edit: edit)
+            }
         }
-        return false
+    }
+    
+    private func collectAndSave() {
+        presenter?.saveAll()
+    }
+    
+    @objc
+    private func didEditTaped() {
+        presenter?.didEditTaped()
+    }
+    
+    @objc
+    private func didSaveTaped() {
+        collectAndSave()
+        presenter?.didEditTaped()
     }
     
     @objc
@@ -217,6 +152,8 @@ final class ProfileViewController: UIViewController {
             stackTopAnchor = verticalStackView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: keyboardHeight)
             stackTopAnchor.isActive = true
             headerView.isHidden = true
+            navigationItem.rightBarButtonItem?.isHidden = true
+            navigationItem.rightBarButtonItem?.isEnabled = false
         }
     }
     
@@ -226,9 +163,32 @@ final class ProfileViewController: UIViewController {
         stackTopAnchor = verticalStackView.topAnchor.constraint(equalTo: headerView.bottomAnchor, constant: 8)
         stackTopAnchor.isActive = true
         headerView.isHidden = false
+        navigationItem.rightBarButtonItem?.isHidden = false
+        navigationItem.rightBarButtonItem?.isEnabled = true
     }
 }
 
 enum ViewConstants {
     static let frameWidth = UIScreen.main.bounds.width
+}
+
+extension ProfileViewController: ProfileViewControllerProtocol {
+    
+    func configure(profileStruct: Profile) {
+        updateHeaderView(profileStruct: profileStruct)
+        updateStackViews(profileStruct: profileStruct)
+    }
+    
+    func switchEdit(edit: Bool) {
+        if edit {
+            navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Save", image: nil, target: self, action: #selector(didSaveTaped))
+        } else {
+            navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Edit", image: nil, target: self, action: #selector(didEditTaped))
+        }
+        updateAccessibility(edit: edit)
+    }
+    
+    func setViewTitle(title: String) {
+        self.navigationItem.title = title
+    }
 }

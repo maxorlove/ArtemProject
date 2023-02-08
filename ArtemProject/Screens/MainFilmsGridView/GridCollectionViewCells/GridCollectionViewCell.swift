@@ -18,6 +18,7 @@ final class GridCollectionViewCell: UICollectionViewCell {
     private let ratingImg = UIImageView()
     private let likeButton = UIButton()
     private var id: Int?
+    var likeDidTappedCallback: ((Int) -> (Void))?
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -26,6 +27,14 @@ final class GridCollectionViewCell: UICollectionViewCell {
     
     required init?(coder: NSCoder) {
         fatalError()
+    }
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        labelText.text = nil
+        ratingLabel.text = nil
+        image.sd_cancelCurrentImageLoad()
+        image.image = nil
     }
     
     private func setup() {
@@ -119,7 +128,7 @@ final class GridCollectionViewCell: UICollectionViewCell {
     @objc
     private func likeDidTapped() {
         guard let id = id else { return }
-        SupportFunctions.addLikedFilm(id: id)
+        likeDidTappedCallback?(id)
         setupLikeButton(isLiked: SupportFunctions.checkLikedFilm(id: id))
     }
     
@@ -146,13 +155,5 @@ final class GridCollectionViewCell: UICollectionViewCell {
     private func setImage(path: String) {
         let url = URL(string: "https://image.tmdb.org/t/p/original/\(path)")
         image.sd_setImage(with: url)
-    }
-    
-    override func prepareForReuse() {
-        super.prepareForReuse()
-        labelText.text = nil
-        ratingLabel.text = nil
-        image.sd_cancelCurrentImageLoad()
-        image.image = nil
     }
 }

@@ -75,6 +75,16 @@ final class SortActionView: UIView {
         gridChangeButton.layer.shadowRadius = 10
     }
     
+    @objc
+    private func gridSizeChangeButtonAction() {
+        gridSizeChangeAction?()
+    }
+    
+    @objc
+    private func sortButtonAction() {
+        sortButtonChoseAction?()
+    }
+    
     func changeSortLabel(sortStyle: SortEnum) {
         sortButton.setTitle(sortStyle.rawValue, for: .normal)
     }
@@ -86,15 +96,5 @@ final class SortActionView: UIView {
         case .double:
             gridChangeButton.setImage(UIImage(named: "singleGridChanger"), for: .normal)
         }
-    }
-    
-    @objc
-    private func gridSizeChangeButtonAction() {
-        gridSizeChangeAction?()
-    }
-    
-    @objc
-    private func sortButtonAction() {
-        sortButtonChoseAction?()
     }
 }

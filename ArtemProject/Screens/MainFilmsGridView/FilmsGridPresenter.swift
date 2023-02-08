@@ -15,9 +15,12 @@ protocol FilmsGridPresenterProtocol: AnyObject {
     func refreshPages()
     func didSortButtonPressed(sortStyle: SortEnum)
     func showDetails(item: Item)
+    func setTitle()
+    func likeDidTapped(id: Int)
 }
 
 final class FilmsGridPresenter {
+    private let title: String
     private let router: FilmsGridRouterProtocol
     weak var viewController: FilmsGridViewControllerProtocol?
     private let networkClient: FilmsNetworkProtocol
@@ -29,15 +32,25 @@ final class FilmsGridPresenter {
     init(
         router: FilmsGridRouterProtocol,
         controller: FilmsGridViewControllerProtocol,
-        networkClient: FilmsNetworkProtocol
+        networkClient: FilmsNetworkProtocol,
+        title: String
     ) {
         self.router = router
         self.viewController = controller
         self.networkClient = networkClient
+        self.title = title
     }
 }
 
 extension FilmsGridPresenter: FilmsGridPresenterProtocol {
+    func likeDidTapped(id: Int) {
+        SupportFunctions.addLikedFilm(id: id)
+    }
+    
+    func setTitle() {
+        viewController?.setViewTitle(title: title)
+    }
+    
     func showDetails(item: Item) {
         var data = DetailDataStruct.init(id: item.id)
         data.callBack = { [weak self] id in

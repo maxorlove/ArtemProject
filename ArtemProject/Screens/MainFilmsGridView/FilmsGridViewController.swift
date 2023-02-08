@@ -8,6 +8,7 @@
 import UIKit
 
 protocol FilmsGridViewControllerProtocol: AnyObject {
+    func setViewTitle(title: String)
     func reloadDataSourse(response: AllFilmsResponse)
     func errorAlert(error: ErrorModel)
     func clearDataSource(sortStyle: SortEnum)
@@ -33,6 +34,7 @@ final class FilmsGridViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setup()
+        presenter?.setTitle()
         presenter?.loadData()
     }
     
@@ -82,11 +84,6 @@ final class FilmsGridViewController: UIViewController {
         filmsCollectionView.dataSource = self
         filmsCollectionView.register(GridCollectionViewCell.self, forCellWithReuseIdentifier: Constants.gridCellReuseId)
         filmsCollectionView.register(GridSingleViewCell.self, forCellWithReuseIdentifier: Constants.singleCellReuseId)
-    }
-    
-    func setViewTitle(title: String) {
-        self.title = title
-        sortView.changeImgButton(gridType: gridType)
     }
     
     private func sortButtonAction() {
@@ -149,10 +146,16 @@ extension FilmsGridViewController: UICollectionViewDataSource {
         case .single:
             let cell = filmsCollectionView.dequeueReusableCell(withReuseIdentifier: Constants.singleCellReuseId, for: indexPath) as! GridSingleViewCell
             cell.configure(with: model)
+            cell.likeDidTappedCallback = { [weak self] id in
+                self?.presenter?.likeDidTapped(id: id)
+            }
             return cell
         case .double:
             let cell = filmsCollectionView.dequeueReusableCell(withReuseIdentifier: Constants.gridCellReuseId, for: indexPath) as! GridCollectionViewCell
             cell.configure(with: model)
+            cell.likeDidTappedCallback = { [weak self] id in
+                self?.presenter?.likeDidTapped(id: id)
+            }
             return cell
         }
     }
@@ -218,6 +221,11 @@ extension FilmsGridViewController: FilmsGridViewControllerProtocol {
         if let index = searchIndexForId(id: index) {
             filmsCollectionView.reloadItems(at: [IndexPath(row: index, section: 0)])
         }
+    }
+    
+    func setViewTitle(title: String) {
+        self.navigationItem.title = title
+        sortView.changeImgButton(gridType: gridType)
     }
 }
 

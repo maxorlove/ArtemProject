@@ -8,11 +8,11 @@
 import UIKit
 
 final class FilmsGridBuilder {    
-    static func build() -> FilmsGridViewController {
+    static func build() -> UIViewController {
         let networkClient = NetworkService()
         let viewController = FilmsGridViewController()
         let router = FilmsGridRouter(viewController: viewController)
-        let presenter = FilmsGridPresenter(router: router, controller: viewController, networkClient: networkClient)
+        let presenter = FilmsGridPresenter(router: router, controller: viewController, networkClient: networkClient, title: "Movies")
         viewController.presenter = presenter
         return viewController
     }

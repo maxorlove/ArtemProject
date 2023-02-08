@@ -29,6 +29,12 @@
 		0063428C298BC9F90078DF6B /* FilmDetailRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0063428B298BC9F90078DF6B /* FilmDetailRouter.swift */; };
 		0063428E298C29450078DF6B /* DataStruct.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0063428D298C29450078DF6B /* DataStruct.swift */; };
 		00634290298E743A0078DF6B /* SupportFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0063428F298E743A0078DF6B /* SupportFunctions.swift */; };
+		00CC6E3E29925731001F9B54 /* ProfileViewPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00CC6E3D29925731001F9B54 /* ProfileViewPresenter.swift */; };
+		00CC6E402992573E001F9B54 /* ProfileViewBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00CC6E3F2992573E001F9B54 /* ProfileViewBuilder.swift */; };
+		00CC6E422992574E001F9B54 /* ProfileViewRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00CC6E412992574E001F9B54 /* ProfileViewRouter.swift */; };
+		00CC6E44299391C0001F9B54 /* UserDefaultsKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00CC6E43299391C0001F9B54 /* UserDefaultsKey.swift */; };
+		00CC6E502993A8AD001F9B54 /* UserDefaultsServiceProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00CC6E4E2993A8AD001F9B54 /* UserDefaultsServiceProtocol.swift */; };
+		00CC6E512993A8AD001F9B54 /* UserDefaultsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00CC6E4F2993A8AD001F9B54 /* UserDefaultsService.swift */; };
 		00F32BAD2977FFD20029E4C8 /* SotrView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00F32BAC2977FFD20029E4C8 /* SotrView.swift */; };
 		00F32BAF29799E7D0029E4C8 /* GridSingleViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00F32BAE29799E7D0029E4C8 /* GridSingleViewCell.swift */; };
 		00F32BB1297BE3560029E4C8 /* SortActionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00F32BB0297BE3560029E4C8 /* SortActionView.swift */; };
@@ -69,6 +75,12 @@
 		0063428B298BC9F90078DF6B /* FilmDetailRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilmDetailRouter.swift; sourceTree = "<group>"; };
 		0063428D298C29450078DF6B /* DataStruct.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataStruct.swift; sourceTree = "<group>"; };
 		0063428F298E743A0078DF6B /* SupportFunctions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupportFunctions.swift; sourceTree = "<group>"; };
+		00CC6E3D29925731001F9B54 /* ProfileViewPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewPresenter.swift; sourceTree = "<group>"; };
+		00CC6E3F2992573E001F9B54 /* ProfileViewBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewBuilder.swift; sourceTree = "<group>"; };
+		00CC6E412992574E001F9B54 /* ProfileViewRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewRouter.swift; sourceTree = "<group>"; };
+		00CC6E43299391C0001F9B54 /* UserDefaultsKey.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserDefaultsKey.swift; sourceTree = "<group>"; };
+		00CC6E4E2993A8AD001F9B54 /* UserDefaultsServiceProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserDefaultsServiceProtocol.swift; sourceTree = "<group>"; };
+		00CC6E4F2993A8AD001F9B54 /* UserDefaultsService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserDefaultsService.swift; sourceTree = "<group>"; };
 		00F32BAC2977FFD20029E4C8 /* SotrView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SotrView.swift; sourceTree = "<group>"; };
 		00F32BAE29799E7D0029E4C8 /* GridSingleViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GridSingleViewCell.swift; sourceTree = "<group>"; };
 		00F32BB0297BE3560029E4C8 /* SortActionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SortActionView.swift; sourceTree = "<group>"; };
@@ -127,6 +139,7 @@
 				0033E8D52969650D0095DF7E /* AllFilmsResponse.swift */,
 				00F32BB9297D3E190029E4C8 /* DetailsFilmResponse.swift */,
 				0012C5F7296EC69400EFE5E1 /* ProfileStruct.swift */,
+				0063428D298C29450078DF6B /* DataStruct.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -179,6 +192,9 @@
 			children = (
 				0033E8E9296D99D80095DF7E /* ProfileViews */,
 				0033E8DE296979A80095DF7E /* ProfileViewController.swift */,
+				00CC6E3F2992573E001F9B54 /* ProfileViewBuilder.swift */,
+				00CC6E3D29925731001F9B54 /* ProfileViewPresenter.swift */,
+				00CC6E412992574E001F9B54 /* ProfileViewRouter.swift */,
 			);
 			path = ProfileView;
 			sourceTree = "<group>";
@@ -186,10 +202,10 @@
 		0033E8E6296C02C80095DF7E /* Other */ = {
 			isa = PBXGroup;
 			children = (
+				00CC6E49299392FD001F9B54 /* UserDefaultsSerice */,
 				0033E8E7296C02E80095DF7E /* MainEnums.swift */,
 				0012C5F9296F041F00EFE5E1 /* ImagePicketManager.swift */,
 				0033E8EE296DBCD70095DF7E /* TabBarController.swift */,
-				0063428D298C29450078DF6B /* DataStruct.swift */,
 				0063428F298E743A0078DF6B /* SupportFunctions.swift */,
 			);
 			path = Other;
@@ -202,6 +218,16 @@
 				0033E8EC296DA21A0095DF7E /* ProfileAttributeView.swift */,
 			);
 			path = ProfileViews;
+			sourceTree = "<group>";
+		};
+		00CC6E49299392FD001F9B54 /* UserDefaultsSerice */ = {
+			isa = PBXGroup;
+			children = (
+				00CC6E43299391C0001F9B54 /* UserDefaultsKey.swift */,
+				00CC6E4F2993A8AD001F9B54 /* UserDefaultsService.swift */,
+				00CC6E4E2993A8AD001F9B54 /* UserDefaultsServiceProtocol.swift */,
+			);
+			path = UserDefaultsSerice;
 			sourceTree = "<group>";
 		};
 		00F32BAB2977FF7E0029E4C8 /* GridCollectionOtherViews */ = {
@@ -347,6 +373,7 @@
 				00F32BB8297D3CD90029E4C8 /* DetailsFilmRequest.swift in Sources */,
 				0012C5F8296EC69400EFE5E1 /* ProfileStruct.swift in Sources */,
 				00F32BB4297BF9920029E4C8 /* FilmDetailController.swift in Sources */,
+				00CC6E512993A8AD001F9B54 /* UserDefaultsService.swift in Sources */,
 				0033E8ED296DA21A0095DF7E /* ProfileAttributeView.swift in Sources */,
 				00F32BBE2983C96B0029E4C8 /* FilmsGridPresenter.swift in Sources */,
 				0012C5FF2976A62000EFE5E1 /* TopRatedFilmsRequest.swift in Sources */,
@@ -359,19 +386,24 @@
 				7FA9803C295B23D10053E050 /* AppDelegate.swift in Sources */,
 				00F32BB1297BE3560029E4C8 /* SortActionView.swift in Sources */,
 				0063428A298A4AA70078DF6B /* FilmsGridRouter.swift in Sources */,
+				00CC6E44299391C0001F9B54 /* UserDefaultsKey.swift in Sources */,
 				0033E8DF296979A80095DF7E /* ProfileViewController.swift in Sources */,
+				00CC6E502993A8AD001F9B54 /* UserDefaultsServiceProtocol.swift in Sources */,
 				0012C5FA296F042000EFE5E1 /* ImagePicketManager.swift in Sources */,
 				0033E8D62969650D0095DF7E /* AllFilmsResponse.swift in Sources */,
+				00CC6E422992574E001F9B54 /* ProfileViewRouter.swift in Sources */,
 				00634290298E743A0078DF6B /* SupportFunctions.swift in Sources */,
 				00F32BAD2977FFD20029E4C8 /* SotrView.swift in Sources */,
 				0033E8DC29696AAE0095DF7E /* GridCollectionViewCell.swift in Sources */,
 				00F32BBA297D3E190029E4C8 /* DetailsFilmResponse.swift in Sources */,
+				00CC6E3E29925731001F9B54 /* ProfileViewPresenter.swift in Sources */,
 				7FA9803C295B23D10053E050 /* AppDelegate.swift in Sources */,
 				0033E8DF296979A80095DF7E /* ProfileViewController.swift in Sources */,
 				0033E8CF296964690095DF7E /* ErrorModel.swift in Sources */,
 				7FA9803E295B23D10053E050 /* SceneDelegate.swift in Sources */,
 				0063428C298BC9F90078DF6B /* FilmDetailRouter.swift in Sources */,
 				0033E8D2296964690095DF7E /* ServiceManager.swift in Sources */,
+				00CC6E402992573E001F9B54 /* ProfileViewBuilder.swift in Sources */,
 				0033E8D1296964690095DF7E /* PopularFilmsRequest.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

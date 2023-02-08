@@ -9,7 +9,6 @@ import UIKit
 
 final class ProfileHeaderView: UIView {
     
-    private var editFlag: Bool = false
     private let label = UILabel()
     private let image = UIImageView()
     private let editButton = UIButton()
@@ -29,7 +28,7 @@ final class ProfileHeaderView: UIView {
         setupViews()
         setupLabels()
         setupImages()
-        setEditFlag(edit: editFlag)
+        setupButtons()
     }
     
     private func addSubViews() {
@@ -74,32 +73,30 @@ final class ProfileHeaderView: UIView {
     }
     
     private func setupImages() {
-        image.backgroundColor = .black
+        image.backgroundColor = Colors.secondarySurfaceColor
         image.layer.masksToBounds = true
         image.contentMode = .scaleAspectFill
         image.layer.cornerRadius = (UIScreen.main.bounds.width / 2.5) / 2
     }
     
-    private func setupButton() {
+    private func setupButtons() {
         editButton.setImage(UIImage(systemName: "pencil"), for: .normal)
         editButton.tintColor = .black
         editButton.addTarget(self, action: #selector(buttonAction), for: .touchUpInside)
-        editButton.isHidden = !editFlag
-        editButton.isEnabled = editFlag
         
         imageEditButton.setImage(UIImage(systemName: "pencil"), for: .normal)
         imageEditButton.tintColor = .white
         imageEditButton.addTarget(self, action: #selector(buttonAction), for: .touchUpInside)
-        imageEditButton.isHidden = !editFlag
-        imageEditButton.isEnabled = editFlag
         imageEditButton.layer.masksToBounds = true
         imageEditButton.contentMode = .scaleToFill
         imageEditButton.layer.cornerRadius = (UIScreen.main.bounds.width / 2.5) / 2
     }
     
-    func setEditFlag(edit: Bool) {
-        editFlag = edit
-        setupButton()
+    func showButtons(edit: Bool) {
+        editButton.isHidden = !edit
+        editButton.isEnabled = edit
+        imageEditButton.isHidden = !edit
+        imageEditButton.isEnabled = edit
     }
     
     @objc

@@ -7,12 +7,16 @@
 
 import UIKit
 
-struct ProfileStruct {
-    var name: String = ""
-    var email: String = ""
-    var title: String = ""
-    var location: String = ""
-    var image: UIImage = UIImage()
+struct Profile: Codable {
+    var name: String?
+    var email: String?
+    var title: String?
+    var location: String?
+    var image: Data?
+}
+
+struct Likes: Codable {
+    var id: [Int]
 }
 
 //struct ProfileStruct {
