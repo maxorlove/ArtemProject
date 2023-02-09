@@ -18,7 +18,7 @@ protocol ProfileViewPresenterProtocol: AnyObject {
 class ProfileViewPresenter {
     weak var viewController: ProfileViewControllerProtocol?
     private var editState = false
-    private var profileStruct = Profile()
+    private var profileStruct: Profile?
     private let title: String
     private let userDefaults: UserDefaultsServiceProtocol = UserDefaultsService(with: UserDefaults.standard)
     
@@ -37,6 +37,7 @@ extension ProfileViewPresenter: ProfileViewPresenterProtocol {
     }
     
     func saveAttValue(att: AttNameEnum, value: String) {
+        guard var profileStruct = profileStruct else { return }
         switch att {
         case .name:
             profileStruct.name = value
@@ -47,19 +48,22 @@ extension ProfileViewPresenter: ProfileViewPresenterProtocol {
         case .location:
             profileStruct.location = value
         }
+        self.profileStruct = profileStruct
     }
     
     func saveProfileImage(image: Data) {
+        guard var profileStruct = profileStruct else { return }
         profileStruct.image = image
+        self.profileStruct = profileStruct
     }
     
     
     func setupView() {
         if let profileStruct = userDefaults.getModel(with: Profile.self, by: .profile) {
             self.profileStruct = profileStruct
+            viewController?.configure(profileStruct: profileStruct)
         }
         viewController?.setViewTitle(title: title)
-        viewController?.configure(profileStruct: profileStruct)
         viewController?.switchEdit(edit: editState)
     }
     

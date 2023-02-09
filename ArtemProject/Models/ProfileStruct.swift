@@ -13,6 +13,15 @@ struct Profile: Codable {
     var title: String?
     var location: String?
     var image: Data?
+    
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.name = try container.decodeIfPresent(String.self, forKey: .name) ?? ""
+        self.email = try container.decodeIfPresent(String.self, forKey: .email) ?? ""
+        self.title = try container.decodeIfPresent(String.self, forKey: .title) ?? ""
+        self.location = try container.decodeIfPresent(String.self, forKey: .location) ?? ""
+        self.image = try container.decodeIfPresent(Data.self, forKey: .image) ?? nil
+    }
 }
 
 struct Likes: Codable {
