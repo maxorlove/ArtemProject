@@ -10,7 +10,7 @@ import UIKit
 final class ProfileViewBuilder {
     static func build() -> UIViewController {
         let viewController = ProfileViewController()
-        let presenter = ProfileViewPresenter(viewController: viewController, title: "Profile")
+        let presenter = ProfileViewPresenter(viewController: viewController)
         viewController.presenter = presenter
         return viewController
     }

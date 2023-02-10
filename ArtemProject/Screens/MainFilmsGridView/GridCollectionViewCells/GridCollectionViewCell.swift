@@ -25,9 +25,7 @@ final class GridCollectionViewCell: UICollectionViewCell {
         setup()
     }
     
-    required init?(coder: NSCoder) {
-        fatalError()
-    }
+    required init?(coder: NSCoder) { fatalError() }
     
     override func prepareForReuse() {
         super.prepareForReuse()

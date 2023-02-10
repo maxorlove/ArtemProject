@@ -10,7 +10,6 @@ import UIKit
 protocol ProfileViewControllerProtocol: AnyObject {
     func configure(profileStruct: Profile)
     func switchEdit(edit: Bool)
-    func setViewTitle(title: String)
 }
 
 final class ProfileViewController: UIViewController {
@@ -66,6 +65,7 @@ final class ProfileViewController: UIViewController {
     
     private func setupViews() {
         view.backgroundColor = Colors.primaryBackgroundColor
+        self.navigationItem.title = "Profile"
         headerView.actionPressed = {[weak self] in
             ImagePickerManager().pickImage(self!) { image in
                 self?.headerView.setImage(image: image)
@@ -186,9 +186,5 @@ extension ProfileViewController: ProfileViewControllerProtocol {
             navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Edit", image: nil, target: self, action: #selector(didEditTaped))
         }
         updateAccessibility(edit: edit)
-    }
-    
-    func setViewTitle(title: String) {
-        self.navigationItem.title = title
     }
 }

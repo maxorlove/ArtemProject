@@ -9,6 +9,7 @@ import UIKit
 
 protocol FilmDetailRouterProtocol {
     func popOutView()
+    func showFilmsDetailView(data: DetailDataStruct)
 }
 
 class FilmDetailRouter {
@@ -22,5 +23,10 @@ class FilmDetailRouter {
 extension FilmDetailRouter: FilmDetailRouterProtocol {
     func popOutView() {
         self.viewController?.navigationController?.popViewController(animated: true)
+    }
+    
+    func showFilmsDetailView(data: DetailDataStruct) {
+        let filmDetailController = FilmDetailBuilder.build(data: data)
+        viewController?.navigationController?.pushViewController(filmDetailController, animated: true)
     }
 }

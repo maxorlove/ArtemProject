@@ -12,6 +12,7 @@ protocol FilmDetailControllerProtocol: AnyObject {
     func configure(with item: DetailsFilmResponse)
     func errorAlert(error: ErrorModel)
     func setupLikeButton(isLiked: Bool)
+    func addSimilarFilms(items: [Item])
 }
 
 final class FilmDetailController: UIViewController {
@@ -34,6 +35,8 @@ final class FilmDetailController: UIViewController {
         stack.axis = .vertical
         return stack
     }()
+    
+    private let similarFilmsView = SimilarFilmsView()
    
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -160,6 +163,19 @@ final class FilmDetailController: UIViewController {
         detailsView.addArrangedSubview(wrapLabel(labelView: description))
         
         detailsView.setCustomSpacing(16, after: yearLabel)
+        
+        configureSimilarView()
+    }
+    
+    private func configureSimilarView() {
+        similarFilmsView.getNext = { [weak self] in
+            self?.presenter?.getSimilarFilms()
+        }
+        similarFilmsView.showDetails = { [weak self] in
+            self?.presenter?.showDetails(item: $0)
+        }
+        presenter?.getSimilarFilms()
+        detailsView.addArrangedSubview(similarFilmsView)
     }
     
     private func wrapLabel(labelView: UILabel) -> UIView {
@@ -190,6 +206,10 @@ extension FilmDetailController: FilmDetailControllerProtocol {
             setImage(path: poster)
         }
         addArrangedSubviews(item: item)
+    }
+    
+    func addSimilarFilms(items: [Item]) {
+        similarFilmsView.loadData(items: items)
     }
     
     func errorAlert(error: ErrorModel) {

@@ -12,7 +12,7 @@ final class FilmsGridBuilder {
         let networkClient = NetworkService()
         let viewController = FilmsGridViewController()
         let router = FilmsGridRouter(viewController: viewController)
-        let presenter = FilmsGridPresenter(router: router, controller: viewController, networkClient: networkClient, title: "Movies")
+        let presenter = FilmsGridPresenter(router: router, controller: viewController, networkClient: networkClient)
         viewController.presenter = presenter
         return viewController
     }

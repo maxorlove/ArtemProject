@@ -8,7 +8,6 @@
 import UIKit
 
 protocol FilmsGridViewControllerProtocol: AnyObject {
-    func setViewTitle(title: String)
     func reloadDataSourse(response: AllFilmsResponse)
     func errorAlert(error: ErrorModel)
     func clearDataSource(sortStyle: SortEnum)
@@ -34,7 +33,6 @@ final class FilmsGridViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setup()
-        presenter?.setTitle()
         presenter?.loadData()
     }
     
@@ -77,6 +75,9 @@ final class FilmsGridViewController: UIViewController {
         sortView.sortButtonChoseAction = { [weak self] in
             self?.sortButtonAction()
         }
+        
+        self.navigationItem.title = "Movies"
+        sortView.changeImgButton(gridType: gridType)
     }
     
     private func setupColectionViews() {
@@ -221,11 +222,6 @@ extension FilmsGridViewController: FilmsGridViewControllerProtocol {
         if let index = searchIndexForId(id: index) {
             filmsCollectionView.reloadItems(at: [IndexPath(row: index, section: 0)])
         }
-    }
-    
-    func setViewTitle(title: String) {
-        self.navigationItem.title = title
-        sortView.changeImgButton(gridType: gridType)
     }
 }
 

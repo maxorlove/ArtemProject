@@ -12,6 +12,8 @@ protocol FilmDetailPresenterProtocol: AnyObject {
     func setupLikeButton()
     func likeDidTapped()
     func popOut()
+    func getSimilarFilms()
+    func showDetails(item: DetailDataStruct)
 }
 
 class FilmDetailPresenter {
@@ -19,6 +21,8 @@ class FilmDetailPresenter {
     private let router: FilmDetailRouterProtocol
     private let networkClient: FilmDetailNetworkProtocol
     private let data: DetailDataStruct
+    private var similarFilmsPage = 0
+    private var similarFilmsPageCount = 0
     
     init(
         networkClient: FilmDetailNetworkProtocol,
@@ -34,10 +38,18 @@ class FilmDetailPresenter {
 }
 
 extension FilmDetailPresenter: FilmDetailPresenterProtocol {
+    func showDetails(item: DetailDataStruct) {
+        var data = DetailDataStruct(id: item.id)
+        data.callBack = self.data.callBack
+        data.callBack2 = item.callBack
+        router.showFilmsDetailView(data: data)
+    }
+    
     func likeDidTapped() {
         SupportFunctions.addLikedFilm(id: data.id)
         setupLikeButton()
         data.callBack?(data.id)
+        data.callBack2?(data.id)
     }
     
     func setupLikeButton() {
@@ -51,6 +63,24 @@ extension FilmDetailPresenter: FilmDetailPresenterProtocol {
             case .success(let response):
                 DispatchQueue.main.async {
                     self?.viewController?.configure(with: response)
+                }
+            case .failure(let error):
+                self?.viewController?.errorAlert(error: error)
+            }
+        }
+    }
+    
+    func getSimilarFilms() {
+        let id = data.id
+        similarFilmsPage += 1
+        networkClient.getSimilar(id: id, page: similarFilmsPage) { [weak self] result in
+            switch result {
+            case .success(let response):
+                DispatchQueue.main.async {
+                    self?.similarFilmsPageCount = response.totalPages
+                    if response.totalPages >= self?.similarFilmsPage ?? 0 {
+                        self?.viewController?.addSimilarFilms(items: response.results)
+                    }
                 }
             case .failure(let error):
                 self?.viewController?.errorAlert(error: error)

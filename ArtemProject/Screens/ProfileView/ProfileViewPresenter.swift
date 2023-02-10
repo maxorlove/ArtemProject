@@ -19,15 +19,12 @@ class ProfileViewPresenter {
     weak var viewController: ProfileViewControllerProtocol?
     private var editState = false
     private var profileStruct: Profile?
-    private let title: String
     private let userDefaults: UserDefaultsServiceProtocol = UserDefaultsService(with: UserDefaults.standard)
     
     init(
-        viewController: ProfileViewControllerProtocol,
-        title: String
+        viewController: ProfileViewControllerProtocol
     ) {
         self.viewController = viewController
-        self.title = title
     }
 }
 
@@ -57,13 +54,11 @@ extension ProfileViewPresenter: ProfileViewPresenterProtocol {
         self.profileStruct = profileStruct
     }
     
-    
     func setupView() {
         if let profileStruct = userDefaults.getModel(with: Profile.self, by: .profile) {
             self.profileStruct = profileStruct
             viewController?.configure(profileStruct: profileStruct)
         }
-        viewController?.setViewTitle(title: title)
         viewController?.switchEdit(edit: editState)
     }
     

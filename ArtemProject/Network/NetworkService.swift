@@ -15,6 +15,7 @@ protocol FilmsNetworkProtocol {
 
 protocol FilmDetailNetworkProtocol {
     func getDetails(id: Int, completion: @escaping(Result<DetailsFilmResponse, ErrorModel>) -> Void) -> URLSessionDataTask
+    func getSimilar(id: Int, page: Int, completion: @escaping(Result<AllFilmsResponse, ErrorModel>) -> Void) -> URLSessionDataTask
 }
 
 final class NetworkService {}
@@ -39,6 +40,11 @@ extension NetworkService: FilmsNetworkProtocol {
 extension NetworkService: FilmDetailNetworkProtocol {
     func getDetails(id: Int, completion: @escaping(Result<DetailsFilmResponse, ErrorModel>) -> Void) -> URLSessionDataTask {
         let request = ServiceManager.shared.sendRequest(request: DetailsFilmRequest(id: id), completion: completion)
+        return request
+    }
+    
+    func getSimilar(id: Int, page: Int, completion: @escaping(Result<AllFilmsResponse, ErrorModel>) -> Void) -> URLSessionDataTask {
+        let request = ServiceManager.shared.sendRequest(request: SimilarFilmsRequest(id: id, page: page), completion: completion)
         return request
     }
 }
