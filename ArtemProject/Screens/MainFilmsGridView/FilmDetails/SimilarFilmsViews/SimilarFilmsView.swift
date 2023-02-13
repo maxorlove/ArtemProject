@@ -55,7 +55,7 @@ final class SimilarFilmsView: UIView {
     private func setupColectionViews() {
         collectionView.delegate = self
         collectionView.dataSource = self
-        collectionView.register(GridCollectionViewCell.self, forCellWithReuseIdentifier: Constants.reuseIdentifier)
+        collectionView.register(FilmDetailCellView.self, forCellWithReuseIdentifier: Constants.reuseIdentifier)
     }
     
     private func updateCell(index: Int) {
@@ -80,8 +80,11 @@ extension SimilarFilmsView: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let model = dataSourse[indexPath.row]
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constants.reuseIdentifier, for: indexPath) as! GridCollectionViewCell
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constants.reuseIdentifier, for: indexPath) as! FilmDetailCellView
         cell.configure(with: model)
+        cell.likeDidTappedCallback = { [weak self] id in
+            collectionView.reloadItems(at: [indexPath])
+        }
         return cell
     }
 }
@@ -113,6 +116,6 @@ extension SimilarFilmsView: UICollectionViewDelegateFlowLayout {
 }
 
 private enum Constants {
-    static let reuseIdentifier = "GridCollectionViewCellIdentifier"
+    static let reuseIdentifier = "FilmDetailCellView"
     static let space = 3.0
 }

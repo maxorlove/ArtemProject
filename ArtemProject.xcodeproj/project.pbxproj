@@ -29,6 +29,7 @@
 		0063428C298BC9F90078DF6B /* FilmDetailRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0063428B298BC9F90078DF6B /* FilmDetailRouter.swift */; };
 		0063428E298C29450078DF6B /* DataStruct.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0063428D298C29450078DF6B /* DataStruct.swift */; };
 		00634290298E743A0078DF6B /* SupportFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0063428F298E743A0078DF6B /* SupportFunctions.swift */; };
+		00BF6F90299A616500EDAA32 /* FilmDetailCells.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00BF6F8F299A616500EDAA32 /* FilmDetailCells.swift */; };
 		00CC6E3E29925731001F9B54 /* ProfileViewPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00CC6E3D29925731001F9B54 /* ProfileViewPresenter.swift */; };
 		00CC6E402992573E001F9B54 /* ProfileViewBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00CC6E3F2992573E001F9B54 /* ProfileViewBuilder.swift */; };
 		00CC6E422992574E001F9B54 /* ProfileViewRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00CC6E412992574E001F9B54 /* ProfileViewRouter.swift */; };
@@ -77,6 +78,7 @@
 		0063428B298BC9F90078DF6B /* FilmDetailRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilmDetailRouter.swift; sourceTree = "<group>"; };
 		0063428D298C29450078DF6B /* DataStruct.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataStruct.swift; sourceTree = "<group>"; };
 		0063428F298E743A0078DF6B /* SupportFunctions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupportFunctions.swift; sourceTree = "<group>"; };
+		00BF6F8F299A616500EDAA32 /* FilmDetailCells.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilmDetailCells.swift; sourceTree = "<group>"; };
 		00CC6E3D29925731001F9B54 /* ProfileViewPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewPresenter.swift; sourceTree = "<group>"; };
 		00CC6E3F2992573E001F9B54 /* ProfileViewBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewBuilder.swift; sourceTree = "<group>"; };
 		00CC6E412992574E001F9B54 /* ProfileViewRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewRouter.swift; sourceTree = "<group>"; };
@@ -225,6 +227,14 @@
 			path = ProfileViews;
 			sourceTree = "<group>";
 		};
+		00BF6F91299A616C00EDAA32 /* FilmDetailCells */ = {
+			isa = PBXGroup;
+			children = (
+				00BF6F8F299A616500EDAA32 /* FilmDetailCells.swift */,
+			);
+			path = FilmDetailCells;
+			sourceTree = "<group>";
+		};
 		00CC6E49299392FD001F9B54 /* UserDefaultsSerice */ = {
 			isa = PBXGroup;
 			children = (
@@ -255,6 +265,7 @@
 		00F32BB2297BF9320029E4C8 /* FilmDetails */ = {
 			isa = PBXGroup;
 			children = (
+				00BF6F91299A616C00EDAA32 /* FilmDetailCells */,
 				00CC6E5B299544FF001F9B54 /* SimilarFilmsViews */,
 				00F32BB3297BF9920029E4C8 /* FilmDetailController.swift */,
 				00F32BBF2983E3A40029E4C8 /* FilmDetailBuilder.swift */,
@@ -389,6 +400,7 @@
 				00F32BB4297BF9920029E4C8 /* FilmDetailController.swift in Sources */,
 				00CC6E512993A8AD001F9B54 /* UserDefaultsService.swift in Sources */,
 				0033E8ED296DA21A0095DF7E /* ProfileAttributeView.swift in Sources */,
+				00BF6F90299A616500EDAA32 /* FilmDetailCells.swift in Sources */,
 				00F32BBE2983C96B0029E4C8 /* FilmsGridPresenter.swift in Sources */,
 				0012C5FF2976A62000EFE5E1 /* TopRatedFilmsRequest.swift in Sources */,
 				00F32BC22983E4F90029E4C8 /* FilmDetailPresenter.swift in Sources */,

@@ -14,13 +14,29 @@ struct Profile: Codable {
     var location: String?
     var image: Data?
     
+    private enum CodingKeys: String, CodingKey {
+        case name = "name"
+        case email = "email"
+        case title = "title"
+        case location = "location"
+        case image = "image"
+    }
+    
+    init() {
+        self.name = ""
+        self.email = ""
+        self.title = ""
+        self.location = ""
+        self.image = nil
+    }
+    
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        self.name = try container.decodeIfPresent(String.self, forKey: .name) ?? ""
-        self.email = try container.decodeIfPresent(String.self, forKey: .email) ?? ""
-        self.title = try container.decodeIfPresent(String.self, forKey: .title) ?? ""
-        self.location = try container.decodeIfPresent(String.self, forKey: .location) ?? ""
-        self.image = try container.decodeIfPresent(Data.self, forKey: .image) ?? nil
+        self.name = try? container.decodeIfPresent(String.self, forKey: .name) ?? ""
+        self.email = try? container.decodeIfPresent(String.self, forKey: .email) ?? ""
+        self.title = try? container.decodeIfPresent(String.self, forKey: .title) ?? ""
+        self.location = try? container.decodeIfPresent(String.self, forKey: .location) ?? ""
+        self.image = try? container.decodeIfPresent(Data.self, forKey: .image)
     }
 }
 

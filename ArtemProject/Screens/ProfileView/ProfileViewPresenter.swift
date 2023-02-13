@@ -58,6 +58,8 @@ extension ProfileViewPresenter: ProfileViewPresenterProtocol {
         if let profileStruct = userDefaults.getModel(with: Profile.self, by: .profile) {
             self.profileStruct = profileStruct
             viewController?.configure(profileStruct: profileStruct)
+        } else {
+            self.profileStruct = Profile()
         }
         viewController?.switchEdit(edit: editState)
     }
