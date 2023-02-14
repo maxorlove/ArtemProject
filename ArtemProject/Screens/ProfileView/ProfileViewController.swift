@@ -23,6 +23,11 @@ final class ProfileViewController: UIViewController {
         stack.spacing = 3
         return stack
     }()
+    private let imagePicker: UIImagePickerController = {
+        let imagePicker = UIImagePickerController()
+        imagePicker.allowsEditing = false
+        return UIImagePickerController()
+    }()
     
     private var stackTopAnchor: NSLayoutConstraint!
     
@@ -66,14 +71,40 @@ final class ProfileViewController: UIViewController {
     private func setupViews() {
         view.backgroundColor = Colors.primaryBackgroundColor
         self.navigationItem.title = "Profile"
+        imagePicker.delegate = self
+        imagePicker.sourceType = .photoLibrary
         headerView.actionPressed = {[weak self] in
-            ImagePickerManager().pickImage(self!) { image in
-                self?.headerView.setImage(image: image)
-                if let data = image.pngData() {
-                    self?.presenter?.saveProfileImage(image: data)
-                }
-            }
+            self?.showPickerAllert()
         }
+    }
+    
+    private func showPickerAllert() {
+        var alert = UIAlertController(title: "Choose Image", message: nil, preferredStyle: .actionSheet)
+        alert.addAction(UIAlertAction(title: "Camera", style: .default){
+            UIAlertAction in
+            self.pickImage(.camera)
+        })
+        alert.addAction(UIAlertAction(title: "Gallery", style: .default){
+            UIAlertAction in
+            self.pickImage(.gallery)
+        })
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel){
+            UIAlertAction in
+        })
+        
+        DispatchQueue.main.async {
+            self.present(alert, animated: true, completion: nil)
+        }
+    }
+    
+    private func pickImage(_ style: PickerStyle) {
+        switch style {
+        case .camera:
+            imagePicker.sourceType = .camera
+        case .gallery:
+            imagePicker.sourceType = .photoLibrary
+        }
+        present(imagePicker, animated: true)
     }
     
     private func showAlert(message: String) {
@@ -168,8 +199,13 @@ final class ProfileViewController: UIViewController {
     }
 }
 
-enum ViewConstants {
+private enum ViewConstants {
     static let frameWidth = UIScreen.main.bounds.width
+}
+
+private enum PickerStyle {
+    case camera
+    case gallery
 }
 
 extension ProfileViewController: ProfileViewControllerProtocol {
@@ -187,4 +223,18 @@ extension ProfileViewController: ProfileViewControllerProtocol {
         }
         updateAccessibility(edit: edit)
     }
+}
+
+extension ProfileViewController: UIImagePickerControllerDelegate {
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        dismiss(animated: true)
+        guard let image = info[.originalImage] as? UIImage else { return }
+        headerView.setImage(image: image)
+        if let data = image.pngData() {
+            presenter?.saveProfileImage(image: data)
+        }
+    }
+}
+
+extension ProfileViewController: UINavigationControllerDelegate {
 }

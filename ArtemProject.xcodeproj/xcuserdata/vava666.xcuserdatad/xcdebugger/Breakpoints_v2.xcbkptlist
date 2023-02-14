@@ -200,7 +200,7 @@
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
             uuid = "E71DDDE8-B05A-4661-BCC9-ACA8AF2D8930"
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "ArtemProject/Screens/ProfileView/ProfileViewPresenter.swift"
@@ -216,7 +216,7 @@
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
             uuid = "97A6CC95-1BE9-4225-9980-2EC03D6B8622"
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "ArtemProject/Screens/ProfileView/ProfileViewPresenter.swift"
@@ -226,69 +226,6 @@
             endingLineNumber = "33"
             landmarkName = "saveAll()"
             landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "7B2D221E-7FAB-46C8-AE68-851AE4FA91F6"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "ArtemProject/Screens/ProfileView/ProfileViewController.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "105"
-            endingLineNumber = "105"
-            landmarkName = "updateHeaderView(profileStruct:)"
-            landmarkType = "7">
-            <Locations>
-               <Location
-                  uuid = "7B2D221E-7FAB-46C8-AE68-851AE4FA91F6 - 76ee9fef0e05732e"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "ArtemProject.ProfileViewController.updateHeaderView(profileStruct: ArtemProject.Profile) -&gt; ()"
-                  moduleName = "ArtemProject"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/vava666/Desktop/LearningSwift/ArtemProject/ArtemProject/Screens/ProfileView/ProfileViewController.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "102"
-                  endingLineNumber = "102"
-                  offsetFromSymbolStart = "48">
-               </Location>
-               <Location
-                  uuid = "7B2D221E-7FAB-46C8-AE68-851AE4FA91F6 - 76ee9fef0e05732e"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "ArtemProject.ProfileViewController.updateHeaderView(profileStruct: ArtemProject.Profile) -&gt; ()"
-                  moduleName = "ArtemProject"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/vava666/Desktop/LearningSwift/ArtemProject/ArtemProject/Screens/ProfileView/ProfileViewController.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "102"
-                  endingLineNumber = "102"
-                  offsetFromSymbolStart = "108">
-               </Location>
-               <Location
-                  uuid = "7B2D221E-7FAB-46C8-AE68-851AE4FA91F6 - 76ee9fef0e05732e"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "ArtemProject.ProfileViewController.updateHeaderView(profileStruct: ArtemProject.Profile) -&gt; ()"
-                  moduleName = "ArtemProject"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/vava666/Desktop/LearningSwift/ArtemProject/ArtemProject/Screens/ProfileView/ProfileViewController.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "102"
-                  endingLineNumber = "102"
-                  offsetFromSymbolStart = "204">
-               </Location>
-            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -439,7 +376,7 @@
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
             uuid = "5187EEED-39E6-45A8-93F0-B52B3E18DBDA"
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "ArtemProject/Screens/ProfileView/ProfileViewPresenter.swift"

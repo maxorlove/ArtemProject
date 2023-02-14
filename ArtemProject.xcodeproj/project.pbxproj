@@ -211,9 +211,9 @@
 			children = (
 				00CC6E49299392FD001F9B54 /* UserDefaultsSerice */,
 				0033E8E7296C02E80095DF7E /* MainEnums.swift */,
-				0012C5F9296F041F00EFE5E1 /* ImagePicketManager.swift */,
 				0033E8EE296DBCD70095DF7E /* TabBarController.swift */,
 				0063428F298E743A0078DF6B /* SupportFunctions.swift */,
+				0012C5F9296F041F00EFE5E1 /* ImagePicketManager.swift */,
 			);
 			path = Other;
 			sourceTree = "<group>";
