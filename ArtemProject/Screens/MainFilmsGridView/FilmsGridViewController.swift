@@ -20,6 +20,7 @@ final class FilmsGridViewController: UIViewController {
     var presenter: FilmsGridPresenterProtocol?
     
     // MARK: - Private Properties
+    private let searchView = SearchView()
     private let sortView = SortActionView()
     private let filmsCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
@@ -46,7 +47,7 @@ final class FilmsGridViewController: UIViewController {
     }
     
     private func addSubviews() {
-        [filmsCollectionView, sortView].forEach {
+        [searchView, filmsCollectionView, sortView].forEach {
             view.addSubview($0)
             $0.translatesAutoresizingMaskIntoConstraints = false
         }
@@ -54,7 +55,13 @@ final class FilmsGridViewController: UIViewController {
     
     private func setupConstraints() {
         NSLayoutConstraint.activate([
-            filmsCollectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            searchView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            searchView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: Constants.border),
+            searchView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -Constants.border),
+            searchView.heightAnchor.constraint(equalToConstant: 50),
+            
+            filmsCollectionView.topAnchor.constraint(equalTo: searchView.bottomAnchor),
+//            filmsCollectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             filmsCollectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
             filmsCollectionView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: Constants.border),
             filmsCollectionView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -Constants.border),
@@ -80,6 +87,10 @@ final class FilmsGridViewController: UIViewController {
         
         self.navigationItem.title = "Movies"
         sortView.changeImgButton(gridType: gridType)
+        
+        searchView.action = { [weak self] text in
+            self?.presenter?.didSearchButtonPressed(text: text)
+        }
     }
     
     private func setupColectionViews() {
@@ -203,7 +214,6 @@ extension FilmsGridViewController: FilmsGridViewControllerProtocol {
         self.sortView.changeSortLabel(sortStyle: sortStyle)
         self.dataSourse.removeAll()
     }
-    
     
     func reloadDataSourse(response: AllFilmsResponse) {
         DispatchQueue.main.async {

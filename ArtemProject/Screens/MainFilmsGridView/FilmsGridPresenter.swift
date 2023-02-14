@@ -14,6 +14,7 @@ protocol FilmsGridPresenterProtocol: AnyObject {
     func getNext() -> Bool
     func refreshPages()
     func didSortButtonPressed(sortStyle: SortEnum)
+    func didSearchButtonPressed(text: String)
     func showDetails(item: Item)
     func likeDidTapped(id: Int)
 }
@@ -58,9 +59,15 @@ extension FilmsGridPresenter: FilmsGridPresenterProtocol {
     
     func didSortButtonPressed(sortStyle: SortEnum) {
         currentSortStyle = sortStyle
-        self.viewController?.clearDataSource(sortStyle: .topRated)
+        viewController?.clearDataSource(sortStyle: .topRated)
         refreshPages()
         loadData()
+    }
+    
+    func didSearchButtonPressed(text: String) {
+        currentSortStyle = .searched
+        viewController?.clearDataSource(sortStyle: .searched)
+        loadSearchResult(text: text)
     }
     
     func refreshPages() {
@@ -112,6 +119,19 @@ extension FilmsGridPresenter: FilmsGridPresenterProtocol {
                 case .failure(let error):
                     self?.viewController?.errorAlert(error: error)
                 }
+            }
+        case .searched:
+            return
+        }
+    }
+    
+    func loadSearchResult(text: String) {
+        networkClient.searchFilm(query: text) { [weak self] result in
+            switch result {
+            case .success(let response):
+                self?.viewController?.reloadDataSourse(response: response)
+            case .failure(let error):
+                self?.viewController?.errorAlert(error: error)
             }
         }
     }
