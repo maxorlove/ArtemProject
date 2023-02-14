@@ -16,26 +16,28 @@ protocol FilmsGridViewControllerProtocol: AnyObject {
 
 final class FilmsGridViewController: UIViewController {
     
+    // MARK: - Public Properties
     var presenter: FilmsGridPresenterProtocol?
     
+    // MARK: - Private Properties
     private let sortView = SortActionView()
     private let filmsCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         let collection = UICollectionView(frame: .zero, collectionViewLayout: layout)
         return collection
     }()
-    
     private var dataSourse: [Item] = []
- 
     private var gridType: GridType = .double
     private var itemSize: CGFloat = 0.0
-     
+    
+    // MARK: - LifeCycle
     override func viewDidLoad() {
         super.viewDidLoad()
         setup()
         presenter?.loadData()
     }
     
+    // MARK: - Private Methods
     private func setup() {
         addSubviews()
         setupConstraints()
@@ -135,6 +137,7 @@ final class FilmsGridViewController: UIViewController {
     }
 }
 
+// MARK: - Datasourse/Prorocols
 extension FilmsGridViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         dataSourse.count

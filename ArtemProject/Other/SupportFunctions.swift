@@ -7,7 +7,7 @@
 
 import Foundation
 
-class SupportFunctions {
+final class LikesManager {
     static func addLikedFilm(id: Int) {
         let defaults = UserDefaults.standard
         if let likedFilms = defaults.array(forKey: "likedFilms") as? [Int] {

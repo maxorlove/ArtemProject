@@ -13,8 +13,11 @@ protocol ProfileViewControllerProtocol: AnyObject {
 }
 
 final class ProfileViewController: UIViewController {
+    
+    // MARK: - Public Properties
     var presenter: ProfileViewPresenterProtocol?
     
+    // MARK: - Private Properties
     private let headerView = ProfileHeaderView()
     private let verticalStackView: UIStackView = {
         let stack = UIStackView()
@@ -31,6 +34,7 @@ final class ProfileViewController: UIViewController {
     
     private var stackTopAnchor: NSLayoutConstraint!
     
+    // MARK: - LifeCycle
     override func viewDidLoad() {
         super.viewDidLoad()
         setup()
@@ -39,6 +43,7 @@ final class ProfileViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
     
+    // MARK: - Private Methods
     private func setup() {
         addSubViews()
         setupConstraints()
@@ -175,7 +180,7 @@ final class ProfileViewController: UIViewController {
     }
     
     @objc
-    func keyboardWillShow(_ notification: Notification) {
+    private func keyboardWillShow(_ notification: Notification) {
         if let keyboardFrame: NSValue = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
             let keyboardRectangle = keyboardFrame.cgRectValue
             let keyboardHeight = keyboardRectangle.height
@@ -189,7 +194,7 @@ final class ProfileViewController: UIViewController {
     }
     
     @objc
-    func keyboardWillHide() {
+    private func keyboardWillHide() {
         self.view.frame.origin.y = 0
         stackTopAnchor = verticalStackView.topAnchor.constraint(equalTo: headerView.bottomAnchor, constant: 8)
         stackTopAnchor.isActive = true
@@ -208,6 +213,7 @@ private enum PickerStyle {
     case gallery
 }
 
+// MARK: - Protocols
 extension ProfileViewController: ProfileViewControllerProtocol {
     
     func configure(profileStruct: Profile) {

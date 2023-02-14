@@ -9,13 +9,16 @@ import UIKit
 
 final class ProfileAttributeView: UIView {
     
+    // MARK: - Public Properties
     var didEndEditAction: ((AttNameEnum, String) -> Void)?
     var type: AttNameEnum?
     
+    // MARK: - Private Properties
     private let label = UILabel()
     private let value = UITextField()
     private let editButton = UIButton()
     
+    // MARK: - Init/Deinit
     override init(frame: CGRect) {
         super.init(frame: .zero)
         setup()
@@ -23,6 +26,7 @@ final class ProfileAttributeView: UIView {
     
     required init?(coder: NSCoder) { fatalError() }
     
+    // MARK: - Private Methods
     private func setup() {
         value.delegate = self
         addSubViews()
@@ -76,6 +80,7 @@ final class ProfileAttributeView: UIView {
         value.becomeFirstResponder()
     }
     
+    // MARK: - Public Methods
     func configure(type: AttNameEnum) {
         self.label.text = type.rawValue
         self.value.placeholder = "\(type)"
@@ -102,6 +107,7 @@ final class ProfileAttributeView: UIView {
     }
 }
 
+// MARK: - Delegates
 extension ProfileAttributeView: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         endEditing(true)

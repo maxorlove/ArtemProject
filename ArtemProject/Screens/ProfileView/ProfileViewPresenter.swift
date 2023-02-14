@@ -15,19 +15,29 @@ protocol ProfileViewPresenterProtocol: AnyObject {
     func saveAll()
 }
 
-class ProfileViewPresenter {
+final class ProfileViewPresenter {
+    
+    // MARK: - Public Properties
     weak var viewController: ProfileViewControllerProtocol?
+    
+    // MARK: - Private Properties
+    private let router: ProfileViewRouterProtocol
+    private let userDefaults: UserDefaultsServiceProtocol = UserDefaultsService(with: UserDefaults.standard)
     private var editState = false
     private var profileStruct: Profile?
-    private let userDefaults: UserDefaultsServiceProtocol = UserDefaultsService(with: UserDefaults.standard)
     
+    // MARK: - Init/Deinit
     init(
+        router: ProfileViewRouterProtocol,
         viewController: ProfileViewControllerProtocol
     ) {
+        self.router = router
         self.viewController = viewController
+        
     }
 }
 
+// MARK: - Protocols
 extension ProfileViewPresenter: ProfileViewPresenterProtocol {
     func saveAll() {
         userDefaults.saveModel(profileStruct, by: .profile)

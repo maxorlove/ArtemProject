@@ -9,7 +9,11 @@ import UIKit
 import SDWebImage
 
 final class GridCollectionViewCell: UICollectionViewCell {
-   
+    
+    // MARK: - Public Properties
+    var likeDidTappedCallback: ((Int) -> (Void))?
+    
+    // MARK: - Private Properties
     private let image = UIImageView()
     private let labelView = UIView()
     private let labelText = UILabel()
@@ -18,8 +22,8 @@ final class GridCollectionViewCell: UICollectionViewCell {
     private let ratingImg = UIImageView()
     private let likeButton = UIButton()
     private var id: Int?
-    var likeDidTappedCallback: ((Int) -> (Void))?
     
+    // MARK: - Init/Deinit
     override init(frame: CGRect) {
         super.init(frame: frame)
         setup()
@@ -27,6 +31,7 @@ final class GridCollectionViewCell: UICollectionViewCell {
     
     required init?(coder: NSCoder) { fatalError() }
     
+    // MARK: - LifeCycle
     override func prepareForReuse() {
         super.prepareForReuse()
         labelText.text = nil
@@ -35,6 +40,7 @@ final class GridCollectionViewCell: UICollectionViewCell {
         image.image = nil
     }
     
+    // MARK: - Private Methods
     private func setup() {
         addSubviews()
         setupConstraints()
@@ -123,12 +129,19 @@ final class GridCollectionViewCell: UICollectionViewCell {
         likeButton.addTarget(self, action: #selector(likeDidTapped), for: .touchUpInside)
     }
     
+    private func setImage(path: String) {
+        let url = URL(string: "https://image.tmdb.org/t/p/original/\(path)")
+        image.sd_setImage(with: url)
+    }
+    
     @objc
     private func likeDidTapped() {
         guard let id = id else { return }
         likeDidTappedCallback?(id)
-        setupLikeButton(isLiked: SupportFunctions.checkLikedFilm(id: id))
+        setupLikeButton(isLiked: LikesManager.checkLikedFilm(id: id))
     }
+    
+    //MARK: - Public Methods
     
     func configure(with item: Item) {
         id = item.id
@@ -136,7 +149,7 @@ final class GridCollectionViewCell: UICollectionViewCell {
         ratingLabel.text = "\(item.voteAverage)"
         guard let poster = item.posterPath else {return}
         setImage(path: poster)
-        setupLikeButton(isLiked: SupportFunctions.checkLikedFilm(id: item.id))
+        setupLikeButton(isLiked: LikesManager.checkLikedFilm(id: item.id))
     }
     
     func setupLikeButton(isLiked: Bool) {
@@ -148,10 +161,5 @@ final class GridCollectionViewCell: UICollectionViewCell {
             likeButton.tintColor = .systemGray
             likeButton.setImage(UIImage(systemName: "heart", withConfiguration: imageConfig), for: .normal)
         }
-    }
-    
-    private func setImage(path: String) {
-        let url = URL(string: "https://image.tmdb.org/t/p/original/\(path)")
-        image.sd_setImage(with: url)
     }
 }

@@ -9,12 +9,16 @@ import UIKit
 
 final class ProfileHeaderView: UIView {
     
+    // MARK: - Public Properties
+    var actionPressed: (() -> Void)?
+    
+    // MARK: - Private Properties
     private let label = UILabel()
     private let image = UIImageView()
     private let editButton = UIButton()
     private let imageEditButton = UIButton()
-    var actionPressed: (() -> Void)?
     
+    // MARK: - Init/Deinit
     override init(frame: CGRect) {
         super.init(frame: .zero)
         setup()
@@ -22,6 +26,7 @@ final class ProfileHeaderView: UIView {
     
     required init?(coder: NSCoder) { fatalError() }
     
+    // MARK: - Private Methods
     private func setup() {
         addSubViews()
         setupConstraints()
@@ -92,18 +97,19 @@ final class ProfileHeaderView: UIView {
         imageEditButton.layer.cornerRadius = (UIScreen.main.bounds.width / 2.5) / 2
     }
     
+    @objc
+    private func buttonAction() {
+        actionPressed?()
+    }
+    
+    // MARK: - Public Methods
     func showButtons(edit: Bool) {
         editButton.isHidden = !edit
         editButton.isEnabled = edit
         imageEditButton.isHidden = !edit
         imageEditButton.isEnabled = edit
     }
-    
-    @objc
-    private func buttonAction() {
-        actionPressed?()
-    }
-    
+
     func setImage(image: UIImage) {
         self.image.image = image
     }

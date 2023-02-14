@@ -19,14 +19,18 @@ protocol FilmsGridPresenterProtocol: AnyObject {
 }
 
 final class FilmsGridPresenter {
-    private let router: FilmsGridRouterProtocol
-    weak var viewController: FilmsGridViewControllerProtocol?
-    private let networkClient: FilmsNetworkProtocol
     
+    // MARK: - Public Properties
+    weak var viewController: FilmsGridViewControllerProtocol?
+    
+    // MARK: - Private Properties
+    private let router: FilmsGridRouterProtocol
+    private let networkClient: FilmsNetworkProtocol
     private var currentSortStyle: SortEnum = .def
     private var currentPage: Int = 0
     private var totalPages: Int = 1
     
+    // MARK: - Init/Deinit
     init(
         router: FilmsGridRouterProtocol,
         controller: FilmsGridViewControllerProtocol,
@@ -38,9 +42,10 @@ final class FilmsGridPresenter {
     }
 }
 
+// MARK: - Protocols
 extension FilmsGridPresenter: FilmsGridPresenterProtocol {
     func likeDidTapped(id: Int) {
-        SupportFunctions.addLikedFilm(id: id)
+        LikesManager.addLikedFilm(id: id)
     }
     
     func showDetails(item: Item) {

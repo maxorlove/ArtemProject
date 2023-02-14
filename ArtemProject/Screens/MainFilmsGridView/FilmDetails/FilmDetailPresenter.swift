@@ -17,13 +17,18 @@ protocol FilmDetailPresenterProtocol: AnyObject {
 }
 
 class FilmDetailPresenter {
+    
+    // MARK: - Public Properties
     weak var viewController: FilmDetailControllerProtocol?
+    
+    // MARK: - Private Properties
     private let router: FilmDetailRouterProtocol
     private let networkClient: FilmDetailNetworkProtocol
     private let data: DetailDataStruct
     private var similarFilmsPage = 0
     private var similarFilmsPageCount = 0
     
+    // MARK: - Init/Deinit
     init(
         networkClient: FilmDetailNetworkProtocol,
         controller: FilmDetailControllerProtocol,
@@ -37,6 +42,7 @@ class FilmDetailPresenter {
     }
 }
 
+// MARK: - Protocols
 extension FilmDetailPresenter: FilmDetailPresenterProtocol {
     func showDetails(item: DetailDataStruct) {
         var data = DetailDataStruct(id: item.id)
@@ -46,14 +52,14 @@ extension FilmDetailPresenter: FilmDetailPresenterProtocol {
     }
     
     func likeDidTapped() {
-        SupportFunctions.addLikedFilm(id: data.id)
+        LikesManager.addLikedFilm(id: data.id)
         setupLikeButton()
         data.callBack?(data.id)
         data.callBack2?(data.id)
     }
     
     func setupLikeButton() {
-        viewController?.setupLikeButton(isLiked: SupportFunctions.checkLikedFilm(id: data.id))
+        viewController?.setupLikeButton(isLiked: LikesManager.checkLikedFilm(id: data.id))
     }
     
     func loadData() {

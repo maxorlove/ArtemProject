@@ -17,8 +17,10 @@ protocol FilmDetailControllerProtocol: AnyObject {
 
 final class FilmDetailController: UIViewController {
     
+    // MARK: - Public Properties
     var presenter: FilmDetailPresenterProtocol?
     
+    // MARK: - Private Properties
     private let scrollView = UIScrollView()
     private let topView = UIView()
     private let bottomView = UIView()
@@ -27,7 +29,6 @@ final class FilmDetailController: UIViewController {
     
     private let blurEffectView = UIVisualEffectView(effect: UIBlurEffect(style: .systemUltraThinMaterialDark))
     private let backImageView = UIImageView()
-
     private let detailsView: UIStackView = {
         let stack = UIStackView()
         stack.spacing = 8
@@ -35,15 +36,16 @@ final class FilmDetailController: UIViewController {
         stack.axis = .vertical
         return stack
     }()
-    
     private let similarFilmsView = SimilarFilmsView()
    
+    // MARK: - LifeCycle
     override func viewDidLoad() {
         super.viewDidLoad()
         setup()
         presenter?.loadData()
     }
     
+    // MARK: - Private Methods
     private func setup() {
         addSubviews()
         setupConstraints()
@@ -194,12 +196,14 @@ final class FilmDetailController: UIViewController {
         presenter?.setupLikeButton()
     }
     
+    // MARK: - Public Methods
     @objc
     func likeDidTapped() {
         presenter?.likeDidTapped()
     }
 }
 
+// MARK: - Protocols
 extension FilmDetailController: FilmDetailControllerProtocol {
     func configure(with item: DetailsFilmResponse) {
         if let poster = item.posterPath {
