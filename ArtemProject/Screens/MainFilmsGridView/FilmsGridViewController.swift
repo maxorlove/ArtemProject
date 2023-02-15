@@ -12,6 +12,7 @@ protocol FilmsGridViewControllerProtocol: AnyObject {
     func errorAlert(error: ErrorModel)
     func clearDataSource(sortStyle: SortEnum)
     func updateCell(index: Int)
+    func scrollToTop()
 }
 
 final class FilmsGridViewController: UIViewController {
@@ -27,6 +28,12 @@ final class FilmsGridViewController: UIViewController {
         let collection = UICollectionView(frame: .zero, collectionViewLayout: layout)
         return collection
     }()
+    private let tap = UITapGestureRecognizer()
+    private let inidicator : UIActivityIndicatorView = {
+        let view = UIActivityIndicatorView()
+        view.style = .large
+        return view
+    }()
     private var dataSourse: [Item] = []
     private var gridType: GridType = .double
     private var itemSize: CGFloat = 0.0
@@ -35,6 +42,7 @@ final class FilmsGridViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setup()
+        setupObservers()
         presenter?.loadData()
     }
     
@@ -47,7 +55,7 @@ final class FilmsGridViewController: UIViewController {
     }
     
     private func addSubviews() {
-        [searchView, filmsCollectionView, sortView].forEach {
+        [searchView,  filmsCollectionView, inidicator, sortView].forEach {
             view.addSubview($0)
             $0.translatesAutoresizingMaskIntoConstraints = false
         }
@@ -61,10 +69,12 @@ final class FilmsGridViewController: UIViewController {
             searchView.heightAnchor.constraint(equalToConstant: 50),
             
             filmsCollectionView.topAnchor.constraint(equalTo: searchView.bottomAnchor),
-//            filmsCollectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             filmsCollectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
             filmsCollectionView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: Constants.border),
             filmsCollectionView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -Constants.border),
+            
+            inidicator.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            inidicator.centerYAnchor.constraint(equalTo: view.centerYAnchor),
             
             sortView.bottomAnchor.constraint(equalTo: filmsCollectionView.bottomAnchor, constant: -6),
             sortView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 104),
@@ -115,6 +125,14 @@ final class FilmsGridViewController: UIViewController {
         self.present(alert, animated: true, completion: nil)
     }
     
+    private func setupObservers() {
+        tap.addTarget(self, action: #selector(dismissKeyboard))
+        tap.cancelsTouchesInView = false
+        view.addGestureRecognizer(tap)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardDidHide), name: UIResponder.keyboardDidHideNotification, object: nil)
+    }
+    
     private func gridSizeChangeAction() {
         updateGridType()
         filmsCollectionView.reloadData()
@@ -145,6 +163,21 @@ final class FilmsGridViewController: UIViewController {
         } else {
             return nil
         }
+    }
+    
+    @objc
+    private func keyboardWillShow() {
+        tap.cancelsTouchesInView = true
+    }
+    
+    @objc
+    private func keyboardDidHide() {
+        tap.cancelsTouchesInView = false
+    }
+    
+    @objc
+    private func dismissKeyboard() {
+        view.endEditing(true)
     }
 }
 
@@ -197,6 +230,7 @@ extension FilmsGridViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         guard let next = presenter?.getNext() else { return }
         if dataSourse.count - Int(gridType.rawValue) == indexPath.row, next {
+            inidicator.startAnimating()
             presenter?.loadData()
         }
     }
@@ -213,12 +247,14 @@ extension FilmsGridViewController: FilmsGridViewControllerProtocol {
     func clearDataSource(sortStyle: SortEnum) {
         self.sortView.changeSortLabel(sortStyle: sortStyle)
         self.dataSourse.removeAll()
+//            self.scrollToTop()
     }
     
     func reloadDataSourse(response: AllFilmsResponse) {
         DispatchQueue.main.async {
             self.dataSourse.append(contentsOf: response.results)
             self.filmsCollectionView.reloadData()
+            self.inidicator.stopAnimating()
         }
     }
     
@@ -235,6 +271,11 @@ extension FilmsGridViewController: FilmsGridViewControllerProtocol {
         if let index = searchIndexForId(id: index) {
             filmsCollectionView.reloadItems(at: [IndexPath(row: index, section: 0)])
         }
+    }
+    
+    func scrollToTop() {
+//        filmsCollectionView.setContentOffset(CGPoint(x:0 ,y:0), animated: true)
+//        filmsCollectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .top, animated: true)
     }
 }
 

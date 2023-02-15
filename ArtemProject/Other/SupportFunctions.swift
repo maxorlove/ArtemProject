@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SDWebImage
 
 final class LikesManager {
     static func addLikedFilm(id: Int) {
@@ -36,5 +37,12 @@ final class LikesManager {
             }
         }
         return false
+    }
+}
+
+final class Rounder {
+    static func roundDouble(_ x: Double) -> Float {
+        let f = (x * 10).rounded() / 10
+        return Float(f)
     }
 }

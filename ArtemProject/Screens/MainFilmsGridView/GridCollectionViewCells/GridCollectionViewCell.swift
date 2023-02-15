@@ -130,8 +130,19 @@ final class GridCollectionViewCell: UICollectionViewCell {
     }
     
     private func setImage(path: String) {
-        let url = URL(string: "https://image.tmdb.org/t/p/original/\(path)")
-        image.sd_setImage(with: url)
+        let url = URL(string: "https://image.tmdb.org/t/p/w500/\(path)")
+        self.image.sd_setImage(with: url)
+    }
+    
+    private func setupLikeButton(isLiked: Bool) {
+        let imageConfig = UIImage.SymbolConfiguration(scale: .large)
+        if isLiked {
+            likeButton.tintColor = .red
+            likeButton.setImage(UIImage(systemName: "heart.fill", withConfiguration: imageConfig), for: .normal)
+        } else {
+            likeButton.tintColor = .systemGray
+            likeButton.setImage(UIImage(systemName: "heart", withConfiguration: imageConfig), for: .normal)
+        }
     }
     
     @objc
@@ -146,20 +157,12 @@ final class GridCollectionViewCell: UICollectionViewCell {
     func configure(with item: Item) {
         id = item.id
         labelText.text = item.title
-        ratingLabel.text = "\(item.voteAverage)"
-        guard let poster = item.posterPath else {return}
-        setImage(path: poster)
+        ratingLabel.text = "\(Rounder.roundDouble(item.voteAverage))"
         setupLikeButton(isLiked: LikesManager.checkLikedFilm(id: item.id))
-    }
-    
-    func setupLikeButton(isLiked: Bool) {
-        let imageConfig = UIImage.SymbolConfiguration(scale: .large)
-        if isLiked {
-            likeButton.tintColor = .red
-            likeButton.setImage(UIImage(systemName: "heart.fill", withConfiguration: imageConfig), for: .normal)
+        if let poster = item.posterPath {
+            setImage(path: poster)
         } else {
-            likeButton.tintColor = .systemGray
-            likeButton.setImage(UIImage(systemName: "heart", withConfiguration: imageConfig), for: .normal)
+            image.image = UIImage(named: "filmplaceholder")
         }
     }
 }

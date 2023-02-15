@@ -76,7 +76,7 @@ final class FilmDetailCellView: UICollectionViewCell {
             labelView.heightAnchor.constraint(equalToConstant: contentView.frame.height / 6),
             
             labelText.centerXAnchor.constraint(equalTo: labelView.centerXAnchor),
-            labelView.centerYAnchor.constraint(equalTo: labelView.centerYAnchor),
+            labelText.centerYAnchor.constraint(equalTo: labelView.centerYAnchor),
             labelText.leadingAnchor.constraint(equalTo: labelView.leadingAnchor, constant: 12),
             labelText.trailingAnchor.constraint(equalTo: labelView.trailingAnchor, constant: -12),
             labelText.topAnchor.constraint(equalTo: labelView.topAnchor, constant: 4),
@@ -84,8 +84,8 @@ final class FilmDetailCellView: UICollectionViewCell {
             
             ratingView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 4),
             ratingView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 4),
-            ratingView.widthAnchor.constraint(equalToConstant: contentView.frame.width / 3),
-            ratingView.heightAnchor.constraint(equalToConstant: 32),
+            ratingView.widthAnchor.constraint(equalToConstant: contentView.frame.width / 2.5),
+            ratingView.heightAnchor.constraint(equalToConstant: 24),
             
             ratingImg.centerYAnchor.constraint(equalTo: ratingView.centerYAnchor),
             ratingImg.leadingAnchor.constraint(equalTo: ratingView.leadingAnchor, constant: 6),
@@ -121,7 +121,7 @@ final class FilmDetailCellView: UICollectionViewCell {
         
         ratingImg.image = UIImage(named: "star")
         
-        ratingLabel.font = .systemFont(ofSize: 9)
+        ratingLabel.font = .systemFont(ofSize: 12)
         ratingLabel.textColor = Colors.accentTextColor
     }
     
@@ -130,7 +130,7 @@ final class FilmDetailCellView: UICollectionViewCell {
     }
     
     private func setImage(path: String) {
-        let url = URL(string: "https://image.tmdb.org/t/p/original/\(path)")
+        let url = URL(string: "https://image.tmdb.org/t/p/w300/\(path)")
         image.sd_setImage(with: url)
     }
     
@@ -146,10 +146,14 @@ final class FilmDetailCellView: UICollectionViewCell {
     func configure(with item: Item) {
         id = item.id
         labelText.text = item.title
-        ratingLabel.text = "\(item.voteAverage)"
-        guard let poster = item.posterPath else {return}
-        setImage(path: poster)
+        ratingLabel.text = "\(Rounder.roundDouble(item.voteAverage))"
         setupLikeButton(isLiked: LikesManager.checkLikedFilm(id: item.id))
+        guard let poster = item.posterPath else {return}
+        if let poster = item.posterPath {
+            setImage(path: poster)
+        } else {
+            image.image = UIImage(named: "filmplaceholder")
+        }
     }
     
     func setupLikeButton(isLiked: Bool) {

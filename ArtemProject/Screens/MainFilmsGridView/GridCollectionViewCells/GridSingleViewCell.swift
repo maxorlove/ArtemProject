@@ -124,7 +124,7 @@ final class GridSingleViewCell: UICollectionViewCell {
     }
     
     private func setImage(path: String) {
-        let url = URL(string: "https://image.tmdb.org/t/p/original/\(path)")
+        let url = URL(string: "https://image.tmdb.org/t/p/w500/\(path)")
         image.sd_setImage(with: url)
     }
     
@@ -140,12 +140,12 @@ final class GridSingleViewCell: UICollectionViewCell {
         id = item.id
         label.text = item.title
         yearLabel.text = item.releaseDate
-        ratingLabel.text = "\(item.voteAverage)"
+        ratingLabel.text = "\(Rounder.roundDouble(item.voteAverage))"
         setupLikeButton(isLiked: LikesManager.checkLikedFilm(id: item.id))
         if let poster = item.posterPath {
             setImage(path: poster)
         } else {
-            return
+            image.image = UIImage(named: "filmplaceholder")
         }
     }
     

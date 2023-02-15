@@ -25,3 +25,4 @@ enum GridType: Int {
     case single = 1
     case double = 2
 }
+

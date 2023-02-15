@@ -36,12 +36,18 @@ final class FilmDetailController: UIViewController {
         stack.axis = .vertical
         return stack
     }()
+    private let inidicator : UIActivityIndicatorView = {
+        let view = UIActivityIndicatorView()
+        view.style = .large
+        return view
+    }()
     private let similarFilmsView = SimilarFilmsView()
    
     // MARK: - LifeCycle
     override func viewDidLoad() {
         super.viewDidLoad()
         setup()
+        inidicator.startAnimating()
         presenter?.loadData()
     }
     
@@ -208,8 +214,13 @@ extension FilmDetailController: FilmDetailControllerProtocol {
     func configure(with item: DetailsFilmResponse) {
         if let poster = item.posterPath {
             setImage(path: poster)
+        } else {
+            let image = UIImage(named: "filmplaceholder")
+            imageView.image = image
+            backImageView.image = image
         }
         addArrangedSubviews(item: item)
+        inidicator.stopAnimating()
     }
     
     func addSimilarFilms(items: [Item]) {

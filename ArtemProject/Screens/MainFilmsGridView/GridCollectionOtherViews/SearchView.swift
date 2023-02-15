@@ -8,17 +8,23 @@
 import UIKit
 
 final class SearchView: UIView {
-    let text = UITextField()
-    let searchButton = UIButton()
+    
+    //  MARK: - public parameters
     var action: ((String)->(Void))?
     
+    //  MARK: - private parameters
+    private let text = UITextField()
+    private let searchButton = UIButton()
+    
+    //  MARK: - init
     override init(frame: CGRect) {
         super.init(frame: .zero)
         setup()
     }
     
     required init?(coder: NSCoder) { fatalError() }
-        
+    
+    //  MARK: - private functions
     private func setup() {
         [text, searchButton].forEach {
             addSubview($0)
@@ -44,6 +50,7 @@ final class SearchView: UIView {
         text.delegate = self
         text.placeholder = "Search"
         text.backgroundColor = Colors.primarySurfaceColor
+        text.returnKeyType = .search
     }
     
     @objc
@@ -57,6 +64,7 @@ final class SearchView: UIView {
 extension SearchView: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         endEditing(true)
+        searchDidTapped()
         return false
     }
 }
