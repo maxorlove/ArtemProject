@@ -12,7 +12,7 @@ struct Profile: Codable {
     var email: String?
     var title: String?
     var location: String?
-    var image: Data?
+    var image: URL?
     
     private enum CodingKeys: String, CodingKey {
         case name = "name"
@@ -36,7 +36,7 @@ struct Profile: Codable {
         self.email = try? container.decodeIfPresent(String.self, forKey: .email) ?? ""
         self.title = try? container.decodeIfPresent(String.self, forKey: .title) ?? ""
         self.location = try? container.decodeIfPresent(String.self, forKey: .location) ?? ""
-        self.image = try? container.decodeIfPresent(Data.self, forKey: .image)
+        self.image = try? container.decodeIfPresent(URL.self, forKey: .image) ?? nil
     }
 }
 

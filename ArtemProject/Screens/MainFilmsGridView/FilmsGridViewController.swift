@@ -254,6 +254,7 @@ extension FilmsGridViewController: FilmsGridViewControllerProtocol {
         DispatchQueue.main.async {
             self.dataSourse.append(contentsOf: response.results)
             self.filmsCollectionView.reloadData()
+//            self.scrollToTop()
             self.inidicator.stopAnimating()
         }
     }

@@ -5,8 +5,7 @@
 //  Created by Artem Vavilov on 04.02.2023.
 //
 
-import Foundation
-import SDWebImage
+import UIKit
 
 final class LikesManager {
     static func addLikedFilm(id: Int) {
@@ -44,5 +43,39 @@ final class Rounder {
     static func roundDouble(_ x: Double) -> Float {
         let f = (x * 10).rounded() / 10
         return Float(f)
+    }
+}
+
+final class ImageManager {
+    static func saveImage(image: UIImage, name: String) -> URL? {
+        guard let data = image.pngData() else { return nil }
+        
+        guard let path = FileManager
+            .default
+            .urls(for: .documentDirectory, in: .userDomainMask)
+            .first?
+            .appendingPathExtension("\(name).png") else {
+            print("path forming Error")
+            return nil
+        }
+        
+        do {
+            try data.write(to: path)
+        } catch let error {
+            print(error.localizedDescription)
+            return nil
+        }
+        return path
+    }
+    
+    static func getImage(url: URL) -> UIImage? {
+        do {
+            let data = try Data(contentsOf: url)
+            let image = UIImage(data: data)
+            return image
+        } catch let error {
+            print(error)
+            return nil
+        }
     }
 }

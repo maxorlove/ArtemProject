@@ -138,9 +138,16 @@ final class ProfileViewController: UIViewController {
     }
     
     private func updateHeaderView(profileStruct: Profile) {
-        if let data = profileStruct.image, let image = UIImage(data: data) {
+        if let url = profileStruct.image, let image = ImageManager.getImage(url: url) {
             headerView.setImage(image: image)
         }
+//        if let str = profileStruct.image, let url = URL(string: str) {
+//            DispatchQueue.main.async {
+//                if let data = try? Data(contentsOf: url), let image = UIImage(data: data) {
+//                    self.headerView.setImage(image: image)
+//                }
+//            }
+//        }
     }
     
     private func updateStackViews(profileStruct: Profile) {
@@ -215,7 +222,6 @@ private enum PickerStyle {
 
 // MARK: - Protocols
 extension ProfileViewController: ProfileViewControllerProtocol {
-    
     func configure(profileStruct: Profile) {
         updateHeaderView(profileStruct: profileStruct)
         updateStackViews(profileStruct: profileStruct)
@@ -236,9 +242,12 @@ extension ProfileViewController: UIImagePickerControllerDelegate {
         dismiss(animated: true)
         guard let image = info[.originalImage] as? UIImage else { return }
         headerView.setImage(image: image)
-        if let data = image.pngData() {
-            presenter?.saveProfileImage(image: data)
+        if let url = ImageManager.saveImage(image: image, name: "UserAvatar") {
+            presenter?.saveProfileImage(url: url)
         }
+//        if let data = image.pngData() {
+//            presenter?.saveProfileImage(image: data)
+//        }
     }
 }
 

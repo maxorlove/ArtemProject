@@ -10,7 +10,7 @@ import Foundation
 protocol ProfileViewPresenterProtocol: AnyObject {
     func setupView()
     func didEditTaped()
-    func saveProfileImage(image: Data)
+    func saveProfileImage(url: URL)
     func saveAttValue(att: AttNameEnum, value: String)
     func saveAll()
 }
@@ -24,7 +24,7 @@ final class ProfileViewPresenter {
     private let router: ProfileViewRouterProtocol
     private let userDefaults: UserDefaultsServiceProtocol = UserDefaultsService(with: UserDefaults.standard)
     private var editState = false
-    private var profileStruct: Profile?
+    private var profileStruct = Profile()
     
     // MARK: - Init/Deinit
     init(
@@ -44,7 +44,6 @@ extension ProfileViewPresenter: ProfileViewPresenterProtocol {
     }
     
     func saveAttValue(att: AttNameEnum, value: String) {
-        guard var profileStruct = profileStruct else { return }
         switch att {
         case .name:
             profileStruct.name = value
@@ -55,21 +54,16 @@ extension ProfileViewPresenter: ProfileViewPresenterProtocol {
         case .location:
             profileStruct.location = value
         }
-        self.profileStruct = profileStruct
     }
     
-    func saveProfileImage(image: Data) {
-        guard var profileStruct = profileStruct else { return }
-        profileStruct.image = image
-        self.profileStruct = profileStruct
+    func saveProfileImage(url: URL) {
+        profileStruct.image = url
     }
     
     func setupView() {
         if let profileStruct = userDefaults.getModel(with: Profile.self, by: .profile) {
             self.profileStruct = profileStruct
             viewController?.configure(profileStruct: profileStruct)
-        } else {
-            self.profileStruct = Profile()
         }
         viewController?.switchEdit(edit: editState)
     }
