@@ -141,13 +141,6 @@ final class ProfileViewController: UIViewController {
         if let url = profileStruct.image, let image = ImageManager.getImage(url: url) {
             headerView.setImage(image: image)
         }
-//        if let str = profileStruct.image, let url = URL(string: str) {
-//            DispatchQueue.main.async {
-//                if let data = try? Data(contentsOf: url), let image = UIImage(data: data) {
-//                    self.headerView.setImage(image: image)
-//                }
-//            }
-//        }
     }
     
     private func updateStackViews(profileStruct: Profile) {
@@ -245,9 +238,6 @@ extension ProfileViewController: UIImagePickerControllerDelegate {
         if let url = ImageManager.saveImage(image: image, name: "UserAvatar") {
             presenter?.saveProfileImage(url: url)
         }
-//        if let data = image.pngData() {
-//            presenter?.saveProfileImage(image: data)
-//        }
     }
 }
 

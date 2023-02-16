@@ -17,4 +17,5 @@ enum Colors {
     static let secondaryTextOnSurfaceColor = UIColor(named: "secondaryTextOnSurfaceColor")
     static let primaryTextOnBackgroundColor = UIColor(named: "primaryTextOnBackgroundColor")
     static let secondaryTextOnBackgroundColor = UIColor(named: "secondaryTextOnBackgroundColor")
+    static let secondaryBackgroundColor = UIColor(named: "secondaryBackgroundColor")
 }

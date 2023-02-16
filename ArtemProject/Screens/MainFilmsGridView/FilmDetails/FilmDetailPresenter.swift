@@ -12,7 +12,7 @@ protocol FilmDetailPresenterProtocol: AnyObject {
     func setupLikeButton()
     func likeDidTapped()
     func popOut()
-    func getSimilarFilms()
+    func getSimilarFilms(firstLoad: (() -> (Void))?)
     func showDetails(item: DetailDataStruct)
 }
 
@@ -76,13 +76,16 @@ extension FilmDetailPresenter: FilmDetailPresenterProtocol {
         }
     }
     
-    func getSimilarFilms() {
+    func getSimilarFilms(firstLoad: (() -> (Void))? = nil) {
         let id = data.id
         similarFilmsPage += 1
         networkClient.getSimilar(id: id, page: similarFilmsPage) { [weak self] result in
             switch result {
             case .success(let response):
                 DispatchQueue.main.async {
+                    if response.results.count > 0 {
+                        firstLoad?()
+                    }
                     self?.similarFilmsPageCount = response.totalPages
                     if response.totalPages >= self?.similarFilmsPage ?? 0 {
                         self?.viewController?.addSimilarFilms(items: response.results)

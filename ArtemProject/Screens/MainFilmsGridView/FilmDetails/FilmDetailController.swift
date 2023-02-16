@@ -117,8 +117,8 @@ final class FilmDetailController: UIViewController {
             bottomView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
             
             detailsView.topAnchor.constraint(equalTo: bottomView.topAnchor, constant: 16),
-            detailsView.leadingAnchor.constraint(equalTo: bottomView.leadingAnchor),
-            detailsView.trailingAnchor.constraint(equalTo: bottomView.trailingAnchor),
+            detailsView.leadingAnchor.constraint(equalTo: bottomView.leadingAnchor, constant: 8),
+            detailsView.trailingAnchor.constraint(equalTo: bottomView.trailingAnchor, constant: -8),
             detailsView.bottomAnchor.constraint(equalTo: bottomView.bottomAnchor),
         ])
     }
@@ -156,11 +156,16 @@ final class FilmDetailController: UIViewController {
         label.lineBreakMode = .byWordWrapping
         detailsView.addArrangedSubview(wrapLabel(labelView: label))
         
-        let yearLabel = UILabel()
-        yearLabel.text = item.releaseDate
-        yearLabel.textColor = Colors.primaryTextOnSurfaceColor
-        yearLabel.font = .systemFont(ofSize: 17)
-        detailsView.addArrangedSubview(wrapLabel(labelView: yearLabel))
+        let ratingBlock = RatingBlockView()
+        ratingBlock.createSubviews(titleText: "Rating", valueText: "\(Rounder.roundDouble(item.voteAverage))", withImage: true)
+        ratingBlock.createSubviews(titleText: "Vote count", valueText: "\(item.voteCount)", withImage: false)
+        ratingBlock.createSubviews(titleText: "Popularity", valueText: "\(Rounder.roundDouble(item.popularity))", withImage: false)
+        detailsView.addArrangedSubview(ratingBlock)
+        
+        let releaseLanguageView = ReleaseLanguageView()
+        releaseLanguageView.createSubviews(titleText: "Release date", valueText: item.releaseDate)
+        releaseLanguageView.createSubviews(titleText: "Language", valueText: item.originalLanguage)
+        detailsView.addArrangedSubview(releaseLanguageView)
         
         let description = UILabel()
         description.text = item.overview
@@ -169,20 +174,26 @@ final class FilmDetailController: UIViewController {
         description.lineBreakMode = .byWordWrapping
         description.font = .systemFont(ofSize: 20)
         detailsView.addArrangedSubview(wrapLabel(labelView: description))
-        
-        detailsView.setCustomSpacing(16, after: yearLabel)
-        
+
+        detailsView.setCustomSpacing(16, after: description)
+
         configureSimilarView()
+        
     }
     
     private func configureSimilarView() {
         similarFilmsView.getNext = { [weak self] in
-            self?.presenter?.getSimilarFilms()
+            self?.presenter?.getSimilarFilms(firstLoad: nil)
         }
         similarFilmsView.showDetails = { [weak self] in
             self?.presenter?.showDetails(item: $0)
         }
-        presenter?.getSimilarFilms()
+        presenter?.getSimilarFilms(firstLoad: { [weak self] in
+            self?.addSimilarView()
+        })
+    }
+    
+    private func addSimilarView() {
         detailsView.addArrangedSubview(similarFilmsView)
     }
     

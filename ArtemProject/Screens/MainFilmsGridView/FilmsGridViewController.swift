@@ -43,7 +43,7 @@ final class FilmsGridViewController: UIViewController {
         super.viewDidLoad()
         setup()
         setupObservers()
-        presenter?.loadData()
+        presenter?.loadData(isFinished: nil)
     }
     
     // MARK: - Private Methods
@@ -231,7 +231,7 @@ extension FilmsGridViewController: UICollectionViewDelegateFlowLayout {
         guard let next = presenter?.getNext() else { return }
         if dataSourse.count - Int(gridType.rawValue) == indexPath.row, next {
             inidicator.startAnimating()
-            presenter?.loadData()
+            presenter?.loadData(isFinished: nil)
         }
     }
     
@@ -276,7 +276,7 @@ extension FilmsGridViewController: FilmsGridViewControllerProtocol {
     
     func scrollToTop() {
 //        filmsCollectionView.setContentOffset(CGPoint(x:0 ,y:0), animated: true)
-//        filmsCollectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .top, animated: true)
+        filmsCollectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .top, animated: true)
     }
 }
 

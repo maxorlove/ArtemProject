@@ -8,7 +8,7 @@
 import UIKit
 
 protocol FilmsGridPresenterProtocol: AnyObject {
-    func loadData()
+    func loadData(isFinished: (() -> (Void))?)
     func getTotalPages() -> Int
     func getCurrentPage() -> Int
     func getNext() -> Bool
@@ -61,7 +61,9 @@ extension FilmsGridPresenter: FilmsGridPresenterProtocol {
         currentSortStyle = sortStyle
         viewController?.clearDataSource(sortStyle: .topRated)
         refreshPages()
-        loadData()
+        loadData(isFinished: { [weak self] in
+            self?.viewController?.scrollToTop()
+        })
     }
     
     func didSearchButtonPressed(text: String) {
@@ -87,7 +89,7 @@ extension FilmsGridPresenter: FilmsGridPresenterProtocol {
         return totalPages
     }
     
-    func loadData() {
+    func loadData(isFinished: (() -> (Void))? = nil) {
         currentPage += 1
         switch currentSortStyle {
         case .def:
@@ -96,6 +98,7 @@ extension FilmsGridPresenter: FilmsGridPresenterProtocol {
                 case .success(let response):
                     self?.totalPages = response.totalPages
                     self?.viewController?.reloadDataSourse(response: response)
+                    isFinished?()
                 case .failure(let error):
                     self?.viewController?.errorAlert(error: error)
                 }
@@ -106,6 +109,7 @@ extension FilmsGridPresenter: FilmsGridPresenterProtocol {
                 case .success(let response):
                     self?.totalPages = response.totalPages
                     self?.viewController?.reloadDataSourse(response: response)
+                    isFinished?()
                 case .failure(let error):
                     self?.viewController?.errorAlert(error: error)
                 }
@@ -116,6 +120,7 @@ extension FilmsGridPresenter: FilmsGridPresenterProtocol {
                 case .success(let response):
                     self?.totalPages = response.totalPages
                     self?.viewController?.reloadDataSourse(response: response)
+                    isFinished?()
                 case .failure(let error):
                     self?.viewController?.errorAlert(error: error)
                 }

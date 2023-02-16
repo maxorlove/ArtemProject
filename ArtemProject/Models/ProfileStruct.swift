@@ -43,24 +43,3 @@ struct Profile: Codable {
 struct Likes: Codable {
     var id: [Int]
 }
-
-//struct ProfileStruct {
-//    let name: String?
-//    let email: String?
-//    let title: String?
-//    let location: String?
-//    let image: UIImage?
-//
-//    init() {
-//        let defaults = UserDefaults.standard
-//        self.name = defaults.string(forKey: "name") ?? ""
-//        self.email = defaults.string(forKey: "email") ?? ""
-//        self.title = defaults.string(forKey: "title") ?? ""
-//        self.location = defaults.string(forKey: "location") ?? ""
-//        if let data = defaults.object(forKey: "image") as? Data,  let image = UIImage(data: data) {
-//            self.image = image
-//        } else {
-//            self.image = UIImage()
-//        }
-//    }
-//}

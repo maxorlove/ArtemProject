@@ -22,6 +22,8 @@ struct DetailsFilmResponse: Codable {
     let status: String
     let tagline: String
     let voteAverage: Double
+    let voteCount: Int
+    let popularity: Double
 }
 
 struct Genre: Codable {
