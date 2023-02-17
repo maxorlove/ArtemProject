@@ -8,24 +8,30 @@
 import UIKit
 
 protocol FilmsGridPresenterProtocol: AnyObject {
-    func loadData()
+    func loadData(isFinished: (() -> (Void))?)
     func getTotalPages() -> Int
     func getCurrentPage() -> Int
     func getNext() -> Bool
     func refreshPages()
     func didSortButtonPressed(sortStyle: SortEnum)
+    func didSearchButtonPressed(text: String)
     func showDetails(item: Item)
+    func likeDidTapped(id: Int)
 }
 
 final class FilmsGridPresenter {
-    private let router: FilmsGridRouterProtocol
-    weak var viewController: FilmsGridViewControllerProtocol?
-    private let networkClient: FilmsNetworkProtocol
     
+    // MARK: - Public Properties
+    weak var viewController: FilmsGridViewControllerProtocol?
+    
+    // MARK: - Private Properties
+    private let router: FilmsGridRouterProtocol
+    private let networkClient: FilmsNetworkProtocol
     private var currentSortStyle: SortEnum = .def
     private var currentPage: Int = 0
     private var totalPages: Int = 1
     
+    // MARK: - Init/Deinit
     init(
         router: FilmsGridRouterProtocol,
         controller: FilmsGridViewControllerProtocol,
@@ -37,7 +43,12 @@ final class FilmsGridPresenter {
     }
 }
 
+// MARK: - Protocols
 extension FilmsGridPresenter: FilmsGridPresenterProtocol {
+    func likeDidTapped(id: Int) {
+        LikesManager.addLikedFilm(id: id)
+    }
+    
     func showDetails(item: Item) {
         var data = DetailDataStruct.init(id: item.id)
         data.callBack = { [weak self] id in
@@ -48,9 +59,17 @@ extension FilmsGridPresenter: FilmsGridPresenterProtocol {
     
     func didSortButtonPressed(sortStyle: SortEnum) {
         currentSortStyle = sortStyle
-        self.viewController?.clearDataSource(sortStyle: .topRated)
+        viewController?.clearDataSource(sortStyle: .topRated)
         refreshPages()
-        loadData()
+        loadData(isFinished: { [weak self] in
+            self?.viewController?.scrollToTop()
+        })
+    }
+    
+    func didSearchButtonPressed(text: String) {
+        currentSortStyle = .searched
+        viewController?.clearDataSource(sortStyle: .searched)
+        loadSearchResult(text: text)
     }
     
     func refreshPages() {
@@ -70,7 +89,7 @@ extension FilmsGridPresenter: FilmsGridPresenterProtocol {
         return totalPages
     }
     
-    func loadData() {
+    func loadData(isFinished: (() -> (Void))? = nil) {
         currentPage += 1
         switch currentSortStyle {
         case .def:
@@ -79,6 +98,7 @@ extension FilmsGridPresenter: FilmsGridPresenterProtocol {
                 case .success(let response):
                     self?.totalPages = response.totalPages
                     self?.viewController?.reloadDataSourse(response: response)
+                    isFinished?()
                 case .failure(let error):
                     self?.viewController?.errorAlert(error: error)
                 }
@@ -89,6 +109,7 @@ extension FilmsGridPresenter: FilmsGridPresenterProtocol {
                 case .success(let response):
                     self?.totalPages = response.totalPages
                     self?.viewController?.reloadDataSourse(response: response)
+                    isFinished?()
                 case .failure(let error):
                     self?.viewController?.errorAlert(error: error)
                 }
@@ -99,9 +120,23 @@ extension FilmsGridPresenter: FilmsGridPresenterProtocol {
                 case .success(let response):
                     self?.totalPages = response.totalPages
                     self?.viewController?.reloadDataSourse(response: response)
+                    isFinished?()
                 case .failure(let error):
                     self?.viewController?.errorAlert(error: error)
                 }
+            }
+        case .searched:
+            return
+        }
+    }
+    
+    func loadSearchResult(text: String) {
+        networkClient.searchFilm(query: text) { [weak self] result in
+            switch result {
+            case .success(let response):
+                self?.viewController?.reloadDataSourse(response: response)
+            case .failure(let error):
+                self?.viewController?.errorAlert(error: error)
             }
         }
     }

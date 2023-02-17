@@ -8,7 +8,7 @@
 import UIKit
 
 final class FilmsGridBuilder {    
-    static func build() -> FilmsGridViewController {
+    static func build() -> UIViewController {
         let networkClient = NetworkService()
         let viewController = FilmsGridViewController()
         let router = FilmsGridRouter(viewController: viewController)

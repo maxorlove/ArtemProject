@@ -11,15 +11,22 @@ protocol FilmsNetworkProtocol {
     func getPopularMovies(page: Int, completion: @escaping(Result<AllFilmsResponse, ErrorModel>) -> Void) -> URLSessionDataTask
     func getTopRated(page: Int, completion: @escaping(Result<AllFilmsResponse, ErrorModel>) -> Void) -> URLSessionDataTask
     func getNowPlaying(page: Int, completion: @escaping(Result<AllFilmsResponse, ErrorModel>) -> Void) -> URLSessionDataTask
+    func searchFilm(query: String, completion: @escaping(Result<AllFilmsResponse, ErrorModel>) -> Void) -> URLSessionDataTask
 }
 
 protocol FilmDetailNetworkProtocol {
     func getDetails(id: Int, completion: @escaping(Result<DetailsFilmResponse, ErrorModel>) -> Void) -> URLSessionDataTask
+    func getSimilar(id: Int, page: Int, completion: @escaping(Result<AllFilmsResponse, ErrorModel>) -> Void) -> URLSessionDataTask
 }
 
 final class NetworkService {}
 
 extension NetworkService: FilmsNetworkProtocol {
+    func searchFilm(query: String, completion: @escaping (Result<AllFilmsResponse, ErrorModel>) -> Void) -> URLSessionDataTask {
+        let request = ServiceManager.shared.sendRequest(request: SearchFilmRequest(query: query), completion: completion)
+        return request
+    }
+    
     func getPopularMovies(page: Int, completion: @escaping(Result<AllFilmsResponse, ErrorModel>) -> Void) -> URLSessionDataTask {
         let request = ServiceManager.shared.sendRequest(request: PopularFilmsRequest(page: page), completion: completion)
         return request
@@ -39,6 +46,11 @@ extension NetworkService: FilmsNetworkProtocol {
 extension NetworkService: FilmDetailNetworkProtocol {
     func getDetails(id: Int, completion: @escaping(Result<DetailsFilmResponse, ErrorModel>) -> Void) -> URLSessionDataTask {
         let request = ServiceManager.shared.sendRequest(request: DetailsFilmRequest(id: id), completion: completion)
+        return request
+    }
+    
+    func getSimilar(id: Int, page: Int, completion: @escaping(Result<AllFilmsResponse, ErrorModel>) -> Void) -> URLSessionDataTask {
+        let request = ServiceManager.shared.sendRequest(request: SimilarFilmsRequest(id: id, page: page), completion: completion)
         return request
     }
 }

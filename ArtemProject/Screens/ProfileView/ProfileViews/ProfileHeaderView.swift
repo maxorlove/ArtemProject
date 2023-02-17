@@ -9,13 +9,16 @@ import UIKit
 
 final class ProfileHeaderView: UIView {
     
-    private var editFlag: Bool = false
+    // MARK: - Public Properties
+    var actionPressed: (() -> Void)?
+    
+    // MARK: - Private Properties
     private let label = UILabel()
     private let image = UIImageView()
     private let editButton = UIButton()
     private let imageEditButton = UIButton()
-    var actionPressed: (() -> Void)?
     
+    // MARK: - Init/Deinit
     override init(frame: CGRect) {
         super.init(frame: .zero)
         setup()
@@ -23,13 +26,14 @@ final class ProfileHeaderView: UIView {
     
     required init?(coder: NSCoder) { fatalError() }
     
+    // MARK: - Private Methods
     private func setup() {
         addSubViews()
         setupConstraints()
         setupViews()
         setupLabels()
         setupImages()
-        setEditFlag(edit: editFlag)
+        setupButtons()
     }
     
     private func addSubViews() {
@@ -52,9 +56,10 @@ final class ProfileHeaderView: UIView {
             imageEditButton.heightAnchor.constraint(equalTo: image.widthAnchor),
             
             label.centerXAnchor.constraint(equalTo: centerXAnchor),
-            label.topAnchor.constraint(equalTo: image.bottomAnchor, constant: 40),
+            label.topAnchor.constraint(equalTo: image.bottomAnchor, constant: 32),
             label.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 32),
             label.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -32),
+            label.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -32),
             
             editButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -12),
             editButton.topAnchor.constraint(equalTo: topAnchor, constant: 12),
@@ -64,7 +69,7 @@ final class ProfileHeaderView: UIView {
     }
     
     private func setupViews() {
-        backgroundColor = Colors.primaryBackgroundColor
+        backgroundColor = Colors.secondaryBackgroundColor
     }
     
     private func setupLabels() {
@@ -74,32 +79,23 @@ final class ProfileHeaderView: UIView {
     }
     
     private func setupImages() {
-        image.backgroundColor = .black
+        image.backgroundColor = Colors.secondarySurfaceColor
         image.layer.masksToBounds = true
         image.contentMode = .scaleAspectFill
         image.layer.cornerRadius = (UIScreen.main.bounds.width / 2.5) / 2
     }
     
-    private func setupButton() {
+    private func setupButtons() {
         editButton.setImage(UIImage(systemName: "pencil"), for: .normal)
         editButton.tintColor = .black
         editButton.addTarget(self, action: #selector(buttonAction), for: .touchUpInside)
-        editButton.isHidden = !editFlag
-        editButton.isEnabled = editFlag
         
         imageEditButton.setImage(UIImage(systemName: "pencil"), for: .normal)
         imageEditButton.tintColor = .white
         imageEditButton.addTarget(self, action: #selector(buttonAction), for: .touchUpInside)
-        imageEditButton.isHidden = !editFlag
-        imageEditButton.isEnabled = editFlag
         imageEditButton.layer.masksToBounds = true
         imageEditButton.contentMode = .scaleToFill
         imageEditButton.layer.cornerRadius = (UIScreen.main.bounds.width / 2.5) / 2
-    }
-    
-    func setEditFlag(edit: Bool) {
-        editFlag = edit
-        setupButton()
     }
     
     @objc
@@ -107,6 +103,14 @@ final class ProfileHeaderView: UIView {
         actionPressed?()
     }
     
+    // MARK: - Public Methods
+    func showButtons(edit: Bool) {
+        editButton.isHidden = !edit
+        editButton.isEnabled = edit
+        imageEditButton.isHidden = !edit
+        imageEditButton.isEnabled = edit
+    }
+
     func setImage(image: UIImage) {
         self.image.image = image
     }

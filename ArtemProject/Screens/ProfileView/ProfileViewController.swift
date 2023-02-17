@@ -7,61 +7,44 @@
 
 import UIKit
 
+protocol ProfileViewControllerProtocol: AnyObject {
+    func configure(profileStruct: Profile)
+    func switchEdit(edit: Bool)
+}
+
 final class ProfileViewController: UIViewController {
     
-    //    MARK: - properties
-    var didEndEdit: ((ProfileStruct) -> Void)?
+    // MARK: - Public Properties
+    var presenter: ProfileViewPresenterProtocol?
     
-    private var editFlag = false
+    // MARK: - Private Properties
     private let headerView = ProfileHeaderView()
+    private let scroolView = UIScrollView()
     private let verticalStackView: UIStackView = {
         let stack = UIStackView()
-        stack.distribution = .fillEqually
+//        stack.distribution = .fillEqually
         stack.axis = .vertical
         stack.spacing = 3
         return stack
     }()
-    private var stackTopAnchor: NSLayoutConstraint!
-    
-    private var profileStruct: ProfileStruct = {
-        var profile = ProfileStruct()
-        let defaults = UserDefaults.standard
-        AttNameEnum.allCases.forEach {
-            switch $0 {
-            case .name:
-                if let savedValue = defaults.string(forKey: "\($0)") {
-                    profile.name = savedValue
-                }
-            case .email:
-                if let savedValue = defaults.string(forKey: "\($0)") {
-                    profile.email = savedValue
-                }
-            case .title:
-                if let savedValue = defaults.string(forKey: "\($0)") {
-                    profile.title = savedValue
-                }
-            case .location:
-                if let savedValue = defaults.string(forKey: "\($0)") {
-                    profile.location = savedValue
-                }
-            }
-        }
-        if let data = defaults.object(forKey: "image") as? Data,  let image = UIImage(data: data) {
-            profile.image = image
-        }
-        return profile
+    private let imagePicker: UIImagePickerController = {
+        let imagePicker = UIImagePickerController()
+        imagePicker.allowsEditing = false
+        return UIImagePickerController()
     }()
     
-    var endEdit: ((ProfileStruct) -> Void)?
+    private var stackTopAnchor: NSLayoutConstraint!
     
-    //    MARK: - main funcs
+    // MARK: - LifeCycle
     override func viewDidLoad() {
         super.viewDidLoad()
         setup()
+        presenter?.setupView()
         NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
     
+    // MARK: - Private Methods
     private func setup() {
         addSubViews()
         setupConstraints()
@@ -70,8 +53,13 @@ final class ProfileViewController: UIViewController {
     }
     
     private func addSubViews() {
-        [headerView, verticalStackView].forEach {
+        [headerView, scroolView].forEach {
             view.addSubview($0)
+            $0.translatesAutoresizingMaskIntoConstraints = false
+        }
+        
+        [verticalStackView].forEach {
+            scroolView.addSubview($0)
             $0.translatesAutoresizingMaskIntoConstraints = false
         }
     }
@@ -81,154 +69,193 @@ final class ProfileViewController: UIViewController {
             headerView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             headerView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
             headerView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
-            headerView.heightAnchor.constraint(lessThanOrEqualToConstant: ViewConstants.frameWidth),
+            headerView.heightAnchor.constraint(greaterThanOrEqualToConstant: ViewConstants.frameWidth * 2 / 3),
             
-            verticalStackView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
-            verticalStackView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
-            verticalStackView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            scroolView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            scroolView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+            scroolView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            
+            verticalStackView.leadingAnchor.constraint(equalTo: scroolView.leadingAnchor),
+            verticalStackView.trailingAnchor.constraint(equalTo: scroolView.trailingAnchor),
+            verticalStackView.bottomAnchor.constraint(equalTo: scroolView.bottomAnchor),
+            verticalStackView.topAnchor.constraint(equalTo: scroolView.topAnchor),
         ])
-        stackTopAnchor = verticalStackView.topAnchor.constraint(equalTo: headerView.bottomAnchor, constant: 8)
+        stackTopAnchor = scroolView.topAnchor.constraint(equalTo: headerView.bottomAnchor, constant: 8)
         stackTopAnchor.isActive = true
     }
     
-    func setupViews() {
-        view.backgroundColor = .white
-        verticalStackView.backgroundColor = .lightGray
-        headerView.setEditFlag(edit: editFlag)
-        if editFlag {
-            navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Save", image: nil, target: self, action: #selector(doneEdit))
-        } else {
-            navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Edit", image: nil, target: self, action: #selector(swichEdit))
-        }
-        
+    private func setupViews() {
+        view.backgroundColor = Colors.primaryBackgroundColor
+        self.navigationItem.title = "Profile"
+        imagePicker.delegate = self
+        imagePicker.sourceType = .photoLibrary
         headerView.actionPressed = {[weak self] in
-            ImagePickerManager().pickImage(self!){ image in
-                self?.headerView.setImage(image: image)
-                self?.profileStruct.image = image
-                }
+            self?.showPickerAllert()
         }
-        updateHeaderView()
+    }
+    
+    private func showPickerAllert() {
+        var alert = UIAlertController(title: "Choose Image", message: nil, preferredStyle: .actionSheet)
+        alert.addAction(UIAlertAction(title: "Camera", style: .default){
+            UIAlertAction in
+            self.pickImage(.camera)
+        })
+        alert.addAction(UIAlertAction(title: "Gallery", style: .default){
+            UIAlertAction in
+            self.pickImage(.gallery)
+        })
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel){
+            UIAlertAction in
+        })
+        
+        DispatchQueue.main.async {
+            self.present(alert, animated: true, completion: nil)
+        }
+    }
+    
+    private func pickImage(_ style: PickerStyle) {
+        switch style {
+        case .camera:
+            imagePicker.sourceType = .camera
+        case .gallery:
+            imagePicker.sourceType = .photoLibrary
+        }
+        present(imagePicker, animated: true)
+    }
+    
+    private func showAlert(message: String) {
+        let alert = UIAlertController(title: "Error", message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { _ in
+        }))
+        DispatchQueue.main.async {
+            self.present(alert, animated: true, completion: nil)
+        }
     }
     
     private func addStackViews() {
         AttNameEnum.allCases.forEach {
             let att = createProfileAttribute(att: $0)
-            att.setEditFlag(edit: editFlag)
             verticalStackView.addArrangedSubview(att)
         }
-    }
-    
-    private func prep(attType: AttNameEnum, textValue: String) {
-        switch attType {
-        case .name:
-            profileStruct.name = textValue
-        case .email:
-            profileStruct.email = textValue
-        case .title:
-            profileStruct.title = textValue
-        case .location:
-            profileStruct.location = textValue
+        
+        AttNameEnum.allCases.forEach {
+            let att = createProfileAttribute(att: $0)
+            verticalStackView.addArrangedSubview(att)
         }
     }
     
     private func createProfileAttribute(att: AttNameEnum) -> ProfileAttributeView {
         let view = ProfileAttributeView()
-        view.didEndEditAction = {[weak self] attType, textValue in
-            self?.prep(attType: attType, textValue: textValue)
-        }
         view.configure(type: att)
+        view.didEndEditAction = { [weak self] (att, value) in
+            self?.presenter?.saveAttValue(att: att, value: value)
+        }
         return view
     }
     
-    //    MARK: - func
-    func setEditFlag(edit: Bool) {
-        editFlag = edit
-    }
-    
-    func setViewTitle(title: String) {
-        self.title = title
-    }
-    
-    func saveAttValues() {
-        let defaults = UserDefaults.standard
-        defaults.set(profileStruct.name, forKey: "name")
-        defaults.set(profileStruct.email, forKey: "email")
-        defaults.set(profileStruct.title, forKey: "title")
-        defaults.set(profileStruct.location, forKey: "location")
-        if let data = profileStruct.image.pngData() {
-            defaults.set(data, forKey: "image")
-        }
-    }
-    
-    func updateStackView() {
-        verticalStackView.arrangedSubviews.forEach {
-            if let sv = $0 as? ProfileAttributeView, let type = sv.type {
-                sv.configure(type: type)
-            }
-        }
-    }
-    
-    func updateHeaderView() {
-        let defaults = UserDefaults.standard
-        if let data = defaults.object(forKey: "image") as? Data,  let image = UIImage(data: data) {
+    private func updateHeaderView(profileStruct: Profile) {
+        if let url = profileStruct.image, let image = ImageManager.getImage(url: url) {
             headerView.setImage(image: image)
         }
     }
     
-    @objc
-    func swichEdit() {
-        let editViewController = ProfileViewController()
-        editViewController.setEditFlag(edit: true)
-        editViewController.setViewTitle(title: "Edit profile")
-        editViewController.didEndEdit = { [weak self] str in
-            self?.profileStruct = str
-            self?.saveAttValues()
-            self?.updateStackView()
-            self?.updateHeaderView()
-        }
-        navigationController?.pushViewController(editViewController, animated: true)
-    }
-    
-    @objc
-    func doneEdit() {
-        if checkAllProperties() {
-            didEndEdit?(profileStruct)
-            navigationController?.popViewController(animated: true)
-        } else {
-            let alert = UIAlertController(title: "Fill all attributes", message: "", preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
-            self.present(alert, animated: true, completion: nil)
+    private func updateStackViews(profileStruct: Profile) {
+        verticalStackView.arrangedSubviews.forEach {
+            if let sv = $0 as? ProfileAttributeView {
+                updateStackView(sv: sv, profileStruct: profileStruct)
+            }
         }
     }
     
-    func checkAllProperties() -> Bool {
-        if profileStruct.name != "", profileStruct.email != "", profileStruct.location != "", profileStruct.title != "" {
-            return true
+    private func updateStackView(sv: ProfileAttributeView, profileStruct: Profile) {
+        sv.setLabel(profileStruct: profileStruct)
+    }
+    
+    private func updateAccessibility(edit: Bool) {
+        headerView.showButtons(edit: edit)
+        verticalStackView.arrangedSubviews.forEach {
+            if let sv = $0 as? ProfileAttributeView {
+                sv.showButtons(edit: edit)
+            }
         }
-        return false
+    }
+    
+    private func collectAndSave() {
+        presenter?.saveAll()
     }
     
     @objc
-    func keyboardWillShow(_ notification: Notification) {
+    private func didEditTaped() {
+        presenter?.didEditTaped()
+    }
+    
+    @objc
+    private func didSaveTaped() {
+        collectAndSave()
+        presenter?.didEditTaped()
+    }
+    
+    @objc
+    private func keyboardWillShow(_ notification: Notification) {
         if let keyboardFrame: NSValue = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
             let keyboardRectangle = keyboardFrame.cgRectValue
             let keyboardHeight = keyboardRectangle.height
             self.view.frame.origin.y = 0 - keyboardHeight
-            stackTopAnchor = verticalStackView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: keyboardHeight)
+            stackTopAnchor = scroolView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: keyboardHeight)
             stackTopAnchor.isActive = true
             headerView.isHidden = true
+            navigationItem.rightBarButtonItem?.isHidden = true
+            navigationItem.rightBarButtonItem?.isEnabled = false
         }
     }
     
     @objc
-    func keyboardWillHide() {
+    private func keyboardWillHide() {
         self.view.frame.origin.y = 0
-        stackTopAnchor = verticalStackView.topAnchor.constraint(equalTo: headerView.bottomAnchor, constant: 8)
+        stackTopAnchor = scroolView.topAnchor.constraint(equalTo: headerView.bottomAnchor, constant: 8)
         stackTopAnchor.isActive = true
         headerView.isHidden = false
+        navigationItem.rightBarButtonItem?.isHidden = false
+        navigationItem.rightBarButtonItem?.isEnabled = true
     }
 }
 
-enum ViewConstants {
+private enum ViewConstants {
     static let frameWidth = UIScreen.main.bounds.width
+}
+
+private enum PickerStyle {
+    case camera
+    case gallery
+}
+
+// MARK: - Protocols
+extension ProfileViewController: ProfileViewControllerProtocol {
+    func configure(profileStruct: Profile) {
+        updateHeaderView(profileStruct: profileStruct)
+        updateStackViews(profileStruct: profileStruct)
+    }
+    
+    func switchEdit(edit: Bool) {
+        if edit {
+            navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Save", image: nil, target: self, action: #selector(didSaveTaped))
+        } else {
+            navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Edit", image: nil, target: self, action: #selector(didEditTaped))
+        }
+        updateAccessibility(edit: edit)
+    }
+}
+
+extension ProfileViewController: UIImagePickerControllerDelegate {
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        dismiss(animated: true)
+        guard let image = info[.originalImage] as? UIImage else { return }
+        headerView.setImage(image: image)
+        if let url = ImageManager.saveImage(image: image, name: "UserAvatar") {
+            presenter?.saveProfileImage(url: url)
+        }
+    }
+}
+
+extension ProfileViewController: UINavigationControllerDelegate {
 }

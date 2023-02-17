@@ -11,6 +11,7 @@ enum SortEnum: String, CaseIterable {
     case topRated = "Top rated"
     case popular = "Popular"
     case def = "Default"
+    case searched = "Searched"
 }
 
 enum AttNameEnum: String, CaseIterable {
@@ -24,3 +25,4 @@ enum GridType: Int {
     case single = 1
     case double = 2
 }
+

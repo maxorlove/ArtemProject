@@ -8,8 +8,8 @@
 import UIKit
 import SDWebImage
 
-final class GridCollectionViewCell: UICollectionViewCell {
-    
+final class FilmDetailCellView: UICollectionViewCell {
+   
     // MARK: - Public Properties
     var likeDidTappedCallback: ((Int) -> (Void))?
     
@@ -22,7 +22,7 @@ final class GridCollectionViewCell: UICollectionViewCell {
     private let ratingImg = UIImageView()
     private let likeButton = UIButton()
     private var id: Int?
-    
+
     // MARK: - Init/Deinit
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -73,10 +73,10 @@ final class GridCollectionViewCell: UICollectionViewCell {
             labelView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -4),
             labelView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 4),
             labelView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -4),
-            labelView.heightAnchor.constraint(equalToConstant: contentView.frame.height / 4.5),
+            labelView.heightAnchor.constraint(equalToConstant: contentView.frame.height / 6),
             
             labelText.centerXAnchor.constraint(equalTo: labelView.centerXAnchor),
-            labelView.centerYAnchor.constraint(equalTo: labelView.centerYAnchor),
+            labelText.centerYAnchor.constraint(equalTo: labelView.centerYAnchor),
             labelText.leadingAnchor.constraint(equalTo: labelView.leadingAnchor, constant: 12),
             labelText.trailingAnchor.constraint(equalTo: labelView.trailingAnchor, constant: -12),
             labelText.topAnchor.constraint(equalTo: labelView.topAnchor, constant: 4),
@@ -84,8 +84,8 @@ final class GridCollectionViewCell: UICollectionViewCell {
             
             ratingView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 4),
             ratingView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 4),
-            ratingView.widthAnchor.constraint(equalToConstant: contentView.frame.width / 3),
-            ratingView.heightAnchor.constraint(equalToConstant: 32),
+            ratingView.widthAnchor.constraint(equalToConstant: contentView.frame.width / 2.5),
+            ratingView.heightAnchor.constraint(equalToConstant: 24),
             
             ratingImg.centerYAnchor.constraint(equalTo: ratingView.centerYAnchor),
             ratingImg.leadingAnchor.constraint(equalTo: ratingView.leadingAnchor, constant: 6),
@@ -108,7 +108,7 @@ final class GridCollectionViewCell: UICollectionViewCell {
         labelView.backgroundColor = Colors.secondarySurfaceColor
         labelView.layer.cornerRadius = 13
         
-        labelText.font = .systemFont(ofSize: 20)
+        labelText.font = .systemFont(ofSize: 12)
         labelText.textColor = Colors.accentTextColor
         labelText.textAlignment = .center
         labelText.lineBreakMode = .byWordWrapping
@@ -121,7 +121,7 @@ final class GridCollectionViewCell: UICollectionViewCell {
         
         ratingImg.image = UIImage(named: "star")
         
-        ratingLabel.font = .systemFont(ofSize: 15)
+        ratingLabel.font = .systemFont(ofSize: 12)
         ratingLabel.textColor = Colors.accentTextColor
     }
     
@@ -130,11 +130,33 @@ final class GridCollectionViewCell: UICollectionViewCell {
     }
     
     private func setImage(path: String) {
-        let url = URL(string: "https://image.tmdb.org/t/p/w500/\(path)")
-        self.image.sd_setImage(with: url)
+        let url = URL(string: "https://image.tmdb.org/t/p/w300/\(path)")
+        image.sd_setImage(with: url)
     }
     
-    private func setupLikeButton(isLiked: Bool) {
+    @objc
+    private func likeDidTapped() {
+        guard let id = id else { return }
+        LikesManager.addLikedFilm(id: id)
+        likeDidTappedCallback?(id)
+        setupLikeButton(isLiked: LikesManager.checkLikedFilm(id: id))
+    }
+    
+    // MARK: - Public Methods
+    func configure(with item: Item) {
+        id = item.id
+        labelText.text = item.title
+        ratingLabel.text = "\(Rounder.roundDouble(item.voteAverage))"
+        setupLikeButton(isLiked: LikesManager.checkLikedFilm(id: item.id))
+        guard let poster = item.posterPath else {return}
+        if let poster = item.posterPath {
+            setImage(path: poster)
+        } else {
+            image.image = UIImage(named: "filmplaceholder")
+        }
+    }
+    
+    func setupLikeButton(isLiked: Bool) {
         let imageConfig = UIImage.SymbolConfiguration(scale: .large)
         if isLiked {
             likeButton.tintColor = .red
@@ -142,27 +164,6 @@ final class GridCollectionViewCell: UICollectionViewCell {
         } else {
             likeButton.tintColor = .systemGray
             likeButton.setImage(UIImage(systemName: "heart", withConfiguration: imageConfig), for: .normal)
-        }
-    }
-    
-    @objc
-    private func likeDidTapped() {
-        guard let id = id else { return }
-        likeDidTappedCallback?(id)
-        setupLikeButton(isLiked: LikesManager.checkLikedFilm(id: id))
-    }
-    
-    //MARK: - Public Methods
-    
-    func configure(with item: Item) {
-        id = item.id
-        labelText.text = item.title
-        ratingLabel.text = "\(Rounder.roundDouble(item.voteAverage))"
-        setupLikeButton(isLiked: LikesManager.checkLikedFilm(id: item.id))
-        if let poster = item.posterPath {
-            setImage(path: poster)
-        } else {
-            image.image = UIImage(named: "filmplaceholder")
         }
     }
 }

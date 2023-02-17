@@ -15,22 +15,20 @@ final class TabBarController: UITabBarController {
     }
     
     private func setup() {
-        let pv = ProfileViewController()
-        pv.setViewTitle(title: "Profile")
-        pv.setEditFlag(edit: false)
-        let profileViewController = UINavigationController(rootViewController: pv)
-        profileViewController.tabBarItem.image = UIImage(named: "profileIco")
-        profileViewController.title = nil
-        profileViewController.tabBarItem.imageInsets = UIEdgeInsets.init(top: 5,left: 0,bottom: -5,right: 0)
+        
+        let profileViewController = ProfileViewBuilder.build()
+        let profileNavigationController = UINavigationController(rootViewController: profileViewController)
+        profileNavigationController.tabBarItem.image = UIImage(named: "profileIco")
+        profileNavigationController.tabBarItem.title = nil
+        profileNavigationController.tabBarItem.imageInsets = UIEdgeInsets.init(top: 5, left: 0, bottom: -15, right: 0)
         
         let filmsGridViewController = FilmsGridBuilder.build()
-        filmsGridViewController.setViewTitle(title: "Movies")
-        let ilmsGridNavigationController = UINavigationController(rootViewController: filmsGridViewController)
-        ilmsGridNavigationController.tabBarItem.image = UIImage(named: "filmsIco")
-        ilmsGridNavigationController.title = nil
-        ilmsGridNavigationController.tabBarItem.imageInsets = UIEdgeInsets.init(top: 5,left: 0,bottom: -5,right: 0)
-        
-        self.viewControllers = [ilmsGridNavigationController, profileViewController]
+        let filmsGridNavigationController = UINavigationController(rootViewController: filmsGridViewController)
+        filmsGridNavigationController.tabBarItem.image = UIImage(named: "FilmsIco")
+        filmsGridNavigationController.title = nil
+        filmsGridNavigationController.tabBarItem.imageInsets = UIEdgeInsets.init(top: 5, left: 0, bottom: -15, right: 0)
+
+        self.viewControllers = [filmsGridNavigationController, profileNavigationController]
     }
     
 }

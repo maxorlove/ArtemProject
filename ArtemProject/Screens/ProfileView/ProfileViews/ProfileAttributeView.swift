@@ -9,15 +9,16 @@ import UIKit
 
 final class ProfileAttributeView: UIView {
     
+    // MARK: - Public Properties
     var didEndEditAction: ((AttNameEnum, String) -> Void)?
     var type: AttNameEnum?
     
-    let defaults = UserDefaults.standard
+    // MARK: - Private Properties
     private let label = UILabel()
     private let value = UITextField()
     private let editButton = UIButton()
-    private var editFlag = false
     
+    // MARK: - Init/Deinit
     override init(frame: CGRect) {
         super.init(frame: .zero)
         setup()
@@ -25,13 +26,13 @@ final class ProfileAttributeView: UIView {
     
     required init?(coder: NSCoder) { fatalError() }
     
+    // MARK: - Private Methods
     private func setup() {
-        self.value.delegate = self
+        value.delegate = self
         addSubViews()
         setupConstraints()
         setupLabels()
         setupButton()
-        setupViews()
     }
     
     private func addSubViews() {
@@ -43,17 +44,17 @@ final class ProfileAttributeView: UIView {
     
     private func setupConstraints() {
         NSLayoutConstraint.activate([
-            label.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 3),
+            label.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 12),
             label.topAnchor.constraint(equalTo: topAnchor, constant: 3),
             label.trailingAnchor.constraint(equalTo: editButton.leadingAnchor, constant: -10),
             
-            value.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 3),
+            value.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 12),
             value.topAnchor.constraint(equalTo: label.bottomAnchor, constant: 3),
             value.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -3),
             value.trailingAnchor.constraint(equalTo: editButton.leadingAnchor, constant: -10),
             
             editButton.centerYAnchor.constraint(equalTo: centerYAnchor),
-            editButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -3),
+            editButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -12),
             editButton.heightAnchor.constraint(equalTo: editButton.widthAnchor),
             editButton.topAnchor.constraint(equalTo: topAnchor, constant: 3),
             editButton.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -3),
@@ -63,14 +64,14 @@ final class ProfileAttributeView: UIView {
     private func setupLabels() {
         label.font = .systemFont(ofSize: 24, weight: .semibold)
         value.font = .systemFont(ofSize: 18, weight: .light)
+        value.returnKeyType = .done
+        value.isEnabled = false
     }
     
     private func setupButton() {
         editButton.setImage(UIImage(systemName: "pencil"), for: .normal)
         editButton.tintColor = .black
         editButton.addTarget(self, action: #selector(buttonAction), for: .touchUpInside)
-        editButton.isHidden = !editFlag
-        editButton.isEnabled = editFlag
     }
     
     @objc
@@ -79,42 +80,34 @@ final class ProfileAttributeView: UIView {
         value.becomeFirstResponder()
     }
     
-    func setEditFlag(edit: Bool) {
-        editFlag = edit
-        editButton.isHidden = !editFlag
-        editButton.isEnabled = editFlag
-    }
-    
+    // MARK: - Public Methods
     func configure(type: AttNameEnum) {
         self.label.text = type.rawValue
+        self.value.placeholder = "\(type)"
         self.type = type
+    }
+    
+    func setLabel(profileStruct: Profile) {
+        guard let type = type else { return }
         switch type {
         case .name:
-            setLabel(type: type)
+            self.value.text = profileStruct.name
         case .email:
-            setLabel(type: type)
+            self.value.text = profileStruct.email
         case .title:
-            setLabel(type: type)
+            self.value.text = profileStruct.title
         case .location:
-            setLabel(type: type)
+            self.value.text = profileStruct.location
         }
     }
     
-    private func setLabel(type: AttNameEnum) {
-        if let savedValue = defaults.string(forKey: "\(type)") {
-            self.value.text = savedValue
-            self.didEndEditAction?(type, savedValue)
-        } else {
-            self.value.placeholder = "\(type)"
-        }
-    }
-    
-    private func setupViews() {
-        value.isEnabled = false
-        value.returnKeyType = .done
+    func showButtons(edit: Bool) {
+        editButton.isHidden = !edit
+        editButton.isEnabled = edit
     }
 }
 
+// MARK: - Delegates
 extension ProfileAttributeView: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         endEditing(true)

@@ -12,12 +12,15 @@ protocol FilmDetailControllerProtocol: AnyObject {
     func configure(with item: DetailsFilmResponse)
     func errorAlert(error: ErrorModel)
     func setupLikeButton(isLiked: Bool)
+    func addSimilarFilms(items: [Item])
 }
 
 final class FilmDetailController: UIViewController {
     
+    // MARK: - Public Properties
     var presenter: FilmDetailPresenterProtocol?
     
+    // MARK: - Private Properties
     private let scrollView = UIScrollView()
     private let topView = UIView()
     private let bottomView = UIView()
@@ -26,7 +29,6 @@ final class FilmDetailController: UIViewController {
     
     private let blurEffectView = UIVisualEffectView(effect: UIBlurEffect(style: .systemUltraThinMaterialDark))
     private let backImageView = UIImageView()
-
     private let detailsView: UIStackView = {
         let stack = UIStackView()
         stack.spacing = 8
@@ -34,13 +36,22 @@ final class FilmDetailController: UIViewController {
         stack.axis = .vertical
         return stack
     }()
+    private let inidicator : UIActivityIndicatorView = {
+        let view = UIActivityIndicatorView()
+        view.style = .large
+        return view
+    }()
+    private let similarFilmsView = SimilarFilmsView()
    
+    // MARK: - LifeCycle
     override func viewDidLoad() {
         super.viewDidLoad()
         setup()
+        inidicator.startAnimating()
         presenter?.loadData()
     }
     
+    // MARK: - Private Methods
     private func setup() {
         addSubviews()
         setupConstraints()
@@ -106,8 +117,8 @@ final class FilmDetailController: UIViewController {
             bottomView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
             
             detailsView.topAnchor.constraint(equalTo: bottomView.topAnchor, constant: 16),
-            detailsView.leadingAnchor.constraint(equalTo: bottomView.leadingAnchor),
-            detailsView.trailingAnchor.constraint(equalTo: bottomView.trailingAnchor),
+            detailsView.leadingAnchor.constraint(equalTo: bottomView.leadingAnchor, constant: 8),
+            detailsView.trailingAnchor.constraint(equalTo: bottomView.trailingAnchor, constant: -8),
             detailsView.bottomAnchor.constraint(equalTo: bottomView.bottomAnchor),
         ])
     }
@@ -145,11 +156,16 @@ final class FilmDetailController: UIViewController {
         label.lineBreakMode = .byWordWrapping
         detailsView.addArrangedSubview(wrapLabel(labelView: label))
         
-        let yearLabel = UILabel()
-        yearLabel.text = item.releaseDate
-        yearLabel.textColor = Colors.primaryTextOnSurfaceColor
-        yearLabel.font = .systemFont(ofSize: 17)
-        detailsView.addArrangedSubview(wrapLabel(labelView: yearLabel))
+        let ratingBlock = RatingBlockView()
+        ratingBlock.createSubviews(titleText: "Rating", valueText: "\(Rounder.roundDouble(item.voteAverage))", withImage: true)
+        ratingBlock.createSubviews(titleText: "Vote count", valueText: "\(item.voteCount)", withImage: false)
+        ratingBlock.createSubviews(titleText: "Popularity", valueText: "\(Rounder.roundDouble(item.popularity))", withImage: false)
+        detailsView.addArrangedSubview(ratingBlock)
+        
+        let releaseLanguageView = ReleaseLanguageView()
+        releaseLanguageView.createSubviews(titleText: "Release date", valueText: item.releaseDate)
+        releaseLanguageView.createSubviews(titleText: "Language", valueText: item.originalLanguage)
+        detailsView.addArrangedSubview(releaseLanguageView)
         
         let description = UILabel()
         description.text = item.overview
@@ -158,8 +174,27 @@ final class FilmDetailController: UIViewController {
         description.lineBreakMode = .byWordWrapping
         description.font = .systemFont(ofSize: 20)
         detailsView.addArrangedSubview(wrapLabel(labelView: description))
+
+        detailsView.setCustomSpacing(16, after: description)
+
+        configureSimilarView()
         
-        detailsView.setCustomSpacing(16, after: yearLabel)
+    }
+    
+    private func configureSimilarView() {
+        similarFilmsView.getNext = { [weak self] in
+            self?.presenter?.getSimilarFilms(firstLoad: nil)
+        }
+        similarFilmsView.showDetails = { [weak self] in
+            self?.presenter?.showDetails(item: $0)
+        }
+        presenter?.getSimilarFilms(firstLoad: { [weak self] in
+            self?.addSimilarView()
+        })
+    }
+    
+    private func addSimilarView() {
+        detailsView.addArrangedSubview(similarFilmsView)
     }
     
     private func wrapLabel(labelView: UILabel) -> UIView {
@@ -178,18 +213,29 @@ final class FilmDetailController: UIViewController {
         presenter?.setupLikeButton()
     }
     
+    // MARK: - Public Methods
     @objc
     func likeDidTapped() {
         presenter?.likeDidTapped()
     }
 }
 
+// MARK: - Protocols
 extension FilmDetailController: FilmDetailControllerProtocol {
     func configure(with item: DetailsFilmResponse) {
         if let poster = item.posterPath {
             setImage(path: poster)
+        } else {
+            let image = UIImage(named: "filmplaceholder")
+            imageView.image = image
+            backImageView.image = image
         }
         addArrangedSubviews(item: item)
+        inidicator.stopAnimating()
+    }
+    
+    func addSimilarFilms(items: [Item]) {
+        similarFilmsView.loadData(items: items)
     }
     
     func errorAlert(error: ErrorModel) {
