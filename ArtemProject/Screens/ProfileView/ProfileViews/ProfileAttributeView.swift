@@ -44,17 +44,17 @@ final class ProfileAttributeView: UIView {
     
     private func setupConstraints() {
         NSLayoutConstraint.activate([
-            label.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 12),
+            label.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
             label.topAnchor.constraint(equalTo: topAnchor, constant: 3),
             label.trailingAnchor.constraint(equalTo: editButton.leadingAnchor, constant: -10),
             
-            value.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 12),
+            value.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
             value.topAnchor.constraint(equalTo: label.bottomAnchor, constant: 3),
             value.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -3),
             value.trailingAnchor.constraint(equalTo: editButton.leadingAnchor, constant: -10),
             
             editButton.centerYAnchor.constraint(equalTo: centerYAnchor),
-            editButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -12),
+            editButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
             editButton.heightAnchor.constraint(equalTo: editButton.widthAnchor),
             editButton.topAnchor.constraint(equalTo: topAnchor, constant: 3),
             editButton.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -3),

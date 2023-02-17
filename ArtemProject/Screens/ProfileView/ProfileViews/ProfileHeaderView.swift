@@ -55,7 +55,6 @@ final class ProfileHeaderView: UIView {
             imageEditButton.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.width / 2.5),
             imageEditButton.heightAnchor.constraint(equalTo: image.widthAnchor),
             
-            label.centerXAnchor.constraint(equalTo: centerXAnchor),
             label.topAnchor.constraint(equalTo: image.bottomAnchor, constant: 32),
             label.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 32),
             label.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -32),
@@ -69,7 +68,7 @@ final class ProfileHeaderView: UIView {
     }
     
     private func setupViews() {
-        backgroundColor = Colors.secondaryBackgroundColor
+        backgroundColor = .white
     }
     
     private func setupLabels() {

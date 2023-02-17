@@ -40,8 +40,7 @@ final class ProfileViewController: UIViewController {
         super.viewDidLoad()
         setup()
         presenter?.setupView()
-        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
+        setupObservers()
     }
     
     // MARK: - Private Methods
@@ -53,7 +52,7 @@ final class ProfileViewController: UIViewController {
     }
     
     private func addSubViews() {
-        [headerView, scroolView].forEach {
+        [scroolView].forEach {
             view.addSubview($0)
             $0.translatesAutoresizingMaskIntoConstraints = false
         }
@@ -66,36 +65,37 @@ final class ProfileViewController: UIViewController {
     
     private func setupConstraints() {
         NSLayoutConstraint.activate([
-            headerView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            headerView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
-            headerView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
-            headerView.heightAnchor.constraint(greaterThanOrEqualToConstant: ViewConstants.frameWidth * 2 / 3),
-            
             scroolView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
             scroolView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
             scroolView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            scroolView.widthAnchor.constraint(equalTo: view.widthAnchor),
+            scroolView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             
-            verticalStackView.leadingAnchor.constraint(equalTo: scroolView.leadingAnchor),
-            verticalStackView.trailingAnchor.constraint(equalTo: scroolView.trailingAnchor),
+            verticalStackView.widthAnchor.constraint(equalTo: scroolView.widthAnchor),
+            verticalStackView.centerXAnchor.constraint(equalTo: scroolView.centerXAnchor),
             verticalStackView.bottomAnchor.constraint(equalTo: scroolView.bottomAnchor),
             verticalStackView.topAnchor.constraint(equalTo: scroolView.topAnchor),
         ])
-        stackTopAnchor = scroolView.topAnchor.constraint(equalTo: headerView.bottomAnchor, constant: 8)
-        stackTopAnchor.isActive = true
     }
     
     private func setupViews() {
         view.backgroundColor = Colors.primaryBackgroundColor
-        self.navigationItem.title = "Profile"
+        navigationItem.title = "Profile"
         imagePicker.delegate = self
         imagePicker.sourceType = .photoLibrary
-        headerView.actionPressed = {[weak self] in
+        headerView.actionPressed = { [weak self] in
             self?.showPickerAllert()
         }
+        scroolView.alwaysBounceVertical = true
+    }
+    
+    private func setupObservers() {
+        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
     
     private func showPickerAllert() {
-        var alert = UIAlertController(title: "Choose Image", message: nil, preferredStyle: .actionSheet)
+        let alert = UIAlertController(title: "Choose Image", message: nil, preferredStyle: .actionSheet)
         alert.addAction(UIAlertAction(title: "Camera", style: .default){
             UIAlertAction in
             self.pickImage(.camera)
@@ -133,10 +133,7 @@ final class ProfileViewController: UIViewController {
     }
     
     private func addStackViews() {
-        AttNameEnum.allCases.forEach {
-            let att = createProfileAttribute(att: $0)
-            verticalStackView.addArrangedSubview(att)
-        }
+        verticalStackView.addArrangedSubview(headerView)
         
         AttNameEnum.allCases.forEach {
             let att = createProfileAttribute(att: $0)
@@ -200,10 +197,7 @@ final class ProfileViewController: UIViewController {
         if let keyboardFrame: NSValue = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
             let keyboardRectangle = keyboardFrame.cgRectValue
             let keyboardHeight = keyboardRectangle.height
-            self.view.frame.origin.y = 0 - keyboardHeight
-            stackTopAnchor = scroolView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: keyboardHeight)
-            stackTopAnchor.isActive = true
-            headerView.isHidden = true
+            view.frame.origin.y -= keyboardHeight
             navigationItem.rightBarButtonItem?.isHidden = true
             navigationItem.rightBarButtonItem?.isEnabled = false
         }
@@ -211,10 +205,7 @@ final class ProfileViewController: UIViewController {
     
     @objc
     private func keyboardWillHide() {
-        self.view.frame.origin.y = 0
-        stackTopAnchor = scroolView.topAnchor.constraint(equalTo: headerView.bottomAnchor, constant: 8)
-        stackTopAnchor.isActive = true
-        headerView.isHidden = false
+        view.frame.origin.y = .zero
         navigationItem.rightBarButtonItem?.isHidden = false
         navigationItem.rightBarButtonItem?.isEnabled = true
     }
