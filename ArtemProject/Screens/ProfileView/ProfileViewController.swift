@@ -19,9 +19,10 @@ final class ProfileViewController: UIViewController {
     
     // MARK: - Private Properties
     private let headerView = ProfileHeaderView()
+    private let scroolView = UIScrollView()
     private let verticalStackView: UIStackView = {
         let stack = UIStackView()
-        stack.distribution = .fillEqually
+//        stack.distribution = .fillEqually
         stack.axis = .vertical
         stack.spacing = 3
         return stack
@@ -52,8 +53,13 @@ final class ProfileViewController: UIViewController {
     }
     
     private func addSubViews() {
-        [headerView, verticalStackView].forEach {
+        [headerView, scroolView].forEach {
             view.addSubview($0)
+            $0.translatesAutoresizingMaskIntoConstraints = false
+        }
+        
+        [verticalStackView].forEach {
+            scroolView.addSubview($0)
             $0.translatesAutoresizingMaskIntoConstraints = false
         }
     }
@@ -63,13 +69,18 @@ final class ProfileViewController: UIViewController {
             headerView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             headerView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
             headerView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
-            headerView.heightAnchor.constraint(lessThanOrEqualToConstant: ViewConstants.frameWidth),
+            headerView.heightAnchor.constraint(greaterThanOrEqualToConstant: ViewConstants.frameWidth * 2 / 3),
             
-            verticalStackView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
-            verticalStackView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
-            verticalStackView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            scroolView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            scroolView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+            scroolView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            
+            verticalStackView.leadingAnchor.constraint(equalTo: scroolView.leadingAnchor),
+            verticalStackView.trailingAnchor.constraint(equalTo: scroolView.trailingAnchor),
+            verticalStackView.bottomAnchor.constraint(equalTo: scroolView.bottomAnchor),
+            verticalStackView.topAnchor.constraint(equalTo: scroolView.topAnchor),
         ])
-        stackTopAnchor = verticalStackView.topAnchor.constraint(equalTo: headerView.bottomAnchor, constant: 8)
+        stackTopAnchor = scroolView.topAnchor.constraint(equalTo: headerView.bottomAnchor, constant: 8)
         stackTopAnchor.isActive = true
     }
     
@@ -122,6 +133,11 @@ final class ProfileViewController: UIViewController {
     }
     
     private func addStackViews() {
+        AttNameEnum.allCases.forEach {
+            let att = createProfileAttribute(att: $0)
+            verticalStackView.addArrangedSubview(att)
+        }
+        
         AttNameEnum.allCases.forEach {
             let att = createProfileAttribute(att: $0)
             verticalStackView.addArrangedSubview(att)
@@ -185,7 +201,7 @@ final class ProfileViewController: UIViewController {
             let keyboardRectangle = keyboardFrame.cgRectValue
             let keyboardHeight = keyboardRectangle.height
             self.view.frame.origin.y = 0 - keyboardHeight
-            stackTopAnchor = verticalStackView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: keyboardHeight)
+            stackTopAnchor = scroolView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: keyboardHeight)
             stackTopAnchor.isActive = true
             headerView.isHidden = true
             navigationItem.rightBarButtonItem?.isHidden = true
@@ -196,7 +212,7 @@ final class ProfileViewController: UIViewController {
     @objc
     private func keyboardWillHide() {
         self.view.frame.origin.y = 0
-        stackTopAnchor = verticalStackView.topAnchor.constraint(equalTo: headerView.bottomAnchor, constant: 8)
+        stackTopAnchor = scroolView.topAnchor.constraint(equalTo: headerView.bottomAnchor, constant: 8)
         stackTopAnchor.isActive = true
         headerView.isHidden = false
         navigationItem.rightBarButtonItem?.isHidden = false
