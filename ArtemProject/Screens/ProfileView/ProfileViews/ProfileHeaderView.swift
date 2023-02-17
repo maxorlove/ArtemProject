@@ -46,7 +46,7 @@ final class ProfileHeaderView: UIView {
     private func setupConstraints() {
         NSLayoutConstraint.activate([
             image.centerXAnchor.constraint(equalTo: centerXAnchor),
-            image.centerYAnchor.constraint(equalTo: centerYAnchor),
+            image.centerYAnchor.constraint(equalTo: centerYAnchor, constant: -12),
             image.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.width / 2.5),
             image.heightAnchor.constraint(equalTo: image.widthAnchor),
             
@@ -112,5 +112,9 @@ final class ProfileHeaderView: UIView {
 
     func setImage(image: UIImage) {
         self.image.image = image
+    }
+    
+    func hideLabel(_ hide: Bool) {
+        label.isHidden = hide
     }
 }

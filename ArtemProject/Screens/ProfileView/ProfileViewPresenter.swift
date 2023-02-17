@@ -10,6 +10,7 @@ import Foundation
 protocol ProfileViewPresenterProtocol: AnyObject {
     func setupView()
     func didEditTaped()
+    func didCancelTaped()
     func saveProfileImage(url: URL)
     func saveAttValue(att: AttNameEnum, value: String)
     func saveAll()
@@ -71,5 +72,10 @@ extension ProfileViewPresenter: ProfileViewPresenterProtocol {
     func didEditTaped() {
         editState = !editState
         viewController?.switchEdit(edit: editState)
+    }
+    
+    func didCancelTaped() {
+        editState = !editState
+        setupView()
     }
 }

@@ -74,8 +74,15 @@ final class ImageManager {
             let image = UIImage(data: data)
             return image
         } catch let error {
-            print(error)
-            return nil
+            print(error.localizedDescription)
+            return getPlaceholder()
         }
+    }
+    
+    static func getPlaceholder() -> UIImage {
+        if let image = UIImage(named: "photoPlaceholder") {
+            return image
+        }
+        return UIImage()
     }
 }

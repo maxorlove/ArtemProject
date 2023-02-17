@@ -147,12 +147,15 @@ final class ProfileViewController: UIViewController {
         view.didEndEditAction = { [weak self] (att, value) in
             self?.presenter?.saveAttValue(att: att, value: value)
         }
+        
         return view
     }
     
     private func updateHeaderView(profileStruct: Profile) {
         if let url = profileStruct.image, let image = ImageManager.getImage(url: url) {
             headerView.setImage(image: image)
+        } else {
+            headerView.setImage(image: ImageManager.getPlaceholder())
         }
     }
     
@@ -193,21 +196,36 @@ final class ProfileViewController: UIViewController {
     }
     
     @objc
+    private func didCancelTaped() {
+        presenter?.didCancelTaped()
+    }
+    
+    @objc
     private func keyboardWillShow(_ notification: Notification) {
         if let keyboardFrame: NSValue = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
             let keyboardRectangle = keyboardFrame.cgRectValue
             let keyboardHeight = keyboardRectangle.height
             view.frame.origin.y -= keyboardHeight
+            
             navigationItem.rightBarButtonItem?.isHidden = true
+            navigationItem.leftBarButtonItem?.isHidden = true
             navigationItem.rightBarButtonItem?.isEnabled = false
+            navigationItem.leftBarButtonItem?.isEnabled = false
+            
+            headerView.hideLabel(true)
         }
     }
     
     @objc
     private func keyboardWillHide() {
         view.frame.origin.y = .zero
+        
         navigationItem.rightBarButtonItem?.isHidden = false
+        navigationItem.leftBarButtonItem?.isHidden = false
         navigationItem.rightBarButtonItem?.isEnabled = true
+        navigationItem.leftBarButtonItem?.isEnabled = true
+        
+        headerView.hideLabel(false)
     }
 }
 
@@ -230,8 +248,10 @@ extension ProfileViewController: ProfileViewControllerProtocol {
     func switchEdit(edit: Bool) {
         if edit {
             navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Save", image: nil, target: self, action: #selector(didSaveTaped))
+            navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Cancel", image: nil, target: self, action: #selector(didCancelTaped))
         } else {
             navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Edit", image: nil, target: self, action: #selector(didEditTaped))
+            navigationItem.leftBarButtonItem = nil
         }
         updateAccessibility(edit: edit)
     }
