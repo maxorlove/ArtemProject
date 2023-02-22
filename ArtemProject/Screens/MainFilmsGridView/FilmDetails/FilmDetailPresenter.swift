@@ -8,11 +8,11 @@
 import Foundation
 
 protocol FilmDetailPresenterProtocol: AnyObject {
-    func loadData()
+    func viewDidLoad()
     func setupLikeButton()
     func likeDidTapped()
     func popOut()
-    func getSimilarFilms(firstLoad: (() -> (Void))?)
+    func getNewSimilarFilms()
     func showDetails(item: DetailDataStruct)
 }
 
@@ -22,11 +22,14 @@ class FilmDetailPresenter {
     weak var viewController: FilmDetailControllerProtocol?
     
     // MARK: - Private Properties
+    private let dispatchGroup = DispatchGroup()
     private let router: FilmDetailRouterProtocol
     private let networkClient: FilmDetailNetworkProtocol
     private let data: DetailDataStruct
     private var similarFilmsPage = 0
     private var similarFilmsPageCount = 0
+    private var response: DetailsFilmResponse?
+    private var similarResponce: AllFilmsResponse?
     
     // MARK: - Init/Deinit
     init(
@@ -39,6 +42,35 @@ class FilmDetailPresenter {
         self.viewController = controller
         self.router = router
         self.data = data
+    }
+    
+    private func loadData() {
+        let id = data.id
+        dispatchGroup.enter()
+        networkClient.getDetails(id: id) { [weak self] result in
+            switch result {
+            case .success(let response):
+                self?.response = response
+            case .failure(let error):
+                self?.viewController?.errorAlert(error: error)
+            }
+            self?.dispatchGroup.leave()
+        }
+    }
+    
+    private func getSimilarFilms() {
+        let id = data.id
+        similarFilmsPage += 1
+        dispatchGroup.enter()
+        networkClient.getSimilar(id: id, page: similarFilmsPage) { [weak self] result in
+            switch result {
+            case .success(let response):
+                self?.similarResponce = response
+            case .failure(let error):
+                self?.viewController?.errorAlert(error: error)
+            }
+            self?.dispatchGroup.leave()
+        }
     }
 }
 
@@ -62,37 +94,34 @@ extension FilmDetailPresenter: FilmDetailPresenterProtocol {
         viewController?.setupLikeButton(isLiked: LikesManager.checkLikedFilm(id: data.id))
     }
     
-    func loadData() {
-        let id = data.id
-        networkClient.getDetails(id: id) { [weak self] result in
-            switch result {
-            case .success(let response):
-                DispatchQueue.main.async {
-                    self?.viewController?.configure(with: response)
-                }
-            case .failure(let error):
-                self?.viewController?.errorAlert(error: error)
+    func viewDidLoad() {
+        loadData()
+        getSimilarFilms()
+        dispatchGroup.notify(queue: .main) { [weak self] in
+            guard let self = self,
+                  let response = self.response,
+                  let similarResponce = self.similarResponce
+            else { return }
+            
+            self.viewController?.configure(with: response)
+            
+            self.similarFilmsPageCount = similarResponce.totalPages
+            if similarResponce.totalPages >= self.similarFilmsPage {
+                self.viewController?.addSimilarFilms(items: similarResponce.results)
             }
         }
     }
     
-    func getSimilarFilms(firstLoad: (() -> (Void))? = nil) {
-        let id = data.id
-        similarFilmsPage += 1
-        networkClient.getSimilar(id: id, page: similarFilmsPage) { [weak self] result in
-            switch result {
-            case .success(let response):
-                DispatchQueue.main.async {
-                    if response.results.count > 0 {
-                        firstLoad?()
-                    }
-                    self?.similarFilmsPageCount = response.totalPages
-                    if response.totalPages >= self?.similarFilmsPage ?? 0 {
-                        self?.viewController?.addSimilarFilms(items: response.results)
-                    }
-                }
-            case .failure(let error):
-                self?.viewController?.errorAlert(error: error)
+    func getNewSimilarFilms() {
+        getSimilarFilms()
+        dispatchGroup.notify(queue: .main) { [weak self] in
+            guard let self = self,
+                  let similarResponce = self.similarResponce
+            else { return }
+            
+            self.similarFilmsPageCount = similarResponce.totalPages
+            if similarResponce.totalPages >= self.similarFilmsPage {
+                self.viewController?.addSimilarFilms(items: similarResponce.results)
             }
         }
     }

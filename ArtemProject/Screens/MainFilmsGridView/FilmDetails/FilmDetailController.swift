@@ -48,7 +48,8 @@ final class FilmDetailController: UIViewController {
         super.viewDidLoad()
         setup()
         inidicator.startAnimating()
-        presenter?.loadData()
+//        presenter?.loadData()
+        presenter?.viewDidLoad()
     }
     
     // MARK: - Private Methods
@@ -138,6 +139,17 @@ final class FilmDetailController: UIViewController {
         
         bottomView.layer.cornerRadius = 16
         bottomView.clipsToBounds = true
+        
+        configureSimilarView()
+    }
+    
+    private func configureSimilarView() {
+        similarFilmsView.getNext = { [weak self] in
+            self?.presenter?.getNewSimilarFilms()
+        }
+        similarFilmsView.showDetails = { [weak self] in
+            self?.presenter?.showDetails(item: $0)
+        }
     }
     
     private func setImage(path: String) {
@@ -176,25 +188,10 @@ final class FilmDetailController: UIViewController {
         detailsView.addArrangedSubview(wrapLabel(labelView: description))
 
         detailsView.setCustomSpacing(16, after: description)
-
-        configureSimilarView()
         
-    }
-    
-    private func configureSimilarView() {
-        similarFilmsView.getNext = { [weak self] in
-            self?.presenter?.getSimilarFilms(firstLoad: nil)
-        }
-        similarFilmsView.showDetails = { [weak self] in
-            self?.presenter?.showDetails(item: $0)
-        }
-        presenter?.getSimilarFilms(firstLoad: { [weak self] in
-            self?.addSimilarView()
-        })
-    }
-    
-    private func addSimilarView() {
         detailsView.addArrangedSubview(similarFilmsView)
+//        configureSimilarView()
+        
     }
     
     private func wrapLabel(labelView: UILabel) -> UIView {
